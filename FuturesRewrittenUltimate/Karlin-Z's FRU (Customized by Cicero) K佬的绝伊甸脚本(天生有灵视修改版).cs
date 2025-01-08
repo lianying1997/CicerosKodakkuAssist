@@ -17,14 +17,14 @@ using Dalamud.Utility.Numerics;
 namespace MyScriptNamespace
 {
     
-    [ScriptType(name: "Karlin-Z's FRU (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)", territorys: [1238],guid: "148718fd-575d-493a-8ac7-1cc7092aff85", version:"0.0.0.12",note: noteStr,author:"Karlin-Z (customized by Cicero)")]
+    [ScriptType(name: "Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)", territorys: [1238],guid: "148718fd-575d-493a-8ac7-1cc7092aff85", version:"0.0.0.13",note: noteStr,author:"Karlin-Z (customized by Cicero)")]
     public class EdenUltimate
     {
         const string noteStr =
         """
         Karlin-Z's script of Futures Rewritten (Ultimate).
         Customized by Cicero, branched out from Version 0.0.0.10.
-        Add guidance for Dark Water III and Spirit Taker in the second half of Phase while adopting the MMW Double Group strat.
+        Add guidance for Dark Water III and Spirit Taker in the second half of Phase 3 while adopting the MMW Double Group strat.
         
         Karlin-Z的另一个未来(绝伊甸)脚本。
         天生有灵视基于0.0.0.10版本做了修改。
