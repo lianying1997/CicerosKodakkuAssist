@@ -6,5 +6,13 @@
     "Author":"_marcus_tullius_cicero_",
     "DownloadUrl":"https://raw.githubusercontent.com/AdmiralLvtzov/CicerosKodakkuAssist/main/Pandemonium/Normal/P7N.cs",
     "UpdateInfo":"The duty has been fully supported. 这个副本画完了。"
+  },
+  {
+    "Name":"Karlin-Z's FRU (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
+    "Guid":"148718fd-575d-493a-8ac7-1cc7092aff85",
+    "Version":"0.0.0.12",
+    "Author":"Karlin-Z",
+    "DownloadUrl": "",
+    "UpdateInfo": "Add guidance for Dark Water III and Spirit Taker in the second half of Phase while adopting the MMW Double Group strat. 添加了P3二运双分组法的黑暗狂水指路和碎灵一击指路。"
   }
 ]

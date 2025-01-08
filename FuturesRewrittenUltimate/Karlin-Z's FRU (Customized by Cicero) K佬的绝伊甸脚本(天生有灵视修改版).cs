@@ -17,14 +17,18 @@ using Dalamud.Utility.Numerics;
 namespace MyScriptNamespace
 {
     
-    [ScriptType(name: "EdenUltimate", territorys: [1238],guid: "a4e14eff-0aea-a4b6-d8c3-47644a3e9e9a", version:"0.0.0.10",note: noteStr)]
+    [ScriptType(name: "Karlin-Z's FRU (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)", territorys: [1238],guid: "148718fd-575d-493a-8ac7-1cc7092aff85", version:"0.0.0.12",note: noteStr,author:"Karlin-Z (customized by Cicero)")]
     public class EdenUltimate
     {
         const string noteStr =
         """
-        绝伊甸先行版 P4结束
-        P3地火站位和水分摊尚无
-        P4白圈指示尚无
+        Karlin-Z's script of Futures Rewritten (Ultimate).
+        Customized by Cicero, branched out from Version 0.0.0.10.
+        Add guidance for Dark Water III and Spirit Taker in the second half of Phase while adopting the MMW Double Group strat.
+        
+        Karlin-Z的另一个未来(绝伊甸)脚本。
+        天生有灵视基于0.0.0.10版本做了修改。
+        添加了P3二运双分组法的黑暗狂水指路和碎灵一击指路。
         """;
 
         [UserSetting("P1_转轮召分组依据")]
@@ -43,6 +47,8 @@ namespace MyScriptNamespace
         public P3LampEmum P3LampDeal { get; set; }
         [UserSetting("P3_T跳远引导位置")]
         public bool P3JumpPosition { get; set; } = false;
+        [UserSetting("Phase3_Dark_Water_III_黑暗狂水")]
+        public Phase3_Strats_Of_Dark_Water_III Phase3_Strats_Of_Dark_Water_III_黑暗狂水策略 { get; set; }
 
         [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
         public uint P4LampDisplayDur { get; set; } =3000;
@@ -51,6 +57,9 @@ namespace MyScriptNamespace
 
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
+        
+        [UserSetting("Enable Developer Mode 启用开发者模式")]
+        public bool Enable_Developer_Mode_启用开发者模式 { get; set; } = false;
 
         int? firstTargetIcon = null;
         double parse = 0;
@@ -81,7 +90,19 @@ namespace MyScriptNamespace
         List<int> P3Stack = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P3FloorFireDone = false;
         int P3FloorFire = 0;
-
+        private List<Phase3_Types_Of_Dark_Water_III> typeOfDarkWaterIii=[
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE,
+            Phase3_Types_Of_Dark_Water_III.NONE
+        ];
+        List<int> indexWhileDoubleGroup=[2,3,0,1,4,5,6,7];
+        // The temporary priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 while adopting the MMW Double Group strat.
+        
         uint P4FragmentId;
         List<int> P4Tether = [-1, -1, -1, -1, -1, -1, -1, -1];
         List<int> P4Stack = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -124,6 +145,22 @@ namespace MyScriptNamespace
             MGL
         }
 
+        public enum Phase3_Strats_Of_Dark_Water_III {
+            
+            MMW_Double_Group_双分组法,
+            Other
+            
+        }
+        
+        public enum Phase3_Types_Of_Dark_Water_III {
+            
+            LONG,
+            MEDIUM,
+            SHORT,
+            NONE
+            
+        }
+
         public enum P4WhiteCirleEmum
         {
             IceB,
@@ -147,6 +184,16 @@ namespace MyScriptNamespace
 
             P3FloorFireDone = false;
             P3Stack = [0, 0, 0, 0, 0, 0, 0, 0];
+            typeOfDarkWaterIii=[
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE
+            ];
         }
 
         #region P1
@@ -2101,6 +2148,16 @@ namespace MyScriptNamespace
             P3ReturnBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             P3Lamp = [0, 0, 0, 0, 0, 0, 0, 0];
             P3LampWise = [0, 0, 0, 0, 0, 0, 0, 0];
+            typeOfDarkWaterIii=[
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE,
+                Phase3_Types_Of_Dark_Water_III.NONE
+            ];
         }
         [ScriptMethod(name: "P3_时间压缩_Buff记录", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2455|2456|2464|2462|2461|2460)$"], userControl: false)]
         public void P3_时间压缩_Buff记录(Event @event, ScriptAccessory accessory)
@@ -2699,6 +2756,388 @@ namespace MyScriptNamespace
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
 
         }
+        
+        [ScriptMethod(name:"Phase3_Determine_Types_Of_Dark_Water_III_确定黑暗狂水类型",
+            eventType:EventTypeEnum.StatusAdd,
+            eventCondition:["StatusID:2461"],
+            userControl:false)]
+        
+        public void Phase3_Determine_Types_Of_Dark_Water_III_确定黑暗狂水类型(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+
+                return;
+
+            }
+
+            int currentIndex=accessory.Data.PartyList.IndexOf(targetId);
+            uint timeOfDarkWaterIii=Convert.ToUInt32(@event["DurationMilliseconds"],10);
+
+            if(Enable_Developer_Mode_启用开发者模式) {
+
+                accessory.Method.SendChat($"The DurationMilliseconds of StatusID 2461 is: {timeOfDarkWaterIii}");
+                
+            }
+
+            if(timeOfDarkWaterIii>36000) {
+                // Actually it's 38000ms (38s), but just in case.
+
+                lock(typeOfDarkWaterIii) {
+
+                    typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.LONG;
+
+                }
+
+            }
+
+            else {
+
+                if(timeOfDarkWaterIii>27000) {
+                    // Actually it's 29000ms (29s), but just in case.
+
+                    lock(typeOfDarkWaterIii) {
+
+                        typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.MEDIUM;
+
+                    }
+
+                }
+
+                else {
+
+                    if(timeOfDarkWaterIii>8000) {
+                        // Actually it's 10000ms (10s), but just in case.
+
+                        lock(typeOfDarkWaterIii) {
+
+                            typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.SHORT;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            if(Enable_Developer_Mode_启用开发者模式) {
+
+                accessory.Method.SendChat($"Checking the party member {currentIndex}... The value of typeOfDarkWaterIii is: {typeOfDarkWaterIii[currentIndex].ToString()}");
+                
+            }
+            
+        }
+
+        [ScriptMethod(name:"Phase3_Dark_Water_III_Guidance_黑暗狂水指路",
+            eventType:EventTypeEnum.StatusRemove,
+            eventCondition:["StatusID:2458"])]
+        
+        public void Phase3_Dark_Water_III_黑暗狂水(Event @event,ScriptAccessory accessory) {
+
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            bool targetPositionConfirmed=false;
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase3_Dark_Water_III_Guidance_黑暗狂水指路";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.DestoryAt=5000;
+
+            if(Phase3_Strats_Of_Dark_Water_III_黑暗狂水策略==Phase3_Strats_Of_Dark_Water_III.MMW_Double_Group_双分组法) {
+                
+                bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                if(Enable_Developer_Mode_启用开发者模式) {
+                    
+                    accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent twice.");
+                    
+                }
+
+                if(goToLeft) {
+
+                    currentProperty.TargetPosition=new Vector3(96,0,100);
+                    targetPositionConfirmed=true;
+
+                    accessory.Method.TextInfo("Stack on the left 去左侧分摊",2500);
+                    accessory.Method.TTS("Stack on the left 去左侧分摊");
+
+                }
+
+                else {
+                    
+                    currentProperty.TargetPosition=new Vector3(104,0,100);
+                    targetPositionConfirmed=true;
+                    
+                    accessory.Method.TextInfo("Stack on the right 去右侧分摊",2500);
+                    accessory.Method.TTS("Stack on the right 去右侧分摊");
+
+                }
+
+            }
+
+            if(targetPositionConfirmed) {
+
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+
+        }
+
+        private bool shouldThePartyMemberGoLeftWhileDoubleGroup(int originalIndex) {
+            
+            int currentIndexWhileDoubleGroup=getIndexWhileDoubleGroup(originalIndex);
+            Phase3_Types_Of_Dark_Water_III currentType=typeOfDarkWaterIii[originalIndex];
+            bool result=false;
+
+            for(int i=0;i<8;++i) {
+
+                if(typeOfDarkWaterIii[indexWhileDoubleGroup[i]]==currentType&&i!=currentIndexWhileDoubleGroup) {
+
+                    if(i>currentIndexWhileDoubleGroup) {
+
+                        result=true;
+                        // Should go left.
+
+                        break;
+
+                    }
+
+                    if(i<currentIndexWhileDoubleGroup) {
+
+                        result=false;
+                        // Should go right.
+
+                        break;
+
+                    }
+                        
+                }
+                    
+            }
+
+            return result;
+
+        }
+
+        private int getIndexWhileDoubleGroup(int originalIndex) {
+
+            for(int i=0;i<8;++i) {
+
+                if(originalIndex==indexWhileDoubleGroup[i]) {
+
+                    return i;
+
+                }
+                
+            }
+
+            return originalIndex;
+            // Just a placeholder and should never be reached.
+
+        }
+        
+        [ScriptMethod(name:"Phase3_Spirit_Taker_Guidance_碎灵一击指路",
+            eventType:EventTypeEnum.StatusAdd,
+            eventCondition:["StatusID:2461"])]
+        
+        public void Phase3_Spirit_Taker_碎灵一击(Event @event,ScriptAccessory accessory) {
+
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            System.Threading.Thread.Sleep(10000);
+            
+            accessory.Method.TextInfo("Spread 分散",2000);
+            accessory.Method.TTS("Spread 分散");
+
+            bool targetPositionConfirmed=false;
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase3_Spirit_Taker_Guidance_碎灵一击指路";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.DestoryAt=2000;
+
+            if(Phase3_Strats_Of_Dark_Water_III_黑暗狂水策略==Phase3_Strats_Of_Dark_Water_III.MMW_Double_Group_双分组法) {
+
+                int myIndexWhileDoubleGroup=getIndexWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                switch(myIndexWhileDoubleGroup) {
+
+                    case 0: {
+                        // H1
+                        
+                        currentProperty.TargetPosition=new Vector3(85,0,100);
+                        targetPositionConfirmed=true;
+
+                        break;
+                        
+                    }
+
+                    case 1: {
+                        // H2
+                        
+                        bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                        if(Enable_Developer_Mode_启用开发者模式) {
+                    
+                            accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent six times.");
+                    
+                        }
+
+                        if(goToLeft) {
+                            
+                            currentProperty.TargetPosition=new Vector3(93,0,92);
+                            targetPositionConfirmed=true;
+                            
+                        }
+
+                        else {
+                            
+                            currentProperty.TargetPosition=new Vector3(107,0,92);
+                            targetPositionConfirmed=true;
+                            
+                        }
+
+                        break;
+
+                    }
+
+                    case 2: {
+                        // MT
+                        
+                        currentProperty.TargetPosition=new Vector3(100,0,92);
+                        targetPositionConfirmed=true;
+
+                        break;
+                        
+                    }
+                    
+                    case 3: {
+                        // OT or ST
+                        
+                        currentProperty.TargetPosition=new Vector3(100,0,100);
+                        targetPositionConfirmed=true;
+
+                        break;
+                        
+                    }
+                    
+                    case 4: {
+                        // M1 or D1
+                        
+                        bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                        if(Enable_Developer_Mode_启用开发者模式) {
+                    
+                            accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent six times.");
+                    
+                        }
+
+                        if(goToLeft) {
+                            
+                            currentProperty.TargetPosition=new Vector3(93,0,100);
+                            targetPositionConfirmed=true;
+                            
+                        }
+
+                        else {
+                            
+                            currentProperty.TargetPosition=new Vector3(107,0,100);
+                            targetPositionConfirmed=true;
+                            
+                        }
+
+                        break;
+                        
+                    }
+                    
+                    case 5: {
+                        // M2 or D2
+                        
+                        currentProperty.TargetPosition=new Vector3(100,0,108);
+                        targetPositionConfirmed=true;
+
+                        break;
+                        
+                    }
+                    
+                    case 6: {
+                        // R1 or D3
+                        
+                        bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                        if(Enable_Developer_Mode_启用开发者模式) {
+                    
+                            accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent six times.");
+                    
+                        }
+
+                        if(goToLeft) {
+                            
+                            currentProperty.TargetPosition=new Vector3(93,0,108);
+                            targetPositionConfirmed=true;
+                            
+                        }
+
+                        else {
+                            
+                            currentProperty.TargetPosition=new Vector3(107,0,108);
+                            targetPositionConfirmed=true;
+                            
+                        }
+
+                        break;
+                        
+                    }
+                    
+                    case 7: {
+                        // R2 or D4
+                        
+                        currentProperty.TargetPosition=new Vector3(115,0,100);
+                        targetPositionConfirmed=true;
+
+                        break;
+                        
+                    }
+                    
+                    default: {
+                        // Just a placeholder and should never be reached.
+
+                        break;
+                        
+                    }
+                    
+                }
+
+            }
+
+            if(targetPositionConfirmed) {
+
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+
+        }
+        
         [ScriptMethod(name: "P3_延迟咏唱回响_碎灵一击", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40288"])]
         public void P3_延迟咏唱回响_碎灵一击(Event @event, ScriptAccessory accessory)
         {
