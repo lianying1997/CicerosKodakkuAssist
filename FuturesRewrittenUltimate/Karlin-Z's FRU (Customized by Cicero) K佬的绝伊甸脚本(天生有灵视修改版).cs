@@ -20,7 +20,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.14",
+        version:"0.0.0.15",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -30,11 +30,13 @@ namespace MyScriptNamespace
         """
         Karlin-Z's script of Futures Rewritten (Ultimate).
         Customized by Cicero, branched out from Version 0.0.0.10.
-        Add guidance for Dark Water III and Spirit Taker in the second half of Phase 3 while adopting the MMW Double Group strat.
+        Add guidance of the MMW Double Group strat for the second half of Phase 3.
+        Please re-configure the user settings of this customized script according to your settings in the original script!
         
         Karlin-Z的另一个未来(绝伊甸)脚本。
         天生有灵视基于0.0.0.10版本做了修改。
-        添加了P3二运双分组法的黑暗狂水指路和碎灵一击指路。
+        添加了P3二运的双分组法相关指路。
+        请记得按照原版脚本重新配置一下这个脚本的用户设置！
         """;
 
         [UserSetting("P1_转轮召分组依据")]
