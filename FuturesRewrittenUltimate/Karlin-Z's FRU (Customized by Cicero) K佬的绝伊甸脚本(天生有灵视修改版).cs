@@ -17,7 +17,13 @@ using Dalamud.Utility.Numerics;
 namespace MyScriptNamespace
 {
     
-    [ScriptType(name: "Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)", territorys: [1238],guid: "148718fd-575d-493a-8ac7-1cc7092aff85", version:"0.0.0.13",note: noteStr,author:"Karlin-Z (customized by Cicero)")]
+    [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
+        territorys:[1238],
+        guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
+        version:"0.0.0.14",
+        note:noteStr,
+        author:"Karlin-Z (customized by Cicero)")]
+    
     public class EdenUltimate
     {
         const string noteStr =
@@ -45,10 +51,12 @@ namespace MyScriptNamespace
 
         [UserSetting("P3_分灯方式")]
         public P3LampEmum P3LampDeal { get; set; }
-        [UserSetting("P3_T跳远引导位置")]
-        public bool P3JumpPosition { get; set; } = false;
-        [UserSetting("Phase3_Dark_Water_III_黑暗狂水")]
-        public Phase3_Strats_Of_Dark_Water_III Phase3_Strats_Of_Dark_Water_III_黑暗狂水策略 { get; set; }
+        [UserSetting("Phase3_Strats_Of_The_Second_Half_二运策略")]
+        public Phase3_Strats_Of_The_Second_Half Phase3_Strats_Of_The_Second_Half_二运策略 { get; set; }
+        [UserSetting("Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈")]
+        public Phase3_Who_Baits_Darkest_Dance Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈 { get; set; }
+        [UserSetting("Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色")]
+        public ScriptColor Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色 { get; set; } = new() { V4=new(1f,0f,0f,1f) };
 
         [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
         public uint P4LampDisplayDur { get; set; } =3000;
@@ -90,7 +98,7 @@ namespace MyScriptNamespace
         List<int> P3Stack = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P3FloorFireDone = false;
         int P3FloorFire = 0;
-        private List<Phase3_Types_Of_Dark_Water_III> typeOfDarkWaterIii=[
+        List<Phase3_Types_Of_Dark_Water_III> typeOfDarkWaterIii=[
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE,
@@ -102,6 +110,8 @@ namespace MyScriptNamespace
         ];
         List<int> indexWhileDoubleGroup=[2,3,0,1,4,5,6,7];
         // The temporary priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 while adopting the MMW Double Group strat.
+        uint timesStatus2458Disappeared=0;
+        object lockOfTimesStatus2458Disappeared=new object();
         
         uint P4FragmentId;
         List<int> P4Tether = [-1, -1, -1, -1, -1, -1, -1, -1];
@@ -145,10 +155,17 @@ namespace MyScriptNamespace
             MGL
         }
 
-        public enum Phase3_Strats_Of_Dark_Water_III {
+        public enum Phase3_Strats_Of_The_Second_Half {
             
             MMW_Double_Group_双分组法,
-            Other
+            Other_Strats_Work_In_Progress_其他策略正在施工中
+            
+        }
+
+        public enum Phase3_Who_Baits_Darkest_Dance {
+            
+            MT,
+            OT_ST
             
         }
         
@@ -194,6 +211,7 @@ namespace MyScriptNamespace
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
+            timesStatus2458Disappeared=0;
         }
 
         #region P1
@@ -2158,6 +2176,7 @@ namespace MyScriptNamespace
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
+            timesStatus2458Disappeared=0;
         }
         [ScriptMethod(name: "P3_时间压缩_Buff记录", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2455|2456|2464|2462|2461|2460)$"], userControl: false)]
         public void P3_时间压缩_Buff记录(Event @event, ScriptAccessory accessory)
@@ -2779,12 +2798,6 @@ namespace MyScriptNamespace
             int currentIndex=accessory.Data.PartyList.IndexOf(targetId);
             uint timeOfDarkWaterIii=Convert.ToUInt32(@event["DurationMilliseconds"],10);
 
-            if(Enable_Developer_Mode_启用开发者模式) {
-
-                accessory.Method.SendChat($"The DurationMilliseconds of StatusID 2461 is: {timeOfDarkWaterIii}");
-                
-            }
-
             if(timeOfDarkWaterIii>36000) {
                 // Actually it's 38000ms (38s), but just in case.
 
@@ -2828,7 +2841,7 @@ namespace MyScriptNamespace
 
             if(Enable_Developer_Mode_启用开发者模式) {
 
-                accessory.Method.SendChat($"Checking the party member {currentIndex}... The value of typeOfDarkWaterIii is: {typeOfDarkWaterIii[currentIndex].ToString()}");
+                accessory.Method.SendChat($"Checking the party member {currentIndex}... The DurationMilliseconds of StatusID 2461 is: {timeOfDarkWaterIii}. The value of typeOfDarkWaterIii is: {typeOfDarkWaterIii[currentIndex].ToString()}.");
                 
             }
             
@@ -2838,7 +2851,7 @@ namespace MyScriptNamespace
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:2458"])]
         
-        public void Phase3_Dark_Water_III_黑暗狂水(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Dark_Water_III_Guidance_黑暗狂水指路(Event @event,ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -2856,20 +2869,39 @@ namespace MyScriptNamespace
             currentProperty.Color=accessory.Data.DefaultSafeColor;
             currentProperty.DestoryAt=5000;
 
-            if(Phase3_Strats_Of_Dark_Water_III_黑暗狂水策略==Phase3_Strats_Of_Dark_Water_III.MMW_Double_Group_双分组法) {
+            if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
                 
                 bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
                 if(Enable_Developer_Mode_启用开发者模式) {
                     
-                    accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent twice.");
+                    accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. The value of timesStatus2458Disappeared is: {timesStatus2458Disappeared}. This debug message may be sent twice.");
                     
                 }
 
                 if(goToLeft) {
 
-                    currentProperty.TargetPosition=new Vector3(96,0,100);
-                    targetPositionConfirmed=true;
+                    if(timesStatus2458Disappeared<2) {
+                        // First time of Dark Water III.
+
+                        currentProperty.TargetPosition=new Vector3(93,0,100);
+                        targetPositionConfirmed=true;
+                        
+                    }
+
+                    else {
+                        
+                        if(timesStatus2458Disappeared<4) {
+                            // Second time of Dark Water III.
+
+                            currentProperty.TargetPosition=new Vector3(96,0,100);
+                            targetPositionConfirmed=true;
+                        
+                        }
+                        
+                        // No guidance for the third time since I'm unable to acquire the boss position here.
+                        
+                    }
 
                     accessory.Method.TextInfo("Stack on the left 去左侧分摊",2500);
                     accessory.Method.TTS("Stack on the left 去左侧分摊");
@@ -2878,8 +2910,23 @@ namespace MyScriptNamespace
 
                 else {
                     
-                    currentProperty.TargetPosition=new Vector3(104,0,100);
-                    targetPositionConfirmed=true;
+                    if(timesStatus2458Disappeared<2) {
+
+                        currentProperty.TargetPosition=new Vector3(107,0,100);
+                        targetPositionConfirmed=true;
+                        
+                    }
+
+                    else {
+                        
+                        if(timesStatus2458Disappeared<4) {
+
+                            currentProperty.TargetPosition=new Vector3(104,0,100);
+                            targetPositionConfirmed=true;
+                        
+                        }
+                        
+                    }
                     
                     accessory.Method.TextInfo("Stack on the right 去右侧分摊",2500);
                     accessory.Method.TTS("Stack on the right 去右侧分摊");
@@ -2892,6 +2939,12 @@ namespace MyScriptNamespace
 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
+            }
+            
+            lock(lockOfTimesStatus2458Disappeared) {
+
+                ++timesStatus2458Disappeared;
+
             }
 
         }
@@ -2953,7 +3006,7 @@ namespace MyScriptNamespace
             eventType:EventTypeEnum.StatusAdd,
             eventCondition:["StatusID:2461"])]
         
-        public void Phase3_Spirit_Taker_碎灵一击(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Spirit_Taker_Guidance_碎灵一击指路(Event @event,ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -2961,7 +3014,8 @@ namespace MyScriptNamespace
 
             }
 
-            System.Threading.Thread.Sleep(10000);
+            System.Threading.Thread.Sleep(9900);
+            // Actually it's 10000ms (10s), but a little advance in time may not mess things up.
             
             accessory.Method.TextInfo("Spread 分散",2000);
             accessory.Method.TTS("Spread 分散");
@@ -2976,7 +3030,7 @@ namespace MyScriptNamespace
             currentProperty.Color=accessory.Data.DefaultSafeColor;
             currentProperty.DestoryAt=2000;
 
-            if(Phase3_Strats_Of_Dark_Water_III_黑暗狂水策略==Phase3_Strats_Of_Dark_Water_III.MMW_Double_Group_双分组法) {
+            if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
 
                 int myIndexWhileDoubleGroup=getIndexWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
@@ -3194,39 +3248,134 @@ namespace MyScriptNamespace
             }
             
         }
-        [ScriptMethod(name: "P3_延迟咏唱回响_T引导位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40181"])]
-        public void P3_延迟咏唱回响_T引导位置(Event @event, ScriptAccessory accessory)
-        {
+        
+        [ScriptMethod(name:"Phase3_Darkest_Dance_暗夜舞蹈_Customized_Version",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40181"])]
+        
+        public void Phase3_Darkest_Dance_暗夜舞蹈_Customized_Version(Event @event, ScriptAccessory accessory) {
+            
             if (parse != 3.2) return;
-            if (!P3JumpPosition) return;
-            var me= accessory.Data.Objects.SearchById(accessory.Data.Me);
-            if(me == null) return;
-            accessory.Method.TextInfo("场边引导", 3000);
-            accessory.Method.TTS("场边引导");
-            var dir8 = P3FloorFire % 10 % 4;
-            Vector3 posN = new(100, 0, 86);
-            var rot = dir8 switch
-            {
-                0 => 6,
-                1 => 7,
-                2 => 0,
-                3 => 5
-            };
-            var pos1 = RotatePoint(posN, new(100, 0, 100), float.Pi / 4 * rot);
-            var pos2 = RotatePoint(posN, new(100, 0, 100), float.Pi / 4 * rot+float.Pi);
-            var dealpos = (pos1 - me.Position).Length() < (pos2 - me.Position).Length() ? pos1 : pos2;
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_延迟咏唱回响_T引导位置";
-            dp.Scale = new(2);
-            dp.Owner = accessory.Data.Me;
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.TargetPosition = dealpos;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.DestoryAt = 5000;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+            var tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.Me);
+            bool goBait=false;
+
+            if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+
+                tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.PartyList[0]);
+
+                if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0) {
+
+                    goBait=true;
+
+                }
+
+            }
+
+            else {
+
+                tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.PartyList[1]);
+                
+                if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+
+                    goBait=true;
+
+                }
+
+            }
+
+            if(tankWhoBaitsDarkestDance == null) return;
+
+            if(goBait) {
+
+                var dir8 = P3FloorFire % 10 % 4;
+                Vector3 posN = new(100, 0, 86);
+                var rot = dir8 switch{
+                    0 => 6,
+                    1 => 7,
+                    2 => 0,
+                    3 => 5
+                };
+                var pos1 = RotatePoint(posN, new(100, 0, 100), float.Pi / 4 * rot);
+                var pos2 = RotatePoint(posN, new(100, 0, 100), float.Pi / 4 * rot + float.Pi);
+                var dealpos =
+                    (pos1 - tankWhoBaitsDarkestDance.Position).Length() <
+                    (pos2 - tankWhoBaitsDarkestDance.Position).Length()
+                        ? pos1
+                        : pos2;
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P3_延迟咏唱回响_T引导位置";
+                dp.Scale = new(2);
+                dp.Owner = accessory.Data.Me;
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.TargetPosition = dealpos;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.Delay=2900;
+                dp.DestoryAt = 5000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                
+            }
+                
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            if(goBait) {
+                
+                currentProperty.Owner=accessory.Data.Me;
+                
+            }
+
+            else {
+
+                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+
+                    currentProperty.Owner=accessory.Data.PartyList[0];
+
+                }
+
+                else {
+
+                    currentProperty.Owner=accessory.Data.PartyList[1];
+
+                }
+
+            }
+
+            currentProperty.Name="P3_延迟咏唱回响_T引导范围";
+            currentProperty.Scale=new(7);
+            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+            currentProperty.Delay=2900;
+            currentProperty.DestoryAt=5000;
+
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+            
+            System.Threading.Thread.Sleep(2900);
+            
+            if(goBait) {
+
+                accessory.Method.TextInfo("Go bait 引导死刑",1500);
+                accessory.Method.TTS("Go bait 引导死刑");
+
+            }
+
+            else {
+
+                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+                    
+                    accessory.Method.TextInfo("Stay away from MT 远离MT",1500);
+                    accessory.Method.TTS("Stay away from MT 远离MT");
+                    
+                }
+
+                else {
+                    
+                    accessory.Method.TextInfo("Stay away from OT 远离ST",1500);
+                    accessory.Method.TTS("Stay away from OT 远离ST");
+                    
+                }
+
+            }
 
         }
-
 
         private int MyLampIndex(int myPartyIndex)
         {
@@ -3243,7 +3392,7 @@ namespace MyScriptNamespace
             {
                 //短火
                 if (P3FireBuff[myPartyIndex] == 1)
-                {
+                {    
                     if (myPartyIndex<4)
                     {
                         return (nLampIndex + 4) % 8;
