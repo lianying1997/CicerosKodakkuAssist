@@ -20,7 +20,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.15",
+        version:"0.0.0.16",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -3257,7 +3257,11 @@ namespace MyScriptNamespace
         
         public void Phase3_Darkest_Dance_暗夜舞蹈_Customized_Version(Event @event, ScriptAccessory accessory) {
             
-            if (parse != 3.2) return;
+            if(parse!=3.2) {
+                
+                return;
+                
+            }
 
             var tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.Me);
             bool goBait=false;
@@ -3286,39 +3290,60 @@ namespace MyScriptNamespace
 
             }
 
-            if(tankWhoBaitsDarkestDance == null) return;
-
-            if(goBait) {
-
-                var dir8 = P3FloorFire % 10 % 4;
-                Vector3 posN = new(100, 0, 86);
-                var rot = dir8 switch{
-                    0 => 6,
-                    1 => 7,
-                    2 => 0,
-                    3 => 5
-                };
-                var pos1 = RotatePoint(posN, new(100, 0, 100), float.Pi / 4 * rot);
-                var pos2 = RotatePoint(posN, new(100, 0, 100), float.Pi / 4 * rot + float.Pi);
-                var dealpos =
-                    (pos1 - tankWhoBaitsDarkestDance.Position).Length() <
-                    (pos2 - tankWhoBaitsDarkestDance.Position).Length()
-                        ? pos1
-                        : pos2;
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P3_延迟咏唱回响_T引导位置";
-                dp.Scale = new(2);
-                dp.Owner = accessory.Data.Me;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.TargetPosition = dealpos;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay=2900;
-                dp.DestoryAt = 5000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            if(tankWhoBaitsDarkestDance==null) {
+                
+                return;
                 
             }
-                
+
+            var dir8=P3FloorFire%10%4;
+            Vector3 posN=new(100,0,86);
+            var rot=dir8 switch {
+                0=>6,
+                1=>7,
+                2=>0,
+                3=>5
+            };
+            var pos1=RotatePoint(posN,new(100,0,100),float.Pi/4*rot);
+            var pos2=RotatePoint(posN,new(100,0,100),float.Pi/4*rot+float.Pi);
+            var dealpos=((pos1-tankWhoBaitsDarkestDance.Position).Length()<(pos2-tankWhoBaitsDarkestDance.Position).Length())?(pos1):(pos2);
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            if(goBait) {
+                
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                
+            }
+
+            else {
+
+                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+
+                    currentProperty.Owner=accessory.Data.PartyList[0];
+                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+
+                }
+
+                else {
+
+                    currentProperty.Owner=accessory.Data.PartyList[1];
+                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+
+                }
+
+            }
+            
+            currentProperty.Name="Phase3_Darkest_Dance_Guidance_暗夜舞蹈指路";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.TargetPosition=dealpos;
+            currentProperty.Delay=2700;
+            currentProperty.DestoryAt=3500;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
 
             if(goBait) {
                 
@@ -3342,15 +3367,15 @@ namespace MyScriptNamespace
 
             }
 
-            currentProperty.Name="P3_延迟咏唱回响_T引导范围";
+            currentProperty.Name="Phase3_Darkest_Dance_Range_暗夜舞蹈范围";
             currentProperty.Scale=new(7);
             currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
-            currentProperty.Delay=2900;
-            currentProperty.DestoryAt=5000;
+            currentProperty.Delay=2700;
+            currentProperty.DestoryAt=3500;
 
             accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
             
-            System.Threading.Thread.Sleep(2900);
+            System.Threading.Thread.Sleep(2700);
             
             if(goBait) {
 
