@@ -20,7 +20,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.16",
+        version:"0.0.0.17",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -2900,6 +2900,45 @@ namespace MyScriptNamespace
                             targetPositionConfirmed=true;
                         
                         }
+
+                        else {
+                            
+                            if(timesStatus2458Disappeared<6) {
+                                // Third time of Dark Water III.
+                                // Suggested by @lunarflower223 on Discord. Thank you!
+
+                                for(int i=0;i<8;++i) {
+
+                                    if(typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
+                                        
+                                        var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                                        temporaryProperty.Name="Phase3_Dark_Water_III_Range_黑暗狂水范围";
+                                        temporaryProperty.Scale=new(5);
+                                        temporaryProperty.Owner=accessory.Data.PartyList[i];
+                                        temporaryProperty.DestoryAt=5000;
+
+                                        if(shouldThePartyMemberGoLeftWhileDoubleGroup(i)) {
+
+                                            temporaryProperty.Color=accessory.Data.DefaultSafeColor;
+
+                                        }
+
+                                        else {
+
+                                            temporaryProperty.Color=accessory.Data.DefaultDangerColor;
+
+                                        }
+                                        
+                                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,temporaryProperty);
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
                         
                         // No guidance for the third time since I'm unable to acquire the boss position here.
                         
@@ -2926,6 +2965,43 @@ namespace MyScriptNamespace
                             currentProperty.TargetPosition=new Vector3(104,0,100);
                             targetPositionConfirmed=true;
                         
+                        }
+
+                        else {
+
+                            if(timesStatus2458Disappeared<6) {
+
+                                for(int i=0;i<8;++i) {
+
+                                    if(typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
+                                        
+                                        var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                                        temporaryProperty.Name="Phase3_Dark_Water_III_Range_黑暗狂水范围";
+                                        temporaryProperty.Scale=new(5);
+                                        temporaryProperty.Owner=accessory.Data.PartyList[i];
+                                        temporaryProperty.DestoryAt=5000;
+
+                                        if(shouldThePartyMemberGoLeftWhileDoubleGroup(i)) {
+
+                                            temporaryProperty.Color=accessory.Data.DefaultDangerColor;
+
+                                        }
+
+                                        else {
+
+                                            temporaryProperty.Color=accessory.Data.DefaultSafeColor;
+
+                                        }
+                                        
+                                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,temporaryProperty);
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
                         }
                         
                     }
