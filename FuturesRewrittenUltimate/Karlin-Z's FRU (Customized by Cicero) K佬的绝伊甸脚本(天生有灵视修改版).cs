@@ -20,7 +20,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.17",
+        version:"0.0.0.18",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -2849,11 +2849,11 @@ namespace MyScriptNamespace
             
         }
 
-        [ScriptMethod(name:"Phase3_Dark_Water_III_Guidance_黑暗狂水指路",
+        [ScriptMethod(name:"Phase3_Dark_Water_III_Range_And_Guidance_黑暗狂水范围与指路",
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:2458"])]
         
-        public void Phase3_Dark_Water_III_Guidance_黑暗狂水指路(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Dark_Water_III_Range_And_Guidance_黑暗狂水范围与指路(Event @event,ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -3080,11 +3080,11 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase3_Spirit_Taker_Guidance_碎灵一击指路",
-            eventType:EventTypeEnum.StatusAdd,
-            eventCondition:["StatusID:2461"])]
+        [ScriptMethod(name:"Phase3_Spirit_Taker_Range_And_Guidance_碎灵一击范围与指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40288"])]
         
-        public void Phase3_Spirit_Taker_Guidance_碎灵一击指路(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Spirit_Taker_Range_And_Guidance_碎灵一击范围与指路(Event @event,ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -3092,8 +3092,21 @@ namespace MyScriptNamespace
 
             }
 
-            System.Threading.Thread.Sleep(9900);
-            // Actually it's 10000ms (10s), but a little advance in time may not mess things up.
+            System.Threading.Thread.Sleep(1250);
+            
+            for(int i=0;i<8;++i) {
+                
+                var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                temporaryProperty.Name="Phase3_Spirit_Taker_Range_碎灵一击范围";
+                temporaryProperty.Scale=new(5);
+                temporaryProperty.Owner=accessory.Data.PartyList[i];
+                temporaryProperty.Color=accessory.Data.DefaultDangerColor;
+                temporaryProperty.DestoryAt=2500;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,temporaryProperty);
+                
+            }
             
             accessory.Method.TextInfo("Spread 分散",2000);
             accessory.Method.TTS("Spread 分散");
@@ -3106,7 +3119,7 @@ namespace MyScriptNamespace
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Owner=accessory.Data.Me;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
-            currentProperty.DestoryAt=2000;
+            currentProperty.DestoryAt=2500;
 
             if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
 
@@ -3270,22 +3283,6 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name: "P3_延迟咏唱回响_碎灵一击", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40288"])]
-        public void P3_延迟咏唱回响_碎灵一击(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 3.2) return;
-            for (int i = 0; i < 8; i++)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P3_延迟咏唱回响_碎灵一击";
-                dp.Scale = new(5);
-                dp.Owner = accessory.Data.PartyList[i];
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.Delay = 1000;
-                dp.DestoryAt = 2500;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            }
-        }
         [ScriptMethod(name: "P3_延迟咏唱回响_击退提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40182", "TargetIndex:1"])]
         public void P3_延迟咏唱回响_击退提示(Event @event, ScriptAccessory accessory)
         {
@@ -3327,11 +3324,11 @@ namespace MyScriptNamespace
             
         }
         
-        [ScriptMethod(name:"Phase3_Darkest_Dance_暗夜舞蹈_Customized_Version",
+        [ScriptMethod(name:"Phase3_Darkest_Dance_Range_And_Guidance_暗夜舞蹈范围与指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40181"])]
         
-        public void Phase3_Darkest_Dance_暗夜舞蹈_Customized_Version(Event @event, ScriptAccessory accessory) {
+        public void Phase3_Darkest_Dance_Range_And_Guidance_暗夜舞蹈范围与指路(Event @event, ScriptAccessory accessory) {
             
             if(parse!=3.2) {
                 
@@ -3371,6 +3368,10 @@ namespace MyScriptNamespace
                 return;
                 
             }
+            
+            // ----- Inherited from Karlin-Z's original script -----
+            // This part of the code was directly inherited from Karlin-Z's original FRU script. It's aimed to calculate the exact position where the baiter tank should go.
+            // I kept this part as is.
 
             var dir8=P3FloorFire%10%4;
             Vector3 posN=new(100,0,86);
@@ -3384,6 +3385,8 @@ namespace MyScriptNamespace
             var pos2=RotatePoint(posN,new(100,0,100),float.Pi/4*rot+float.Pi);
             var dealpos=((pos1-tankWhoBaitsDarkestDance.Position).Length()<(pos2-tankWhoBaitsDarkestDance.Position).Length())?(pos1):(pos2);
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            // ----- -----
             
             if(goBait) {
                 
