@@ -21,7 +21,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.20",
+        version:"0.0.0.21",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -31,12 +31,12 @@ namespace MyScriptNamespace
         """
         Karlin-Z's script of Futures Rewritten (Ultimate).
         Customized by Cicero, branched out from Version 0.0.0.10.
-        Add guidance of the MMW Double Group strat for the second half of Phase 3.
+        Add guidance of the MMW Double Group strat for the second half of Phase 3, guidance for residues of Drachen Wanderers in the second half of Phase 4.
         Please re-configure the user settings of this customized script according to your settings in the original script!
         
         Karlin-Z的另一个未来(绝伊甸)脚本。
         天生有灵视基于0.0.0.10版本做了修改。
-        添加了P3二运的双分组法相关指路。
+        添加了P3二运的双分组法指路，P4二运的圣龙气息白圈指路。
         请记得按照原版脚本重新配置一下这个脚本的用户设置！
         """;
 
