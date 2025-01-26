@@ -21,7 +21,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.19",
+        version:"0.0.0.20",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -4169,7 +4169,7 @@ namespace MyScriptNamespace
         
         [ScriptMethod(name:"Phase4_Determine_Residues_Of_Drachen_Wanderers_确定圣龙气息白圈",
             eventType:EventTypeEnum.ObjectChanged,
-            eventCondition:["SourceId:regex:^(40007CF0|40007CF1|40007CF2|40007CF3)$"],
+            eventCondition:["DataId:2014529"],
             userControl:false)]
         
         public void Phase4_Determine_Residues_Of_Drachen_Wanderers_确定圣龙气息白圈(Event @event, ScriptAccessory accessory) {
@@ -4189,9 +4189,9 @@ namespace MyScriptNamespace
             var sourcePositionInJson=JObject.Parse(@event["SourcePosition"]);
             float currentX=sourcePositionInJson["X"]?.Value<float>()??0;
 
-            if((@event["SourceId"].Equals("40007CF0"))
+            if(residueIdFromEastToWest[0]==0
                ||
-               (@event["SourceId"].Equals("40007CF1"))) {
+               residueIdFromEastToWest[3]==0) {
 
                 if(currentX<100) {
 
@@ -4216,29 +4216,33 @@ namespace MyScriptNamespace
                 }
                 
             }
-            
-            if((@event["SourceId"].Equals("40007CF2"))
-               ||
-               (@event["SourceId"].Equals("40007CF3"))) {
-                
-                if(currentX<100) {
 
-                    lock(residueIdFromEastToWest) {
+            else {
 
-                        residueIdFromEastToWest[2]=sourceId;
-                        // The about right while facing south.
-                        
+                if(residueIdFromEastToWest[1]==0
+                   ||
+                   residueIdFromEastToWest[2]==0) { 
+                    
+                    if(currentX<100) {
+
+                        lock(residueIdFromEastToWest) {
+
+                            residueIdFromEastToWest[2]=sourceId;
+                            // The about right while facing south.
+
+                        }
+
                     }
 
-                }
+                    if(currentX>100) {
 
-                if(currentX>100) {
+                        lock(residueIdFromEastToWest) {
 
-                    lock (residueIdFromEastToWest) {
+                            residueIdFromEastToWest[1]=sourceId;
+                            // The about left while facing south.
 
-                        residueIdFromEastToWest[1]=sourceId;
-                        // The about left while facing south.
-                        
+                        }
+
                     }
 
                 }
@@ -4253,7 +4257,7 @@ namespace MyScriptNamespace
         
         }
 
-        [ScriptMethod(name: "Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路",
+        [ScriptMethod(name:"Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路",
             eventType:EventTypeEnum.ActionEffect,
             eventCondition:["ActionId:40251"])]
 
@@ -4287,8 +4291,8 @@ namespace MyScriptNamespace
 
             if(Enable_Developer_Mode_启用开发者模式) {
                 
-                accessory.Method.SendChat($"/e The object IDs acquired which are stored in residueIdFromEastToWest are: {residueIdFromEastToWest[0]}, {residueIdFromEastToWest[1]}, {residueIdFromEastToWest[2]}, {residueIdFromEastToWest[3]}.");
-                accessory.Method.SendChat($"/e The value of myIndex is: {myIndex}, the value of P4ClawBuff[{myIndex}] is: {P4ClawBuff[myIndex]}, the value of P4OtherBuff[{myIndex}] is: {P4OtherBuff[myIndex]}.");
+                accessory.Method.SendChat($"The object IDs acquired which are stored in residueIdFromEastToWest are: {residueIdFromEastToWest[0]}, {residueIdFromEastToWest[1]}, {residueIdFromEastToWest[2]}, {residueIdFromEastToWest[3]}.");
+                accessory.Method.SendChat($"The value of myIndex is: {myIndex}, the value of P4ClawBuff[{myIndex}] is: {P4ClawBuff[myIndex]}, the value of P4OtherBuff[{myIndex}] is: {P4OtherBuff[myIndex]}.");
                 
             }
 
@@ -4352,7 +4356,7 @@ namespace MyScriptNamespace
                 
                 if(Enable_Developer_Mode_启用开发者模式) {
                 
-                    accessory.Method.SendChat($"/e The value of targetPositionConfirmed is: {targetPositionConfirmed}, the value of residueId is: {residueId}. Regarding the current debuffs, the target residue according to UserSetting is: {residuePosition}.");
+                    accessory.Method.SendChat($"The value of targetPositionConfirmed is: {targetPositionConfirmed}, the value of residueId is: {residueId}. Regarding the current debuffs, the target residue according to UserSetting is: {residuePosition}.");
                 
                 }
 
@@ -4366,7 +4370,7 @@ namespace MyScriptNamespace
 
                         if(Enable_Developer_Mode_启用开发者模式) {
                             
-                            accessory.Method.SendChat($"/e The position retrieved from objects is: {residueObject.Position}.");
+                            accessory.Method.SendChat($"The position retrieved from objects is: {residueObject.Position}.");
                             
                         }
 
