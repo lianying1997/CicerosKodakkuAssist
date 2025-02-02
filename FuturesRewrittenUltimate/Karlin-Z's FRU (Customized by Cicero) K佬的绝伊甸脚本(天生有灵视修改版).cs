@@ -21,7 +21,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.21",
+        version:"0.0.0.22",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -4179,6 +4179,12 @@ namespace MyScriptNamespace
                 return;
 
             }
+            
+            if(@event["Operate"].Equals("Remove")) {
+
+                return;
+
+            }
 
             if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
             
@@ -4384,6 +4390,44 @@ namespace MyScriptNamespace
                 }
 
             }
+
+        }
+
+        [ScriptMethod(name: "Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮",
+            eventType:EventTypeEnum.ObjectChanged,
+            eventCondition:["DataId:2014529"])]
+
+        public void Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(@event["Operate"].Equals("Remove")) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            currentProperty.Name="Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮";
+            currentProperty.Scale=new(1f);
+            currentProperty.InnerScale=new(0.8f);
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
+            currentProperty.Radian=float.Pi*2;
+            currentProperty.Owner=sourceId;
+            currentProperty.DestoryAt=17000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Donut,currentProperty);
 
         }
 
