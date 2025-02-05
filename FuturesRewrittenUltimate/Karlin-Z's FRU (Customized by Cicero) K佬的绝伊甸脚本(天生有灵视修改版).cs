@@ -22,7 +22,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.24",
+        version:"0.0.0.25",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -64,8 +64,8 @@ namespace MyScriptNamespace
 
         [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
         public uint P4LampDisplayDur { get; set; } =3000;
-        [UserSetting("Phase4_Length_Of_Drachen_Wanderer_Hitboxes_圣龙气息碰撞箱长度")]
-        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes_圣龙气息碰撞箱长度 { get; set; } = 3;
+        [UserSetting("Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度")]
+        public float Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度 { get; set; } = 3;
         [UserSetting("Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈")]
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.EASTMOST_最东侧;
         [UserSetting("Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈")]
@@ -74,8 +74,8 @@ namespace MyScriptNamespace
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_WEST_次西侧;
         [UserSetting("Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈")]
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧;
-        [UserSetting("Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色")]
-        public ScriptColor Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色")]
+        public ScriptColor Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
@@ -4311,7 +4311,7 @@ namespace MyScriptNamespace
                 currentProperty.Scale=new(2);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.Color=Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色.V4.WithW(1f);
+                currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色.V4.WithW(1f);
                 currentProperty.DestoryAt=23000;
 
                 var residueObject=accessory.Data.Objects.SearchById(idOfMyResidue);
@@ -4690,8 +4690,8 @@ namespace MyScriptNamespace
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
             currentProperty.Name=$"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
-            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes_圣龙气息碰撞箱长度);
-            currentProperty.Color=Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色.V4.WithW(25f);
+            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度);
+            currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色.V4.WithW(25f);
             currentProperty.Offset=new(0f,0f,1f);
             currentProperty.Owner=sourceId;
             currentProperty.DestoryAt=34000;
