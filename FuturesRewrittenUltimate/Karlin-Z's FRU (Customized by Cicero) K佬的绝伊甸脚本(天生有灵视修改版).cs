@@ -22,7 +22,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.23",
+        version:"0.0.0.24",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -4454,6 +4454,12 @@ namespace MyScriptNamespace
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:3264"],
             userControl:false)]
+        
+        // The ObjectChanged event with the property "Operate" as "Remove" would only be triggered a full three seconds after the player takes a residue.
+        // If the draw removal relies on the event, it would be too late and may cause confusion.
+        // Here is an optimized method for players with the Wyrmfang debuff (the blue debuff), which is to monitor the StatusRemove events of the Wyrmfang debuff and acquire the closest residue.
+        // Obviously, the method will not be able to help if a player with the Wyrmclaw debuff (the red debuff) takes a residue. However that's already a wipe, so whatever.
+        // Thanks to Cyf5119 for providing a Dalamud way to detect if the entity is dead, so that the method would skip the StatusRemove events caused by death.
 
         public void Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_In_Advance_提前移除圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
             
