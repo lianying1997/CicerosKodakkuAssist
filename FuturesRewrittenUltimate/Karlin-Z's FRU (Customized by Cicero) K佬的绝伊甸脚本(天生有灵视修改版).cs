@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.ComponentModel;
 using System.Xml.Linq;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Utility.Numerics;
 using Newtonsoft.Json.Linq;
 
@@ -21,7 +22,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.22",
+        version:"0.0.0.23",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -31,12 +32,12 @@ namespace MyScriptNamespace
         """
         Karlin-Z's script of Futures Rewritten (Ultimate).
         Customized by Cicero, branched out from Version 0.0.0.10.
-        Add guidance of the MMW Double Group strat for the second half of Phase 3, guidance for residues of Drachen Wanderers in the second half of Phase 4.
+        Add guidance of the MMW Double Group strat for the second half of Phase 3, guidance of Drachen Wanderers related for the second half of Phase 4.
         Please re-configure the user settings of this customized script according to your settings in the original script!
         
         Karlin-Z的另一个未来(绝伊甸)脚本。
         天生有灵视基于0.0.0.10版本做了修改。
-        添加了P3二运的双分组法指路，P4二运的圣龙气息白圈指路。
+        添加了P3二运的双分组法指路，P4二运的圣龙气息相关指路。
         请记得按照原版脚本重新配置一下这个脚本的用户设置！
         """;
 
@@ -63,7 +64,8 @@ namespace MyScriptNamespace
 
         [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
         public uint P4LampDisplayDur { get; set; } =3000;
-
+        [UserSetting("Phase4_Length_Of_Drachen_Wanderer_Hitboxes_圣龙气息碰撞箱长度")]
+        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes_圣龙气息碰撞箱长度 { get; set; } = 3;
         [UserSetting("Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈")]
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.EASTMOST_最东侧;
         [UserSetting("Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈")]
@@ -72,8 +74,8 @@ namespace MyScriptNamespace
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_WEST_次西侧;
         [UserSetting("Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈")]
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧;
-        [UserSetting("Phase4_Colour_Of_Residue_Guidance_白圈指路颜色")]
-        public ScriptColor Phase4_Colour_Of_Residue_Guidance_白圈指路颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色")]
+        public ScriptColor Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
@@ -204,7 +206,8 @@ namespace MyScriptNamespace
             EASTMOST_最东侧,
             ABOUT_EAST_次东侧,
             ABOUT_WEST_次西侧,
-            WESTMOST_最西侧
+            WESTMOST_最西侧,
+            UNKNOWN_未知
 
         }
 
@@ -4265,7 +4268,7 @@ namespace MyScriptNamespace
 
         [ScriptMethod(name:"Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路",
             eventType:EventTypeEnum.ActionEffect,
-            eventCondition:["ActionId:40251"])]
+            eventCondition:["ActionId:regex:^(40252|40253)$"])]
 
         public void Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路(Event @event, ScriptAccessory accessory) {
 
@@ -4281,12 +4284,6 @@ namespace MyScriptNamespace
 
             }
 
-            else {
-
-                residueGuidanceHasBeenGenerated=true;
-
-            }
-
             if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
 
                 return;
@@ -4294,106 +4291,89 @@ namespace MyScriptNamespace
             }
 
             int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            Phase4_Positions_Of_Drachen_Wanderer_Residues positionOfMyResidue=getResiduePositionByIndex(myIndex);
+            uint idOfMyResidue=getResidueIdByPosition(positionOfMyResidue);
 
             if(Enable_Developer_Mode_启用开发者模式) {
                 
                 accessory.Method.SendChat($"The object IDs acquired which are stored in residueIdFromEastToWest are: {residueIdFromEastToWest[0]}, {residueIdFromEastToWest[1]}, {residueIdFromEastToWest[2]}, {residueIdFromEastToWest[3]}.");
-                accessory.Method.SendChat($"The value of myIndex is: {myIndex}, the value of P4ClawBuff[{myIndex}] is: {P4ClawBuff[myIndex]}, the value of P4OtherBuff[{myIndex}] is: {P4OtherBuff[myIndex]}.");
+                accessory.Method.SendChat($"The value of myIndex is: {myIndex}, the value of P4ClawBuff[{myIndex}] is: {P4ClawBuff[myIndex]}, the value of P4OtherBuff[{myIndex}] is: {P4OtherBuff[myIndex]}, the value of positionOfMyResidue is: {positionOfMyResidue}, the value of idOfMyResidue is: {idOfMyResidue}.");
                 
             }
 
-            if(P4ClawBuff[myIndex]==1||P4ClawBuff[myIndex]==2) {
-                // 1 stands for short Wyrmclaw (the red debuff), 2 stands for long Wyrmclaw.
+            if(positionOfMyResidue!=Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知
+               &&
+               idOfMyResidue!=0) { 
 
-                return;
-
-            }
-
-            if(P4ClawBuff[myIndex]==3) {
-                // 3 stands for Wyrmfang (the blue debuff).
-
-                bool targetPositionConfirmed=false;
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
-                uint residueId=0;
-                Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition=Phase4_Positions_Of_Drachen_Wanderer_Residues.EASTMOST_最东侧;
 
                 currentProperty.Name="Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路";
                 currentProperty.Scale=new(2);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.Color=Phase4_Colour_Of_Residue_Guidance_白圈指路颜色.V4.WithW(1f);
-                currentProperty.DestoryAt=15000;
+                currentProperty.Color=Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色.V4.WithW(1f);
+                currentProperty.DestoryAt=23000;
 
-                if(P4OtherBuff[myIndex]==4) {
-                    // 4 stands for Dark Eruption.
+                var residueObject=accessory.Data.Objects.SearchById(idOfMyResidue);
 
-                    residuePosition=Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈;
-                    residueId=getIdOfResidue(residuePosition);
-                    targetPositionConfirmed=((residueId!=0)?(true):(false));
-
-                }
-
-                if(P4OtherBuff[myIndex]==5) {
-                    // 5 stands for Unholy Darkness.
-
-                    residuePosition=Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈;
-                    residueId=getIdOfResidue(residuePosition);
-                    targetPositionConfirmed=((residueId!=0)?(true):(false));
+                if(residueObject!=null) {
+                        
+                    residueGuidanceHasBeenGenerated=true;
                     
-                }
+                    currentProperty.TargetPosition=residueObject.Position;
 
-                if(P4OtherBuff[myIndex]==1) {
-                    // 1 stands for Dark Blizzard III.
-
-                    residuePosition=Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈;
-                    residueId=getIdOfResidue(residuePosition);
-                    targetPositionConfirmed=((residueId!=0)?(true):(false));
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    accessory.Method.TextInfo(getResidueTextByPosition(positionOfMyResidue),2500);
+                    accessory.Method.TTS(getResidueTextByPosition(positionOfMyResidue));
                     
-                }
-
-                if(P4OtherBuff[myIndex]==3) {
-                    // 3 stands for Dark Water III.
-
-                    residuePosition=Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈;
-                    residueId=getIdOfResidue(residuePosition);
-                    targetPositionConfirmed=((residueId!=0)?(true):(false));
-
-                }
-                
-                if(Enable_Developer_Mode_启用开发者模式) {
-                
-                    accessory.Method.SendChat($"The value of targetPositionConfirmed is: {targetPositionConfirmed}, the value of residueId is: {residueId}. Regarding the current debuffs, the target residue according to UserSetting is: {residuePosition}.");
-                
-                }
-
-                if(targetPositionConfirmed) {
-
-                    var residueObject=accessory.Data.Objects.SearchById(residueId);
-
-                    if(residueObject!=null) {
-                        
-                        currentProperty.TargetPosition=residueObject.Position;
-
-                        if(Enable_Developer_Mode_启用开发者模式) {
+                    if(Enable_Developer_Mode_启用开发者模式) {
                             
-                            accessory.Method.SendChat($"The position retrieved from objects is: {residueObject.Position}.");
+                        accessory.Method.SendChat($"The position retrieved from objects is: {residueObject.Position}.");
                             
-                        }
-
-                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
-                        
-                        accessory.Method.TextInfo(getTtsTextOfResidue(residuePosition),2500);
-                        accessory.Method.TTS(getTtsTextOfResidue(residuePosition));
-                        
                     }
-
+                    
                 }
 
             }
 
         }
+        
+        [ScriptMethod(name:"Phase4_Remove_Guidance_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈指路",
+            eventType:EventTypeEnum.StatusRemove,
+            eventCondition:["StatusID:3264"],
+            userControl:false)]
 
-        [ScriptMethod(name: "Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮",
+        public void Phase4_Remove_Guidance_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈指路(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!residueGuidanceHasBeenGenerated) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+
+                return;
+
+            }
+
+            if(targetId!=accessory.Data.Me) {
+
+                return;
+
+            }
+            
+            accessory.Method.RemoveDraw("Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路");
+
+        }
+
+        [ScriptMethod(name:"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮",
             eventType:EventTypeEnum.ObjectChanged,
             eventCondition:["DataId:2014529"])]
 
@@ -4405,7 +4385,7 @@ namespace MyScriptNamespace
 
             }
 
-            if(@event["Operate"].Equals("Remove")) {
+            if(!@event["Operate"].Equals("Add")) {
 
                 return;
 
@@ -4419,7 +4399,7 @@ namespace MyScriptNamespace
 
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-            currentProperty.Name="Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮";
+            currentProperty.Name=$"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮_{sourceId}";
             currentProperty.Scale=new(1f);
             currentProperty.InnerScale=new(0.8f);
             currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
@@ -4431,7 +4411,169 @@ namespace MyScriptNamespace
 
         }
 
-        private uint getIdOfResidue(Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition) {
+        [ScriptMethod(name:"Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈高亮",
+            eventType:EventTypeEnum.ObjectChanged,
+            eventCondition:["DataId:2014529"],
+            userControl:false)]
+
+        public void Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+    
+            }
+
+            if(!@event["Operate"].Equals("Remove")) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
+            
+            accessory.Method.RemoveDraw($"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮_{sourceId}");
+
+            uint idOfMyResidue=getResidueIdByPosition(getResiduePositionByIndex(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
+
+            if(idOfMyResidue!=0
+               &&
+               idOfMyResidue==sourceId) {
+                
+                accessory.Method.RemoveDraw("Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路");
+                
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_In_Advance_提前移除圣龙气息白圈高亮",
+            eventType:EventTypeEnum.StatusRemove,
+            eventCondition:["StatusID:3264"],
+            userControl:false)]
+
+        public void Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_In_Advance_提前移除圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+
+                return;
+
+            }
+            
+            var targetObject=accessory.Data.Objects.SearchById(targetId);
+
+            if(targetObject==null) {
+
+                return;
+
+            }
+            
+            Vector3 targetPosition=targetObject.Position;
+
+            if((IBattleChara?)targetObject==null) {
+
+                return;
+
+            }
+
+            if(((IBattleChara?)targetObject).IsDead) {
+                // Ignore the situations that the debuff was removed due to a death.
+
+                return;
+
+            }
+
+            int closestResidue=-1;
+            float closestDistance=float.PositiveInfinity;
+
+            for(int i=0;i<4;++i) {
+
+                var residueObject=accessory.Data.Objects.SearchByEntityId(residueIdFromEastToWest[i]);
+
+                if(residueObject!=null) {
+
+                    if(Vector3.Distance(targetPosition,residueObject.Position)<closestDistance) {
+
+                        closestResidue=i;
+                        closestDistance=Vector3.Distance(targetPosition,residueObject.Position);
+
+                    }
+                    
+                }
+
+            }
+
+            if(0<=closestResidue&&closestResidue<4) {
+                
+                accessory.Method.RemoveDraw($"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮_{residueIdFromEastToWest[closestResidue]}");
+                
+            }
+
+        }
+        
+        private Phase4_Positions_Of_Drachen_Wanderer_Residues getResiduePositionByIndex(int currentIndex) {
+
+            if(currentIndex<0||currentIndex>7) {
+                
+                return Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知;
+                
+            }
+            
+            if(P4ClawBuff[currentIndex]==1||P4ClawBuff[currentIndex]==2) {
+                // 1 stands for short Wyrmclaw (the red debuff), 2 stands for long Wyrmclaw (also the red debuff).
+
+                return Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知;
+
+            }
+
+            if(P4ClawBuff[currentIndex]==3) {
+                // 3 stands for Wyrmfang (the blue debuff).
+
+                if(P4OtherBuff[currentIndex]==4) {
+                    // 4 stands for Dark Eruption.
+
+                    return Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈;
+
+                }
+
+                if(P4OtherBuff[currentIndex]==5) {
+                    // 5 stands for Unholy Darkness.
+
+                    return Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈;
+
+                }
+
+                if(P4OtherBuff[currentIndex]==1) {
+                    // 1 stands for Dark Blizzard III.
+
+                    return Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈;
+
+                }
+
+                if(P4OtherBuff[currentIndex]==3) {
+                    // 3 stands for Dark Water III.
+
+                    return Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈;
+
+                }
+
+            }
+
+            return Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知;
+            // Just a placeholder and should never be reached.
+
+        }
+
+        private uint getResidueIdByPosition(Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition) {
             
             switch(residuePosition) {
 
@@ -4453,9 +4595,15 @@ namespace MyScriptNamespace
 
                 }
 
-                case (Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧): {
+                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧): {
 
                     return residueIdFromEastToWest[3];
+
+                }
+
+                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知): {
+
+                    return 0;
 
                 }
 
@@ -4470,7 +4618,7 @@ namespace MyScriptNamespace
             
         }
 
-        private String getTtsTextOfResidue(Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition) {
+        private String getResidueTextByPosition(Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition) {
 
             switch (residuePosition) {
 
@@ -4492,21 +4640,112 @@ namespace MyScriptNamespace
 
                 }
 
-                case (Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧): {
+                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧): {
 
                     return "Rightmost/Westmost 最右/最西";
 
                 }
 
+                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知): {
+                    
+                    return "Unknown residue 白圈未知";
+                    
+                }
+
                 default: {
 
-                    return "Take the residue 吃白圈";
+                    return "Unknown residue 白圈未知";
                     // Just a placeholder and should never be reached.
 
                 }
                 
             }
             
+        }
+        
+        [ScriptMethod(name:"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:17836"])]
+
+        public void Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            currentProperty.Name=$"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
+            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes_圣龙气息碰撞箱长度);
+            currentProperty.Color=Phase4_Colour_Of_Drachen_Wanderers_And_Their_Residues_圣龙气息及白圈的颜色.V4.WithW(25f);
+            currentProperty.Offset=new(0f,0f,1f);
+            currentProperty.Owner=sourceId;
+            currentProperty.DestoryAt=34000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
+
+        }
+        
+        [ScriptMethod(name:"Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:17836"])]
+
+        public void Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+            currentProperty.Name=$"Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}";
+            currentProperty.Scale=new(12);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=accessory.Data.DefaultDangerColor;
+            currentProperty.DestoryAt=34000;
+                
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+
+        }
+        
+        [ScriptMethod(name:"Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_移除圣龙气息碰撞箱与爆炸范围",
+            eventType:EventTypeEnum.RemoveCombatant,
+            eventCondition:["DataId:17836"],
+            userControl:false)]
+
+        public void Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_移除圣龙气息碰撞箱与爆炸范围(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            accessory.Method.RemoveDraw($"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}");
+            accessory.Method.RemoveDraw($"Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}");
+
         }
 
         [ScriptMethod(name: "P4_时间结晶_灯AOE", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0085"])]
@@ -4731,7 +4970,8 @@ namespace MyScriptNamespace
                 dp.Position = dealpos3;
                 dp.TargetPosition = dealpos4;
                 dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 13000;
+                dp.DestoryAt = 16000;
+                // The value has been adjusted by Cicero. It was 13000 before.
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_撞头";
@@ -4740,7 +4980,8 @@ namespace MyScriptNamespace
                 dp.Owner = accessory.Data.Me;
                 dp.TargetPosition = dealpos2;
                 dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 13000;
+                dp.Delay = 16000;
+                // The value has been adjusted by Cicero. It was 13000 before.
                 dp.DestoryAt = 2000;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
             }
