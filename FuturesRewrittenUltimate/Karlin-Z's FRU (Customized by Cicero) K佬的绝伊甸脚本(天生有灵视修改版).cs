@@ -14,6 +14,7 @@ using System.ComponentModel;
 using System.Xml.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Utility.Numerics;
+using ECommons.MathHelpers;
 using Newtonsoft.Json.Linq;
 
 namespace MyScriptNamespace
@@ -22,7 +23,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.25",
+        version:"0.0.0.26",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -74,11 +75,13 @@ namespace MyScriptNamespace
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_WEST_次西侧;
         [UserSetting("Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈")]
         public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧;
-        [UserSetting("Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色")]
-        public ScriptColor Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色")]
+        public ScriptColor Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
+        [UserSetting("Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略")]
+        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略 { get; set; }
         
         [UserSetting("Enable Developer Mode 启用开发者模式")]
         public bool Enable_Developer_Mode_启用开发者模式 { get; set; } = false;
@@ -140,8 +143,9 @@ namespace MyScriptNamespace
         // The leftmost (0), the about left (1), the about right (2), the rightmost (3) while facing south.
         bool residueGuidanceHasBeenGenerated=false;
 
-        bool P5MtDone = false;
-        string P5Tower = "";
+        volatile bool hasAcquiredTheFirstTower=false;
+        string indexOfTheFirstTower="";
+        bool hasDrawnTheInitialPositionOfMT=false;
 
         public enum P1TetherEnum
         {
@@ -210,6 +214,13 @@ namespace MyScriptNamespace
             UNKNOWN_未知
 
         }
+        
+        public enum Phase5_Strats_Of_Wings_Dark_And_Light {
+            
+            GREY9_灰九式,
+            Other_Strats_Work_In_Progress_其他策略正在施工中
+            
+        }
 
         public void Init(ScriptAccessory accessory)
         {
@@ -242,6 +253,10 @@ namespace MyScriptNamespace
 
             residueIdFromEastToWest=[0,0,0,0];
             residueGuidanceHasBeenGenerated=false;
+
+            hasAcquiredTheFirstTower=false;
+            indexOfTheFirstTower="";
+            hasDrawnTheInitialPositionOfMT=false;
         }
 
         #region P1
@@ -4311,7 +4326,7 @@ namespace MyScriptNamespace
                 currentProperty.Scale=new(2);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色.V4.WithW(1f);
+                currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色.V4.WithW(1f);
                 currentProperty.DestoryAt=23000;
 
                 var residueObject=accessory.Data.Objects.SearchById(idOfMyResidue);
@@ -4691,7 +4706,7 @@ namespace MyScriptNamespace
 
             currentProperty.Name=$"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
             currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度);
-            currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Residues_碰撞箱及白圈的颜色.V4.WithW(25f);
+            currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色.V4.WithW(25f);
             currentProperty.Offset=new(0f,0f,1f);
             currentProperty.Owner=sourceId;
             currentProperty.DestoryAt=34000;
@@ -5234,133 +5249,274 @@ namespace MyScriptNamespace
             dp.DestoryAt = 4000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
-        [ScriptMethod(name: "P5_光与暗之翼_重置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40319"])]
-        public void P5_光与暗之翼_重置(Event @event, ScriptAccessory accessory)
-        {
-            P5MtDone = false;
+        
+        [ScriptMethod(name:"Phase5_Reset_Data_Of_Wings_Dark_And_Light_重置光与暗之翼的数据",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40319"],
+            userControl:false)]
+        
+        public void Phase5_Reset_Data_Of_Wings_Dark_And_Light_重置光与暗之翼的数据(Event @event, ScriptAccessory accessory) {
+            
+            hasAcquiredTheFirstTower=false;
+            indexOfTheFirstTower="";
+            hasDrawnTheInitialPositionOfMT=false;
+            
         }
-        [ScriptMethod(name: "P5_光与暗之翼_塔收集", eventType: EventTypeEnum.EnvControl, eventCondition: ["DirectorId:800375BF", "State:00010004", "Index:regex:^(0000003[012])"])]
-        public void P5_光与暗之翼_塔收集(Event @event, ScriptAccessory accessory)
-        {
-            P5Tower = @event["Index"];
-        }
-        [ScriptMethod(name: "P5_光与暗之翼_MT引导位置", eventType: EventTypeEnum.EnvControl, eventCondition: ["DirectorId:800375BF", "State:00010004", "Index:regex:^(0000003[012])"])]
-        public void P5_光与暗之翼_MT引导位置(Event @event, ScriptAccessory accessory)
-        {
-            //40313 先左后右 先远后近
-            //40233 先右后左 先近后远
-            if (P5MtDone) return;
-            P5MtDone = true;
-            if (accessory.Data.PartyList.IndexOf(accessory.Data.Me) != 0) return;
-            var light = @event["ActionId"] == "40313";
-            Vector3 towerPos = P5Tower switch
-            {
-                "00000032" => new(100, 0, 107),
-                "00000031" => new(106.06f, 0, 96.50f),
-                "00000030" => new(93.94f, 0, 96.50f)
-            };
+        
+        [ScriptMethod(name:"Phase5_Acquire_The_First_Tower_Of_Wings_Dark_And_Light_获取光与暗之翼的第一座塔",
+            eventType:EventTypeEnum.EnvControl,
+            eventCondition:["DirectorId:800375BF","State:00010004","Index:regex:^(0000003[012])"],
+            userControl:false)]
+        
+        public void Phase5_Acquire_The_First_Tower_Of_Wings_Dark_And_Light_获取光与暗之翼的第一座塔(Event @event, ScriptAccessory accessory) {
 
-            Vector3 mtPos1 = RotatePoint(towerPos, new(100, 0, 100), float.Pi);
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P5_光与暗之翼_MT引导位置1";
-            dp.Scale = new(2);
-            dp.Owner = accessory.Data.Me;
-            dp.TargetPosition = mtPos1;
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.DestoryAt = 2300;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-        }
-        [ScriptMethod(name: "P5_光与暗之翼_T引导位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40313|40233)$"])]
-        public void P5_光与暗之翼_T引导位置(Event @event, ScriptAccessory accessory)
-        {
-            //40313 先左后右 先远后近
-            //40233 先右后左 先近后远
-
-            var light = @event["ActionId"] == "40313";
-            Vector3 towerPos = P5Tower switch
-            {
-                "00000032" => new(100, 0, 107),
-                "00000031" => new(106.06f, 0, 96.50f),
-                "00000030" => new(93.94f, 0, 96.50f)
-            };
-            var mtRot = 187.5f / 180 * MathF.PI;
-
-            Vector3 mtPos1 = RotatePoint(towerPos, new(100, 0, 100), light ? mtRot : -mtRot);
-            Vector3 mtPos2 = light ? new((mtPos1.X - 100) / 7 + 100, 0, (mtPos1.Z - 100) / 7 + 100) : new((mtPos1.X - 100) / 7 * 15 + 100, 0, (mtPos1.Z - 100) / 7 * 15 + 100);
-            var stRot = 105f / 180 * MathF.PI;
-            Vector3 stPos2 = RotatePoint(mtPos1, new(100, 0, 100), light ? stRot : -stRot);
-            Vector3 stPos1= light ? new((stPos2.X - 100) / 7*15 + 100, 0, (stPos2.Z - 100) / 7*15 + 100) : new((stPos2.X - 100) / 7  + 100, 0, (stPos2.Z - 100) / 7 + 100);
-            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            if (myindex==0)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P5_光与暗之翼_MT引导位置1";
-                dp.Scale = new(2);
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = mtPos1;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 6900;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P5_光与暗之翼_MT引导位置2";
-                dp.Scale = new(2);
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = mtPos2;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 6900;
-                dp.DestoryAt = 4500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P5_光与暗之翼_MT引导位置2预览";
-                dp.Scale = new(2);
-                dp.Position = mtPos1;
-                dp.TargetPosition = mtPos2;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.TargetColor= accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 6900;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            if(!hasAcquiredTheFirstTower) {
+                
+                indexOfTheFirstTower=@event["Index"];
+                
+                hasAcquiredTheFirstTower=true;
+                
             }
-            if (myindex==1)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P5_光与暗之翼_ST引导位置1";
-                dp.Scale = new(2);
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = stPos1;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 7900;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            
+        }
+        
+        [ScriptMethod(name:"Phase5_Initial_Position_Of_MT_During_Wings_Dark_And_Light_光与暗之翼MT初始位置",
+            eventType:EventTypeEnum.EnvControl,
+            eventCondition:["DirectorId:800375BF","State:00010004","Index:regex:^(0000003[012])"])]
+        
+        public void Phase5_Initial_Position_Of_MT_During_Wings_Dark_And_Light_光与暗之翼MT初始位置(Event @event, ScriptAccessory accessory) {
 
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P5_光与暗之翼_ST引导位置2预览";
-                dp.Scale = new(2);
-                dp.Position = stPos1;
-                dp.TargetPosition = stPos2;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.TargetColor = accessory.Data.DefaultSafeColor;
-                dp.Delay = 3000;
-                dp.DestoryAt = 4900;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0) {
 
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P5_光与暗之翼_ST引导位置2";
-                dp.Scale = new(2);
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = stPos2;
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 7900;
-                dp.DestoryAt = 3000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                return;
+
             }
+            
+            if(hasDrawnTheInitialPositionOfMT) {
+
+                return;
+                
+            }
+
+            while(!hasAcquiredTheFirstTower);
+
+            Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
+
+            if(indexOfTheFirstTower.Equals("00000030")) {
+                
+                hasDrawnTheInitialPositionOfMT=true;
+
+                positionOfTheFirstTower=new Vector3(93.94f,0,96.50f);
+
+            }
+            
+            if(indexOfTheFirstTower.Equals("00000031")) {
+                
+                hasDrawnTheInitialPositionOfMT=true;
+                
+                positionOfTheFirstTower=new Vector3(106.06f,0,96.50f);
+                
+            }
+            
+            if(indexOfTheFirstTower.Equals("00000032")) {
+                
+                hasDrawnTheInitialPositionOfMT=true;
+                
+                positionOfTheFirstTower=new Vector3(100,0,107);
+                
+            }
+
+            if(!hasDrawnTheInitialPositionOfMT) {
+                
+                hasDrawnTheInitialPositionOfMT=true;
+
+                return;
+
+            }
+
+            if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
+
+                Vector3 initialPositionOfMt=RotatePoint(positionOfTheFirstTower,new Vector3(100, 0, 100),float.Pi);
+
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                currentProperty.Name="Phase5_Initial_Position_Of_MT_During_Wings_Dark_And_Light_光与暗之翼MT初始位置";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=initialPositionOfMt;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=2300;
+
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase5_Guidance_For_Tanks_During_Wings_Dark_And_Light_光与暗之翼坦克指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40313|40233)$"])]
+        
+        public void Phase5_Guidance_For_Tanks_During_Wings_Dark_And_Light_光与暗之翼坦克指路(Event @event, ScriptAccessory accessory) {
+            
+            if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0
+               &&
+               accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=1) {
+
+                return;
+
+            }
+            
+            if(!hasAcquiredTheFirstTower) {
+
+                return;
+                
+            }
+
+            bool isLeftFirstAndFarFirst=true;
+
+            if(@event["ActionId"].Equals("40313")) {
+                // 40313 stands for left first then right, far first then near.
+
+                isLeftFirstAndFarFirst=true;
+
+            }
+
+            if(@event["ActionId"].Equals("40233")) {
+                // 40233 stands for right first then left, near first then far.
+
+                isLeftFirstAndFarFirst=false;
+
+            }
+
+            Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
+            bool hasConfirmedThePositionOfTheFirstTower=false;
+
+            if(indexOfTheFirstTower.Equals("00000030")) {
+
+                positionOfTheFirstTower=new Vector3(93.94f,0,96.50f);
+                
+                hasConfirmedThePositionOfTheFirstTower=true;
+
+            }
+            
+            if(indexOfTheFirstTower.Equals("00000031")) {
+                
+                positionOfTheFirstTower=new Vector3(106.06f,0,96.50f);
+                
+                hasConfirmedThePositionOfTheFirstTower=true;
+                
+            }
+            
+            if(indexOfTheFirstTower.Equals("00000032")) {
+                
+                positionOfTheFirstTower=new Vector3(100,0,107);
+                
+                hasConfirmedThePositionOfTheFirstTower=true;
+                
+            }
+
+            if(!hasConfirmedThePositionOfTheFirstTower) {
+
+                return;
+
+            }
+
+            if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
+
+                Vector3 mtPosition1=RotatePoint(positionOfTheFirstTower,new Vector3(100, 0, 100),float.Pi);
+                // Just opposite the first tower.
+                Vector3 mtPosition2=isLeftFirstAndFarFirst?
+                    new((mtPosition1.X-100)/7+100,0,(mtPosition1.Z-100)/7+100):
+                    new((mtPosition1.X-100)/7*18+100,0,(mtPosition1.Z-100)/7*18+100);
+                // The calculations of Position 2 were directly inherited from Karlin-Z's original script.
+                // I don't know the mathematical ideas behind the algorithm, but it works and it definitely works great.
+                // So as a result, except the multiplier was adjusted from 15 to 18. I just keep the part as is.
+                
+                Vector3 otPosition2=RotatePoint(mtPosition1,new(100,0,100),isLeftFirstAndFarFirst?
+                    120f.DegToRad():
+                    // Rotate right, since the boss will hit left.
+                    -120f.DegToRad());
+                    // Rotate left.
+                // Rotate 120 degrees left or right.
+                Vector3 otPosition1=isLeftFirstAndFarFirst?
+                    new((otPosition2.X-100)/7*18+100,0,(otPosition2.Z-100)/7*18+100):
+                    new((otPosition2.X-100)/7+100,0,(otPosition2.Z-100)/7+100);
+                
+                if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0) {
+
+                    var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="Phase5_MT_Position_1_During_Wings_Dark_And_Light_光与暗之翼MT位置1";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=mtPosition1;
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt=6900;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="Phase5_MT_Position_2_Preview_During_Wings_Dark_And_Light_光与暗之翼MT位置2预览";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Position=mtPosition1;
+                    currentProperty.TargetPosition=mtPosition2;
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt=6900;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="Phase5_MT_Position_2_During_Wings_Dark_And_Light_光与暗之翼MT位置2";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=mtPosition2;
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay=6900;
+                    currentProperty.DestoryAt=4500;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                }
+
+                if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+
+                    var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="P5_光与暗之翼_ST引导位置1";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=otPosition1;
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt=7900;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="P5_光与暗之翼_ST引导位置2预览";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Position=otPosition1;
+                    currentProperty.TargetPosition=otPosition2;
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay=3000;
+                    currentProperty.DestoryAt=4900;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="P5_光与暗之翼_ST引导位置2";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=otPosition2;
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay=7900;
+                    currentProperty.DestoryAt=3000;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                }
+                
+            }
+
         }
 
         #endregion
