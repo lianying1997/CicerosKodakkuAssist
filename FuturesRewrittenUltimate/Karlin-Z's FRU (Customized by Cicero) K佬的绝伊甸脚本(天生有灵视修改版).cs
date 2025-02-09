@@ -23,7 +23,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.26",
+        version:"0.0.0.27",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -31,14 +31,16 @@ namespace MyScriptNamespace
     {
         const string noteStr =
         """
-        Karlin-Z's script of Futures Rewritten (Ultimate).
-        Customized by Cicero, branched out from Version 0.0.0.10.
-        Add guidance of the MMW Double Group strat for the second half of Phase 3, guidance of Drachen Wanderers related for the second half of Phase 4.
+        Karlin-Z's script of Futures Rewritten (Ultimate). Customized by Cicero, branched out from Version 0.0.0.10.
+        Add guidance for the second half of Phase 3,
+        guidance related to Drachen Wanderers and refinements for the second half of Phase 4,
+        guidance for Wings Dark And Light in Phase 5.
         Please re-configure the user settings of this customized script according to your settings in the original script!
         
-        Karlin-Z的另一个未来(绝伊甸)脚本。
-        天生有灵视基于0.0.0.10版本做了修改。
-        添加了P3二运的双分组法指路，P4二运的圣龙气息相关指路。
+        Karlin-Z的另一个未来(绝伊甸)脚本。天生有灵视基于0.0.0.10版本做了修改。
+        添加了P3二运指路，
+        P4二运指路的精修和圣龙气息相关指路，
+        P5光与暗之翼指路。
         请记得按照原版脚本重新配置一下这个脚本的用户设置！
         """;
 
@@ -146,6 +148,16 @@ namespace MyScriptNamespace
         volatile bool hasAcquiredTheFirstTower=false;
         string indexOfTheFirstTower="";
         bool hasDrawnTheInitialPositionOfMT=false;
+        Vector3 leftSideOfSouth=new Vector3(98,0,107);
+        Vector3 rightSideOfSouth=new Vector3(102,0,107);
+        Vector3 leftSideOfNortheast=new Vector3(107.06f,0,98.23f);
+        Vector3 rightSideOfNortheast=new Vector3(105.06f,0,94.77f);
+        Vector3 leftSideOfNorthwest=new Vector3(94.94f,0,94.77f);
+        Vector3 rightSideOfNorthwest=new Vector3(92.94f,0,98.23f);
+        // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
+        Vector3 standbyPositionBetweenNortheastAndNorthwest=new Vector3(100,0,93);
+        Vector3 standbyPositionBetweenNorthwestAndSouth=new Vector3(93.94f,0,103.50f);
+        Vector3 standbyPositionBetweenNortheastAndSouth=new Vector3(106.06f,0,103.50f);
 
         public enum P1TetherEnum
         {
@@ -5022,28 +5034,6 @@ namespace MyScriptNamespace
                     dp.Color = accessory.Data.DefaultSafeColor;
                     dp.DestoryAt = 7500;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-
-                    dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = "P4_时间结晶_Buff处理位置_躲灯->分摊";
-                    dp.Scale = new(2);
-                    dp.ScaleMode |= ScaleMode.YByDistance;
-                    dp.Position = dealpos1;
-                    dp.TargetPosition = dealpos2;
-                    dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.DestoryAt = 7500;
-                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                    dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = "P4_时间结晶_Buff处理位置_躲灯2";
-                    dp.Scale = new(2);
-                    dp.ScaleMode |= ScaleMode.YByDistance;
-                    dp.Owner = accessory.Data.Me;
-                    dp.TargetPosition = dealpos2;
-                    dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.Delay = 7500;
-                    dp.DestoryAt = 5000;
-                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
                 else
                 {
@@ -5218,7 +5208,7 @@ namespace MyScriptNamespace
 
             dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P5_光与暗之翼_远离靠近";
-            dp.Scale = new(4);
+            dp.Scale = new(5);
             dp.Owner = sid;
             dp.CentreResolvePattern = @event["ActionId"] == "40313"? PositionResolvePatternEnum.PlayerFarestOrder: PositionResolvePatternEnum.PlayerNearestOrder;
             dp.Rotation = @event["ActionId"] == "40313" ? rot : -rot;
@@ -5240,7 +5230,7 @@ namespace MyScriptNamespace
 
             dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P5_光与暗之翼_远离靠近";
-            dp.Scale = new(4);
+            dp.Scale = new(5);
             dp.Owner = sid;
             dp.CentreResolvePattern = @event["ActionId"] == "40313" ? PositionResolvePatternEnum.PlayerNearestOrder : PositionResolvePatternEnum.PlayerFarestOrder;
             dp.Rotation = @event["ActionId"] == "40313" ? rot : -rot;
@@ -5425,7 +5415,7 @@ namespace MyScriptNamespace
 
             if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
 
-                Vector3 mtPosition1=RotatePoint(positionOfTheFirstTower,new Vector3(100, 0, 100),float.Pi);
+                Vector3 mtPosition1=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
                 // Just opposite the first tower.
                 Vector3 mtPosition2=isLeftFirstAndFarFirst?
                     new((mtPosition1.X-100)/7+100,0,(mtPosition1.Z-100)/7+100):
@@ -5482,7 +5472,7 @@ namespace MyScriptNamespace
                 if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
 
                     var currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="P5_光与暗之翼_ST引导位置1";
+                    currentProperty.Name="Phase5_OT_Position_1_During_Wings_Dark_And_Light_光与暗之翼ST位置1";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
                     currentProperty.TargetPosition=otPosition1;
@@ -5492,28 +5482,475 @@ namespace MyScriptNamespace
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="P5_光与暗之翼_ST引导位置2预览";
+                    currentProperty.Name="Phase5_OT_Position_2_Preview_During_Wings_Dark_And_Light_光与暗之翼ST位置2预览";
                     currentProperty.Scale=new(2);
                     currentProperty.Position=otPosition1;
                     currentProperty.TargetPosition=otPosition2;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
-                    currentProperty.Delay=3000;
-                    currentProperty.DestoryAt=4900;
+                    currentProperty.DestoryAt=7900;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="P5_光与暗之翼_ST引导位置2";
+                    currentProperty.Name="Phase5_OT_Position_2_During_Wings_Dark_And_Light_光与暗之翼ST位置2";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
                     currentProperty.TargetPosition=otPosition2;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.Delay=7900;
-                    currentProperty.DestoryAt=3000;
+                    currentProperty.DestoryAt=3500;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                 }
+                
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase5_Guidance_For_Others_During_Wings_Dark_And_Light_光与暗之翼人群指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40313|40233)$"])]
+        
+        public void Phase5_Guidance_For_Others_During_Wings_Dark_And_Light_光与暗之翼人群指路(Event @event, ScriptAccessory accessory) {
+            
+            if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0
+               ||
+               accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+
+                return;
+
+            }
+            
+            if(!hasAcquiredTheFirstTower) {
+
+                return;
+                
+            }
+
+            bool isLeftFirstAndFarFirst=true;
+
+            if(@event["ActionId"].Equals("40313")) {
+
+                isLeftFirstAndFarFirst=true;
+
+            }
+
+            if(@event["ActionId"].Equals("40233")) {
+
+                isLeftFirstAndFarFirst=false;
+
+            }
+            
+            if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
+                
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                if(indexOfTheFirstTower.Equals("00000030")) {
+                    // The first tower is in the northwest.
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+                        // The melee group, that is M1 & M2 or D1 & D2.
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?rightSideOfNorthwest:leftSideOfNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?rightSideOfNorthwest:leftSideOfNorthwest;
+                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+                        // The range group, that is R1 & R2 or D3 & D4.
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.TargetPosition=rightSideOfSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightSideOfSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+                        // The healer group, that is H1 & H2.
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.TargetPosition=leftSideOfNortheast;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftSideOfNortheast;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+
+                }
+            
+                if(indexOfTheFirstTower.Equals("00000031")) {
+                    // The first tower is in the northeast.
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?rightSideOfNortheast:leftSideOfNortheast;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?rightSideOfNortheast:leftSideOfNortheast;
+                        currentProperty.TargetPosition=standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.TargetPosition=rightSideOfNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightSideOfNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.TargetPosition=leftSideOfSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftSideOfSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                
+                }
+            
+                if(indexOfTheFirstTower.Equals("00000032")) {
+                    // The first tower is in the south.
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?rightSideOfSouth:leftSideOfSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?rightSideOfSouth:leftSideOfSouth;
+                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.TargetPosition=rightSideOfNortheast;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightSideOfNortheast;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.TargetPosition=leftSideOfNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftSideOfNorthwest;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                
+                }
+
                 
             }
 
