@@ -23,7 +23,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.27",
+        version:"0.0.0.28",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -2969,7 +2969,7 @@ namespace MyScriptNamespace
                                         var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
                                         
                                         temporaryProperty.Name="Phase3_Dark_Water_III_Range_黑暗狂水范围";
-                                        temporaryProperty.Scale=new(5);
+                                        temporaryProperty.Scale=new(6);
                                         temporaryProperty.Owner=accessory.Data.PartyList[i];
                                         temporaryProperty.DestoryAt=5000;
 
@@ -3033,7 +3033,7 @@ namespace MyScriptNamespace
                                         var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
                                         
                                         temporaryProperty.Name="Phase3_Dark_Water_III_Range_黑暗狂水范围";
-                                        temporaryProperty.Scale=new(5);
+                                        temporaryProperty.Scale=new(6);
                                         temporaryProperty.Owner=accessory.Data.PartyList[i];
                                         temporaryProperty.DestoryAt=5000;
 
@@ -3502,7 +3502,7 @@ namespace MyScriptNamespace
             }
 
             currentProperty.Name="Phase3_Darkest_Dance_Range_暗夜舞蹈范围";
-            currentProperty.Scale=new(7);
+            currentProperty.Scale=new(8);
             currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
             currentProperty.Delay=2700;
             currentProperty.DestoryAt=3500;
@@ -5024,7 +5024,6 @@ namespace MyScriptNamespace
                 if (P4OtherBuff[myIndex] == 4)
                 {
                     Vector3 dealpos1 = P4BlueTether == 1 ? new(112, 0, 85) : new(88, 0, 85);
-                    Vector3 dealpos2 = P4BlueTether == 1 ? new(108.7f, 0, 85) : new(091.3f, 0, 85);
                     var dp = accessory.Data.GetDefaultDrawProperties();
                     dp.Name = "P4_时间结晶_Buff处理位置_躲灯1";
                     dp.Scale = new(2);
@@ -5032,7 +5031,7 @@ namespace MyScriptNamespace
                     dp.Owner = accessory.Data.Me;
                     dp.TargetPosition = dealpos1;
                     dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.DestoryAt = 7500;
+                    dp.DestoryAt = 14500;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
                 else
@@ -5208,7 +5207,7 @@ namespace MyScriptNamespace
 
             dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P5_光与暗之翼_远离靠近";
-            dp.Scale = new(5);
+            dp.Scale = new(4);
             dp.Owner = sid;
             dp.CentreResolvePattern = @event["ActionId"] == "40313"? PositionResolvePatternEnum.PlayerFarestOrder: PositionResolvePatternEnum.PlayerNearestOrder;
             dp.Rotation = @event["ActionId"] == "40313" ? rot : -rot;
@@ -5230,7 +5229,7 @@ namespace MyScriptNamespace
 
             dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P5_光与暗之翼_远离靠近";
-            dp.Scale = new(5);
+            dp.Scale = new(4);
             dp.Owner = sid;
             dp.CentreResolvePattern = @event["ActionId"] == "40313" ? PositionResolvePatternEnum.PlayerNearestOrder : PositionResolvePatternEnum.PlayerFarestOrder;
             dp.Rotation = @event["ActionId"] == "40313" ? rot : -rot;
@@ -5429,7 +5428,6 @@ namespace MyScriptNamespace
                     // Rotate right, since the boss will hit left.
                     -120f.DegToRad());
                     // Rotate left.
-                // Rotate 120 degrees left or right.
                 Vector3 otPosition1=isLeftFirstAndFarFirst?
                     new((otPosition2.X-100)/7*18+100,0,(otPosition2.Z-100)/7*18+100):
                     new((otPosition2.X-100)/7+100,0,(otPosition2.Z-100)/7+100);
