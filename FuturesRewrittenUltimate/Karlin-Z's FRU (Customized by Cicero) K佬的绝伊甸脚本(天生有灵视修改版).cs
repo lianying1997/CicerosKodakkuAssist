@@ -23,7 +23,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.28",
+        version:"0.0.0.29",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -2904,11 +2904,11 @@ namespace MyScriptNamespace
             
         }
 
-        [ScriptMethod(name:"Phase3_Dark_Water_III_Range_And_Guidance_黑暗狂水范围与指路",
+        [ScriptMethod(name:"Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路",
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:2458"])]
         
-        public void Phase3_Dark_Water_III_Range_And_Guidance_黑暗狂水范围与指路(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路(Event @event,ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -2919,7 +2919,7 @@ namespace MyScriptNamespace
             bool targetPositionConfirmed=false;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
-            currentProperty.Name="Phase3_Dark_Water_III_Guidance_黑暗狂水指路";
+            currentProperty.Name="Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路";
             currentProperty.Scale=new(2);
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Owner=accessory.Data.Me;
@@ -2968,7 +2968,7 @@ namespace MyScriptNamespace
                                         
                                         var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
                                         
-                                        temporaryProperty.Name="Phase3_Dark_Water_III_Range_黑暗狂水范围";
+                                        temporaryProperty.Name="Phase3_Range_Guidance_Of_Dark_Water_III_黑暗狂水范围指路";
                                         temporaryProperty.Scale=new(6);
                                         temporaryProperty.Owner=accessory.Data.PartyList[i];
                                         temporaryProperty.DestoryAt=5000;
@@ -3032,7 +3032,7 @@ namespace MyScriptNamespace
                                         
                                         var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
                                         
-                                        temporaryProperty.Name="Phase3_Dark_Water_III_Range_黑暗狂水范围";
+                                        temporaryProperty.Name="Phase3_Range_Guidance_Of_Dark_Water_III_黑暗狂水范围指路";
                                         temporaryProperty.Scale=new(6);
                                         temporaryProperty.Owner=accessory.Data.PartyList[i];
                                         temporaryProperty.DestoryAt=5000;
@@ -3135,11 +3135,45 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase3_Spirit_Taker_Range_And_Guidance_碎灵一击范围与指路",
+        [ScriptMethod(name:"Phase3_Range_Of_Spirit_Taker_碎灵一击范围",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40288"])]
         
-        public void Phase3_Spirit_Taker_Range_And_Guidance_碎灵一击范围与指路(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Range_Of_Spirit_Taker_碎灵一击范围(Event @event,ScriptAccessory accessory) {
+
+            if(parse!=3.2) {
+
+                return;
+
+            }
+            
+            for(int i=0;i<8;++i) {
+                
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase3_Range_Of_Spirit_Taker_碎灵一击范围";
+                currentProperty.Scale=new(5);
+                currentProperty.Owner=accessory.Data.PartyList[i];
+                currentProperty.Color=accessory.Data.DefaultDangerColor;
+                currentProperty.Delay=1000;
+                currentProperty.DestoryAt=2750;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                
+            }
+            
+            System.Threading.Thread.Sleep(1000);
+            
+            accessory.Method.TextInfo("Spread 分散",2000);
+            accessory.Method.TTS("Spread 分散");
+
+        }
+        
+        [ScriptMethod(name:"Phase3_Guidance_Of_Spirit_Taker_碎灵一击指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40288"])]
+        
+        public void Phase3_Guidance_Of_Spirit_Taker_碎灵一击指路(Event @event,ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -3147,34 +3181,16 @@ namespace MyScriptNamespace
 
             }
 
-            System.Threading.Thread.Sleep(1250);
-            
-            for(int i=0;i<8;++i) {
-                
-                var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
-                
-                temporaryProperty.Name="Phase3_Spirit_Taker_Range_碎灵一击范围";
-                temporaryProperty.Scale=new(5);
-                temporaryProperty.Owner=accessory.Data.PartyList[i];
-                temporaryProperty.Color=accessory.Data.DefaultDangerColor;
-                temporaryProperty.DestoryAt=2500;
-                
-                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,temporaryProperty);
-                
-            }
-            
-            accessory.Method.TextInfo("Spread 分散",2000);
-            accessory.Method.TTS("Spread 分散");
-
             bool targetPositionConfirmed=false;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
-            currentProperty.Name="Phase3_Spirit_Taker_Guidance_碎灵一击指路";
+            currentProperty.Name="Phase3_Guidance_Of_Spirit_Taker_碎灵一击指路";
             currentProperty.Scale=new(2);
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Owner=accessory.Data.Me;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
-            currentProperty.DestoryAt=2500;
+            currentProperty.Delay=1000;
+            currentProperty.DestoryAt=2750;
 
             if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
 
@@ -3379,11 +3395,88 @@ namespace MyScriptNamespace
             
         }
         
-        [ScriptMethod(name:"Phase3_Darkest_Dance_Range_And_Guidance_暗夜舞蹈范围与指路",
+        [ScriptMethod(name:"Phase3_Range_Of_Darkest_Dance_暗夜舞蹈范围",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40181"])]
         
-        public void Phase3_Darkest_Dance_Range_And_Guidance_暗夜舞蹈范围与指路(Event @event, ScriptAccessory accessory) {
+        public void Phase3_Range_Of_Darkest_Dance_暗夜舞蹈范围(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+                
+                return;
+                
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+                
+            }
+
+            bool goBait=false;
+
+            if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT
+               &&
+               accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0) { 
+                
+                goBait=true;
+
+            }
+
+            if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.OT_ST
+               &&
+               accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+                
+                goBait=true;
+
+            }
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            currentProperty.Name="Phase3_Range_Of_Darkest_Dance_暗夜舞蹈范围";
+            currentProperty.Scale=new(8);
+            currentProperty.Owner=sourceId;
+            currentProperty.CentreResolvePattern=PositionResolvePatternEnum.PlayerFarestOrder;
+            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+            currentProperty.Delay=2200;
+            currentProperty.DestoryAt=4000;
+
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+            
+            System.Threading.Thread.Sleep(2200);
+            
+            if(goBait) {
+
+                accessory.Method.TextInfo("Go bait 引导死刑",1500);
+                accessory.Method.TTS("Go bait 引导死刑");
+
+            }
+
+            else {
+
+                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+                    
+                    accessory.Method.TextInfo("Stay away from MT 远离MT",1500);
+                    accessory.Method.TTS("Stay away from MT 远离MT");
+                    
+                }
+
+                else {
+                    
+                    accessory.Method.TextInfo("Stay away from OT 远离ST",1500);
+                    accessory.Method.TTS("Stay away from OT 远离ST");
+                    
+                }
+
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase3_Guidance_Of_Darkest_Dance_暗夜舞蹈指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40181"])]
+        
+        public void Phase3_Guidance_Of_Darkest_Dance_暗夜舞蹈指路(Event @event, ScriptAccessory accessory) {
             
             if(parse!=3.2) {
                 
@@ -3424,9 +3517,10 @@ namespace MyScriptNamespace
                 
             }
             
-            // ----- Inherited from Karlin-Z's original script -----
-            // This part of the code was directly inherited from Karlin-Z's original FRU script. It's aimed to calculate the exact position where the baiter tank should go.
-            // I kept this part as is.
+            // ----- Calculations of the position where the tank should bait -----
+            // This part was directly inherited from Karlin-Z's original script.
+            // The algorithm seems to be too mysterious to me, and it definitely works nice.
+            // So as a result, I kept this part as is.
 
             var dir8=P3FloorFire%10%4;
             Vector3 posN=new(100,0,86);
@@ -3439,9 +3533,10 @@ namespace MyScriptNamespace
             var pos1=RotatePoint(posN,new(100,0,100),float.Pi/4*rot);
             var pos2=RotatePoint(posN,new(100,0,100),float.Pi/4*rot+float.Pi);
             var dealpos=((pos1-tankWhoBaitsDarkestDance.Position).Length()<(pos2-tankWhoBaitsDarkestDance.Position).Length())?(pos1):(pos2);
-            var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
             // ----- -----
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
             if(goBait) {
                 
@@ -3468,73 +3563,14 @@ namespace MyScriptNamespace
 
             }
             
-            currentProperty.Name="Phase3_Darkest_Dance_Guidance_暗夜舞蹈指路";
+            currentProperty.Name="Phase3_Guidance_Of_Darkest_Dance_暗夜舞蹈指路";
             currentProperty.Scale=new(2);
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.TargetPosition=dealpos;
-            currentProperty.Delay=2700;
-            currentProperty.DestoryAt=3500;
+            currentProperty.Delay=2200;
+            currentProperty.DestoryAt=4000;
             
             accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
-                
-            currentProperty=accessory.Data.GetDefaultDrawProperties();
-
-            if(goBait) {
-                
-                currentProperty.Owner=accessory.Data.Me;
-                
-            }
-
-            else {
-
-                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
-
-                    currentProperty.Owner=accessory.Data.PartyList[0];
-
-                }
-
-                else {
-
-                    currentProperty.Owner=accessory.Data.PartyList[1];
-
-                }
-
-            }
-
-            currentProperty.Name="Phase3_Darkest_Dance_Range_暗夜舞蹈范围";
-            currentProperty.Scale=new(8);
-            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
-            currentProperty.Delay=2700;
-            currentProperty.DestoryAt=3500;
-
-            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
-            
-            System.Threading.Thread.Sleep(2700);
-            
-            if(goBait) {
-
-                accessory.Method.TextInfo("Go bait 引导死刑",1500);
-                accessory.Method.TTS("Go bait 引导死刑");
-
-            }
-
-            else {
-
-                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
-                    
-                    accessory.Method.TextInfo("Stay away from MT 远离MT",1500);
-                    accessory.Method.TTS("Stay away from MT 远离MT");
-                    
-                }
-
-                else {
-                    
-                    accessory.Method.TextInfo("Stay away from OT 远离ST",1500);
-                    accessory.Method.TTS("Stay away from OT 远离ST");
-                    
-                }
-
-            }
 
         }
 
@@ -5421,7 +5457,7 @@ namespace MyScriptNamespace
                     new((mtPosition1.X-100)/7*18+100,0,(mtPosition1.Z-100)/7*18+100);
                 // The calculations of Position 2 were directly inherited from Karlin-Z's original script.
                 // I don't know the mathematical ideas behind the algorithm, but it works and it definitely works great.
-                // So as a result, except the multiplier was adjusted from 15 to 18. I just keep the part as is.
+                // So as a result, except the multiplier was adjusted from 15 to 18, I just keep the part as is.
                 
                 Vector3 otPosition2=RotatePoint(mtPosition1,new(100,0,100),isLeftFirstAndFarFirst?
                     120f.DegToRad():
