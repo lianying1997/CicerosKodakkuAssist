@@ -23,7 +23,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.30",
+        version:"0.0.0.31",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -6214,7 +6214,7 @@ namespace MyScriptNamespace
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_失调打击对组指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
                 currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheRight:positionToBeCoveredOnTheLeft;
@@ -6228,7 +6228,7 @@ namespace MyScriptNamespace
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_失调打击对组指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
                 currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheRight:positionToStandbyOnTheLeft;
