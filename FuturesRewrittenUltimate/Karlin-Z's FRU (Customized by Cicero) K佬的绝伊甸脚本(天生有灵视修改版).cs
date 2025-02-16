@@ -23,7 +23,7 @@ namespace MyScriptNamespace
     [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.29",
+        version:"0.0.0.30",
         note:noteStr,
         author:"Karlin-Z (customized by Cicero)")]
     
@@ -34,13 +34,15 @@ namespace MyScriptNamespace
         Karlin-Z's script of Futures Rewritten (Ultimate). Customized by Cicero, branched out from Version 0.0.0.10.
         Add guidance for the second half of Phase 3,
         guidance related to Drachen Wanderers and refinements for the second half of Phase 4,
-        guidance for Wings Dark And Light in Phase 5.
+        guidance for Wings Dark And Light in Phase 5,
+        guidance for Polarizing Strikes in Phase 5.
         Please re-configure the user settings of this customized script according to your settings in the original script!
         
         Karlin-Z的另一个未来(绝伊甸)脚本。天生有灵视基于0.0.0.10版本做了修改。
         添加了P3二运指路，
-        P4二运指路的精修和圣龙气息相关指路，
-        P5光与暗之翼指路。
+        P4二运指路的精修和圣龙气息(白圈)相关指路，
+        P5光与暗之翼(踩塔)指路，
+        P5失调打击(挡枪)指路。
         请记得按照原版脚本重新配置一下这个脚本的用户设置！
         """;
 
@@ -84,6 +86,10 @@ namespace MyScriptNamespace
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
         [UserSetting("Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略")]
         public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略 { get; set; }
+        [UserSetting("Phase5_Hints_Of_Provoking_挑衅提示")]
+        public bool Phase5_Hints_Of_Provoking_挑衅提示 { get; set; } = true;
+        [UserSetting("Phase5_Orders_During_Polarizing_Strikes_挡枪顺序")]
+        public Phase5_Orders_During_Polarizing_Strikes Phase5_Orders_During_Polarizing_Strikes_挡枪顺序 { get; set; }
         
         [UserSetting("Enable Developer Mode 启用开发者模式")]
         public bool Enable_Developer_Mode_启用开发者模式 { get; set; } = false;
@@ -159,6 +165,14 @@ namespace MyScriptNamespace
         Vector3 standbyPositionBetweenNorthwestAndSouth=new Vector3(93.94f,0,103.50f);
         Vector3 standbyPositionBetweenNortheastAndSouth=new Vector3(106.06f,0,103.50f);
 
+        Vector3 positionToTakeHitsOnTheLeft=new Vector3(95.93f,0,104.07f);
+        Vector3 positionToBeCoveredOnTheLeft=new Vector3(93.81f,0,106.19f);
+        Vector3 positionToStandbyOnTheLeft=new Vector3(98.78f,0,106.89f);
+        Vector3 positionToTakeHitsOnTheRight=new Vector3(104.07f,0,104.07f);
+        Vector3 positionToBeCoveredOnTheRight=new Vector3(106.19f,0,106.19f);
+        Vector3 positionToStandbyOnTheRight=new Vector3(101.22f,0,106.89f);
+        // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
+
         public enum P1TetherEnum
         {
             OneLine,
@@ -231,6 +245,14 @@ namespace MyScriptNamespace
             
             GREY9_灰九式,
             Other_Strats_Work_In_Progress_其他策略正在施工中
+            
+        }
+
+        public enum Phase5_Orders_During_Polarizing_Strikes {
+            
+            TANKS_MELEES_RANGES_HEALERS_坦克近战远程奶妈,
+            TANKS_HEALERS_MELEES_RANGES_坦克奶妈近战远程,
+            Other_Orders_Work_In_Progress_其他顺序正在施工中
             
         }
 
@@ -2924,7 +2946,7 @@ namespace MyScriptNamespace
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Owner=accessory.Data.Me;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
-            currentProperty.DestoryAt=5000;
+            currentProperty.DestoryAt=4750;
 
             if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
                 
@@ -5500,6 +5522,15 @@ namespace MyScriptNamespace
                     currentProperty.Delay=6900;
                     currentProperty.DestoryAt=4500;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                    if(Phase5_Hints_Of_Provoking_挑衅提示) {
+                        
+                        System.Threading.Thread.Sleep(2000);
+                        
+                        accessory.Method.TextInfo("OT provoke not you! ST挑衅不是你！",2500);
+                        accessory.Method.TTS("OT provoke not you! ST挑衅不是你！");
+                        
+                    }
 
                 }
 
@@ -5524,6 +5555,16 @@ namespace MyScriptNamespace
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.DestoryAt=7900;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="Phase5_OT_Position_3_Preview_During_Wings_Dark_And_Light_光与暗之翼ST位置3预览";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Position=otPosition2;
+                    currentProperty.TargetPosition=new Vector3(100,0,93);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt=7900;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
                     currentProperty.Name="Phase5_OT_Position_2_During_Wings_Dark_And_Light_光与暗之翼ST位置2";
@@ -5535,6 +5576,37 @@ namespace MyScriptNamespace
                     currentProperty.Delay=7900;
                     currentProperty.DestoryAt=3500;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="Phase5_OT_Position_3_Preview_During_Wings_Dark_And_Light_光与暗之翼ST位置3预览";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Position=otPosition2;
+                    currentProperty.TargetPosition=new Vector3(100,0,93);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay=7900;
+                    currentProperty.DestoryAt=3500;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name="Phase5_OT_Position_3_During_Wings_Dark_And_Light_光与暗之翼ST位置3";
+                    currentProperty.Scale=new(2);
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=new Vector3(100,0,93);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay=11400;
+                    currentProperty.DestoryAt=6000;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    if(Phase5_Hints_Of_Provoking_挑衅提示) {
+                        
+                        System.Threading.Thread.Sleep(2000);
+                        
+                        accessory.Method.TextInfo("Provoke! 挑衅！",2500);
+                        accessory.Method.TTS("Provoke! 挑衅！");
+                        
+                    }
 
                 }
                 
@@ -5987,6 +6059,283 @@ namespace MyScriptNamespace
 
                 
             }
+
+        }
+        
+        [ScriptMethod(name:"Phase5_Guidance_Of_Polarizing_Strikes_失调打击指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40316"])]
+        
+        public void Phase5_Guidance_Of_Polarizing_Strikes_失调打击指路(Event @event, ScriptAccessory accessory) {
+
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            bool inTheLeftGroup=true;
+            int myRoundToTakeHits=getRoundByIndex(myIndex);
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            int timeline=0;
+
+            if(myRoundToTakeHits<1||myRoundToTakeHits>4) {
+
+                return;
+
+            } 
+
+            if(myIndex==0
+               ||
+               myIndex==2
+               ||
+               myIndex==4
+               ||
+               myIndex==6) {
+
+                inTheLeftGroup=true;
+
+            }
+            
+            if(myIndex==1
+               ||
+               myIndex==3
+               ||
+               myIndex==5
+               ||
+               myIndex==7) {
+
+                inTheLeftGroup=false;
+
+            }
+            
+            // ----- Initial guidance -----
+
+            if(myRoundToTakeHits==1) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_失调打击初始指路";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=inTheLeftGroup?positionToTakeHitsOnTheLeft:positionToTakeHitsOnTheRight;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=4550;
+                timeline+=4550;
+                        
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+
+            else {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_失调打击初始指路";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheLeft:positionToBeCoveredOnTheRight;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=4550;
+                timeline+=4550;
+                        
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+            
+            // ----- Be covered in the current group -----
+
+            for(int i=1;i<myRoundToTakeHits;++i) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheLeft:positionToBeCoveredOnTheRight;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.Delay=timeline;
+                currentProperty.DestoryAt=2450;
+                timeline+=2450;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheLeft:positionToStandbyOnTheRight;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.Delay=timeline;
+                currentProperty.DestoryAt=2250;
+                timeline+=2250;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+            
+            // ----- -----
+            
+            // ----- Take hits and swap the group -----
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+            currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_失调打击挡枪指路";
+            currentProperty.Scale=new(2);
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.TargetPosition=inTheLeftGroup?positionToTakeHitsOnTheLeft:positionToTakeHitsOnTheRight;
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.Delay=timeline;
+            currentProperty.DestoryAt=2450;
+            timeline+=2450;
+                
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+            currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_失调打击挡枪指路";
+            currentProperty.Scale=new(2);
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheRight:positionToStandbyOnTheLeft;
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.Delay=timeline;
+            currentProperty.DestoryAt=2250;
+            timeline+=2250;
+                
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+            
+            // ----- -----
+            
+            // ----- Be covered in the opposite group -----
+            
+            for(int i=myRoundToTakeHits+1;i<=4;++i) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheRight:positionToBeCoveredOnTheLeft;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.Delay=timeline;
+                currentProperty.DestoryAt=2450;
+                timeline+=2450;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheRight:positionToStandbyOnTheLeft;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.Delay=timeline;
+                currentProperty.DestoryAt=2250;
+                timeline+=2250;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+            
+            // ----- -----
+
+            if(Phase5_Hints_Of_Provoking_挑衅提示) {
+
+                if(myIndex==0) {
+                    
+                    System.Threading.Thread.Sleep(timeline);
+                        
+                    accessory.Method.TextInfo("Provoke! 挑衅！",2500);
+                    accessory.Method.TTS("Provoke! 挑衅！");
+                    
+                }
+
+                if(myIndex==1) {
+                    
+                    System.Threading.Thread.Sleep(timeline);
+                        
+                    accessory.Method.TextInfo("MT provoke not you! MT挑衅不是你！",2500);
+                    accessory.Method.TTS("MT provoke not you! MT挑衅不是你！");
+                    
+                }
+                
+            }
+
+        }
+
+        private int getRoundByIndex(int currentIndex) {
+
+            if(Phase5_Orders_During_Polarizing_Strikes_挡枪顺序==Phase5_Orders_During_Polarizing_Strikes.TANKS_MELEES_RANGES_HEALERS_坦克近战远程奶妈) {
+
+                if(currentIndex==0||currentIndex==1) {
+                    // Tanks.
+
+                    return 1;
+
+                }
+                
+                if(currentIndex==4||currentIndex==5) {
+                    // Melees.
+
+                    return 2;
+
+                }
+                
+                if(currentIndex==6||currentIndex==7) {
+                    // Ranges.
+
+                    return 3;
+
+                }
+                
+                if(currentIndex==2||currentIndex==3) {
+                    // Healers.
+
+                    return 4;
+
+                }
+                
+            }
+            
+            if(Phase5_Orders_During_Polarizing_Strikes_挡枪顺序==Phase5_Orders_During_Polarizing_Strikes.TANKS_HEALERS_MELEES_RANGES_坦克奶妈近战远程) {
+                
+                if(currentIndex==0||currentIndex==1) {
+                    // Tanks.
+
+                    return 1;
+
+                }
+                
+                if(currentIndex==2||currentIndex==3) {
+                    // Healers.
+
+                    return 2;
+
+                }
+                
+                if(currentIndex==4||currentIndex==5) {
+                    // Melees.
+
+                    return 3;
+
+                }
+                
+                if(currentIndex==6||currentIndex==7) {
+                    // Ranges.
+
+                    return 4;
+
+                }
+                
+            }
+
+            return -1;
+            // Just a placeholder and should never be reached.
 
         }
 
