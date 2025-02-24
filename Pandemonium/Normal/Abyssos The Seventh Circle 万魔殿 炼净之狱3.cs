@@ -20,7 +20,7 @@ namespace CicerosKodakkuAssist.Pandemonium.Normal;
 [ScriptType(name:"Abyssos The Seventh Circle 万魔殿 炼净之狱3",
     territorys:[1085],
     guid:"073ca5d8-9a34-41ff-8757-c3862c465be0",
-    version:"0.0.0.10",
+    version:"0.0.0.11",
     author:"Cicero 灵视",
     note:"A script for Abyssos: The Seventh Circle.\n万魔殿 炼净之狱3的脚本。")]
 
@@ -35,20 +35,12 @@ public class P7N
     
     [UserSetting("启用开发者模式")]
     public bool Enable_Developer_Mode { get; set; } = false;
-    
-    volatile bool bladePromptsHasBeenSent;
 
     public enum Languages_Of_Text_Prompts {
         
         Simplified_Chinese_简体中文,
         English_英文
         
-    }
-    
-    public void Init(ScriptAccessory accessory) {
-
-        bladePromptsHasBeenSent=false;
-
     }
     
     [ScriptMethod(name:"Bough of Attis (Front) 阿提斯的巨枝 (前)",
@@ -304,19 +296,17 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
 
-        if(Enable_Text_Prompts&&!bladePromptsHasBeenSent) {
-            
-            bladePromptsHasBeenSent=true;
+        if(Enable_Text_Prompts) {
             
             if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
 
-                accessory.Method.TextInfo("躲避步进式AOE",7700);
+                accessory.Method.TextInfo("躲避步进式AOE",9000);
 
             }
 
             if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
                 
-                accessory.Method.TextInfo("Dodge stepping AOEs",7700);
+                accessory.Method.TextInfo("Dodge stepping AOEs",9000);
                 
             }
             
@@ -377,7 +367,8 @@ public class P7N
     }
     
     private static bool parseObjectId(string? idStr, out uint id) {
-        // I just simply copied and pasted this function from Karlin-Z's code. Appreciate!
+        // This function was directly copied from Karlin's scripts.
+        // Really appreciate the implementations of common functions!
         
         id = 0;
         if (string.IsNullOrEmpty(idStr)) return false;

@@ -3540,7 +3540,7 @@ namespace MyScriptNamespace
             }
             
             // ----- Calculations of the position where the tank should bait -----
-            // This part was directly inherited from Karlin's original script.
+            // This part was directly inherited from Karlin's script.
             // The algorithm seems to be too mysterious to me, and it definitely works nice.
             // So as a result, I kept this part as is.
 
@@ -5477,7 +5477,7 @@ namespace MyScriptNamespace
                 Vector3 mtPosition2=isLeftFirstAndFarFirst?
                     new((mtPosition1.X-100)/7+100,0,(mtPosition1.Z-100)/7+100):
                     new((mtPosition1.X-100)/7*18+100,0,(mtPosition1.Z-100)/7*18+100);
-                // The calculations of Position 2 were directly inherited from Karlin's original script.
+                // The calculations of Position 2 were directly inherited from Karlin's script.
                 // I don't know the mathematical ideas behind the algorithm, but it works and it definitely works great.
                 // So as a result, except the multiplier was adjusted from 15 to 18, I just keep the part as is.
                 
