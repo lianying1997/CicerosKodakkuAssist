@@ -20,25 +20,25 @@ using Newtonsoft.Json.Linq;
 namespace MyScriptNamespace
 {
     
-    [ScriptType(name:"Karlin-Z's FRU script (Customized by Cicero) K佬的绝伊甸脚本(天生有灵视修改版)",
+    [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.31",
+        version:"0.0.0.32",
         note:noteStr,
-        author:"Karlin-Z (customized by Cicero)")]
+        author:"Karlin")]
     
     public class EdenUltimate
     {
         const string noteStr =
         """
-        Karlin-Z's script of Futures Rewritten (Ultimate). Customized by Cicero, branched out from Version 0.0.0.10.
+        Karlin's script of Futures Rewritten (Ultimate). Customized by Cicero, branched out from Version 0.0.0.10.
         Add guidance for the second half of Phase 3,
         guidance related to Drachen Wanderers and refinements for the second half of Phase 4,
         guidance for Wings Dark And Light in Phase 5,
         guidance for Polarizing Strikes in Phase 5.
         Please re-configure the user settings of this customized script according to your settings in the original script!
         
-        Karlin-Z的另一个未来(绝伊甸)脚本。天生有灵视基于0.0.0.10版本做了修改。
+        Karlin的另一个未来(绝伊甸)脚本。灵视基于0.0.0.10版本进行了大幅改装。
         添加了P3二运指路，
         P4二运指路的精修和圣龙气息(白圈)相关指路，
         P5光与暗之翼(踩塔)指路，
@@ -3540,7 +3540,7 @@ namespace MyScriptNamespace
             }
             
             // ----- Calculations of the position where the tank should bait -----
-            // This part was directly inherited from Karlin-Z's original script.
+            // This part was directly inherited from Karlin's original script.
             // The algorithm seems to be too mysterious to me, and it definitely works nice.
             // So as a result, I kept this part as is.
 
@@ -5477,7 +5477,7 @@ namespace MyScriptNamespace
                 Vector3 mtPosition2=isLeftFirstAndFarFirst?
                     new((mtPosition1.X-100)/7+100,0,(mtPosition1.Z-100)/7+100):
                     new((mtPosition1.X-100)/7*18+100,0,(mtPosition1.Z-100)/7*18+100);
-                // The calculations of Position 2 were directly inherited from Karlin-Z's original script.
+                // The calculations of Position 2 were directly inherited from Karlin's original script.
                 // I don't know the mathematical ideas behind the algorithm, but it works and it definitely works great.
                 // So as a result, except the multiplier was adjusted from 15 to 18, I just keep the part as is.
                 
