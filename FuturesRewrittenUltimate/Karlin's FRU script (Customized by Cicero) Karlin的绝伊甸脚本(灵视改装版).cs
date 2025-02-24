@@ -17,19 +17,19 @@ using Dalamud.Utility.Numerics;
 using ECommons.MathHelpers;
 using Newtonsoft.Json.Linq;
 
-namespace MyScriptNamespace
+namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 {
     
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.32",
-        note:noteStr,
+        version:"0.0.0.33",
+        note:notesOfTheScript,
         author:"Karlin")]
     
     public class EdenUltimate
     {
-        const string noteStr =
+        const string notesOfTheScript=
         """
         Karlin's script of Futures Rewritten (Ultimate). Customized by Cicero, branched out from Version 0.0.0.10.
         Add guidance for the second half of Phase 3,
@@ -45,6 +45,11 @@ namespace MyScriptNamespace
         P5失调打击(挡枪)指路。
         请记得按照原版脚本重新配置一下这个脚本的用户设置！
         """;
+        
+        [UserSetting("启用文本提示")]
+        public bool Enable_Text_Prompts { get; set; } = true;
+        [UserSetting("文本提示语言")]
+        public Languages_Of_Text_Prompts Language_Of_Text_Prompts { get; set; }
 
         [UserSetting("P1_转轮召分组依据")]
         public P1BrightFireEnum P1BrightFireGroup { get; set; }
@@ -60,39 +65,39 @@ namespace MyScriptNamespace
 
         [UserSetting("P3_分灯方式")]
         public P3LampEmum P3LampDeal { get; set; }
-        [UserSetting("Phase3_Strats_Of_The_Second_Half_二运策略")]
-        public Phase3_Strats_Of_The_Second_Half Phase3_Strats_Of_The_Second_Half_二运策略 { get; set; }
-        [UserSetting("Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈")]
-        public Phase3_Who_Baits_Darkest_Dance Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈 { get; set; }
-        [UserSetting("Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色")]
-        public ScriptColor Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色 { get; set; } = new() { V4=new(1f,0f,0f,1f) };
+        [UserSetting("P3二运 攻略")]
+        public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
+        [UserSetting("P3二运 引导暗夜舞蹈(最远死刑)的T")]
+        public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; }
+        [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
+        public ScriptColor Phase3_Colour_Of_Darkest_Dance { get; set; } = new() { V4=new(1f,0f,0f,1f) };
 
         [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
         public uint P4LampDisplayDur { get; set; } =3000;
-        [UserSetting("Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度")]
-        public float Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度 { get; set; } = 3;
-        [UserSetting("Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈")]
-        public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.EASTMOST_最东侧;
-        [UserSetting("Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈")]
-        public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_EAST_次东侧;
-        [UserSetting("Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈")]
-        public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_WEST_次西侧;
-        [UserSetting("Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈")]
-        public Phase4_Positions_Of_Drachen_Wanderer_Residues Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈 { get; set; } = Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧;
-        [UserSetting("Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色")]
-        public ScriptColor Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色 { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱长度")]
+        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 3.5f;
+        [UserSetting("P4二运 暗炎喷发(分散)的白圈")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
+        [UserSetting("P4二运 黑暗神圣(后分摊)的白圈")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Unholy_Darkness { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
+        [UserSetting("P4二运 黑暗冰封(月环)的白圈")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Blizzard_III { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
+        [UserSetting("P4二运 黑暗狂水(先分摊)的白圈")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Water_III { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
+        [UserSetting("P4二运 白圈指路的颜色")]
+        public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
-        [UserSetting("Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略")]
-        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略 { get; set; }
-        [UserSetting("Phase5_Hints_Of_Provoking_挑衅提示")]
-        public bool Phase5_Hints_Of_Provoking_挑衅提示 { get; set; } = true;
-        [UserSetting("Phase5_Orders_During_Polarizing_Strikes_挡枪顺序")]
-        public Phase5_Orders_During_Polarizing_Strikes Phase5_Orders_During_Polarizing_Strikes_挡枪顺序 { get; set; }
+        [UserSetting("P5 光与暗之翼(踩塔)攻略")]
+        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; }
+        [UserSetting("P5 挑衅提醒")]
+        public bool Phase5_Reminder_To_Provoke { get; set; } = true;
+        [UserSetting("P5 极化打击(挡枪)顺序")]
+        public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; }
         
-        [UserSetting("Enable Developer Mode 启用开发者模式")]
-        public bool Enable_Developer_Mode_启用开发者模式 { get; set; } = false;
+        [UserSetting("启用开发者模式")]
+        public bool Enable_Developer_Mode { get; set; } = false;
 
         int? firstTargetIcon = null;
         double parse = 0;
@@ -123,7 +128,7 @@ namespace MyScriptNamespace
         List<int> P3Stack = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P3FloorFireDone = false;
         int P3FloorFire = 0;
-        List<Phase3_Types_Of_Dark_Water_III> typeOfDarkWaterIii=[
+        List<Phase3_Types_Of_Dark_Water_III> phase3_typeOfDarkWaterIii=[
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE,
@@ -133,10 +138,9 @@ namespace MyScriptNamespace
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE
         ];
-        List<int> indexWhileDoubleGroup=[2,3,0,1,4,5,6,7];
-        // The temporary priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 while adopting the MMW Double Group strat.
-        uint timesStatus2458Disappeared=0;
-        object lockOfTimesStatus2458Disappeared=new object();
+        volatile int phase3_timesDarkWaterIiiWasRemoved=0;
+        List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
+        // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
         
         uint P4FragmentId;
         List<int> P4Tether = [-1, -1, -1, -1, -1, -1, -1, -1];
@@ -147,9 +151,9 @@ namespace MyScriptNamespace
         int P4BlueTether = 0;
         List<Vector3> P4WhiteCirclePos = [];
         List<Vector3> P4WaterPos = [];
-        List<uint> residueIdFromEastToWest=[0,0,0,0];
+        List<uint> phase4_residueIdsFromEastToWest=[0,0,0,0];
         // The leftmost (0), the about left (1), the about right (2), the rightmost (3) while facing south.
-        bool residueGuidanceHasBeenGenerated=false;
+        volatile bool phase4_guidanceOfResiduesHasBeenGenerated=false;
 
         volatile bool hasAcquiredTheFirstTower=false;
         string indexOfTheFirstTower="";
@@ -172,6 +176,20 @@ namespace MyScriptNamespace
         Vector3 positionToBeCoveredOnTheRight=new Vector3(106.19f,0,106.19f);
         Vector3 positionToStandbyOnTheRight=new Vector3(101.22f,0,106.89f);
         // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
+        
+        public enum Languages_Of_Text_Prompts {
+        
+            Simplified_Chinese_简体中文,
+            English_英文
+        
+        }
+        
+        public enum Tanks {
+            
+            MT,
+            OT_ST
+            
+        }
 
         public enum P1TetherEnum
         {
@@ -204,15 +222,8 @@ namespace MyScriptNamespace
 
         public enum Phase3_Strats_Of_The_Second_Half {
             
-            MMW_Double_Group_双分组法,
-            Other_Strats_Work_In_Progress_其他策略正在施工中
-            
-        }
-
-        public enum Phase3_Who_Baits_Darkest_Dance {
-            
-            MT,
-            OT_ST
+            Double_Group_双分组法,
+            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
         
@@ -225,34 +236,28 @@ namespace MyScriptNamespace
             
         }
 
-        public enum P4WhiteCirleEmum
-        {
-            IceB,
-            Ice3
-        }
+        public enum Phase4_Relative_Positions_Of_Residues {
 
-        public enum Phase4_Positions_Of_Drachen_Wanderer_Residues {
-
-            EASTMOST_最东侧,
-            ABOUT_EAST_次东侧,
-            ABOUT_WEST_次西侧,
-            WESTMOST_最西侧,
-            UNKNOWN_未知
+            Eastmost_最东侧,
+            About_East_次东侧,
+            About_West_次西侧,
+            Westmost_最西侧,
+            Unknown_未知
 
         }
         
         public enum Phase5_Strats_Of_Wings_Dark_And_Light {
             
-            GREY9_灰九式,
-            Other_Strats_Work_In_Progress_其他策略正在施工中
+            Grey9_Brain_Dead_灰九脑死法,
+            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
 
         public enum Phase5_Orders_During_Polarizing_Strikes {
             
-            TANKS_MELEES_RANGES_HEALERS_坦克近战远程奶妈,
-            TANKS_HEALERS_MELEES_RANGES_坦克奶妈近战远程,
-            Other_Orders_Work_In_Progress_其他顺序正在施工中
+            Tanks_Melees_Ranges_Healers_坦克近战远程奶妈,
+            Tanks_Healers_Melees_Ranges_坦克奶妈近战远程,
+            Other_Orders_Are_Work_In_Progress_其他顺序正在施工中
             
         }
 
@@ -273,7 +278,7 @@ namespace MyScriptNamespace
 
             P3FloorFireDone = false;
             P3Stack = [0, 0, 0, 0, 0, 0, 0, 0];
-            typeOfDarkWaterIii=[
+            phase3_typeOfDarkWaterIii=[
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE,
@@ -283,10 +288,10 @@ namespace MyScriptNamespace
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
-            timesStatus2458Disappeared=0;
+            phase3_timesDarkWaterIiiWasRemoved=0;
 
-            residueIdFromEastToWest=[0,0,0,0];
-            residueGuidanceHasBeenGenerated=false;
+            phase4_residueIdsFromEastToWest=[0,0,0,0];
+            phase4_guidanceOfResiduesHasBeenGenerated=false;
 
             hasAcquiredTheFirstTower=false;
             indexOfTheFirstTower="";
@@ -2698,7 +2703,7 @@ namespace MyScriptNamespace
         {
             parse = 3.2d;
             P3FloorFire = -1;
-            typeOfDarkWaterIii=[
+            phase3_typeOfDarkWaterIii=[
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE,
@@ -2708,7 +2713,7 @@ namespace MyScriptNamespace
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
-            timesStatus2458Disappeared=0;
+            phase3_timesDarkWaterIiiWasRemoved=0;
         }
         [ScriptMethod(name: "P3_延迟咏唱回响_地火", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"])]
         public void P3_延迟咏唱回响_地火(Event @event, ScriptAccessory accessory)
@@ -2855,7 +2860,7 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase3_Determine_Types_Of_Dark_Water_III_确定黑暗狂水类型",
+        [ScriptMethod(name:"Phase3 Determine Types Of Dark Water III 确定黑暗狂水(分摊)类型",
             eventType:EventTypeEnum.StatusAdd,
             eventCondition:["StatusID:2461"],
             userControl:false)]
@@ -2875,14 +2880,14 @@ namespace MyScriptNamespace
             }
 
             int currentIndex=accessory.Data.PartyList.IndexOf(targetId);
-            uint timeOfDarkWaterIii=Convert.ToUInt32(@event["DurationMilliseconds"],10);
+            int duration=Convert.ToInt32(@event["DurationMilliseconds"],10);
 
-            if(timeOfDarkWaterIii>36000) {
+            if(duration>36000) {
                 // Actually it's 38000ms (38s), but just in case.
 
-                lock(typeOfDarkWaterIii) {
+                lock(phase3_typeOfDarkWaterIii) {
 
-                    typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.LONG;
+                    phase3_typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.LONG;
 
                 }
 
@@ -2890,12 +2895,12 @@ namespace MyScriptNamespace
 
             else {
 
-                if(timeOfDarkWaterIii>27000) {
+                if(duration>27000) {
                     // Actually it's 29000ms (29s), but just in case.
 
-                    lock(typeOfDarkWaterIii) {
+                    lock(phase3_typeOfDarkWaterIii) {
 
-                        typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.MEDIUM;
+                        phase3_typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.MEDIUM;
 
                     }
 
@@ -2903,12 +2908,12 @@ namespace MyScriptNamespace
 
                 else {
 
-                    if(timeOfDarkWaterIii>8000) {
+                    if(duration>8000) {
                         // Actually it's 10000ms (10s), but just in case.
 
-                        lock(typeOfDarkWaterIii) {
+                        lock(phase3_typeOfDarkWaterIii) {
 
-                            typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.SHORT;
+                            phase3_typeOfDarkWaterIii[currentIndex]=Phase3_Types_Of_Dark_Water_III.SHORT;
 
                         }
 
@@ -2918,19 +2923,25 @@ namespace MyScriptNamespace
 
             }
 
-            if(Enable_Developer_Mode_启用开发者模式) {
+            if(Enable_Developer_Mode) {
 
-                accessory.Method.SendChat($"Checking the party member {currentIndex}... The DurationMilliseconds of StatusID 2461 is: {timeOfDarkWaterIii}. The value of typeOfDarkWaterIii is: {typeOfDarkWaterIii[currentIndex].ToString()}.");
-                
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           currentIndex={currentIndex}
+                                           duration={duration}
+                                           phase3_typeOfDarkWaterIii={phase3_typeOfDarkWaterIii[currentIndex]}
+                                           
+                                           """);
+
             }
             
         }
 
-        [ScriptMethod(name:"Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路",
+        [ScriptMethod(name:"Phase3 Guidance Of Dark Water III 黑暗狂水(分摊)指路",
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:2458"])]
         
-        public void Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路(Event @event,ScriptAccessory accessory) {
+        public void Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路(Event @event, ScriptAccessory accessory) {
 
             if(parse!=3.2) {
 
@@ -2938,6 +2949,7 @@ namespace MyScriptNamespace
 
             }
 
+            int copyOf_phase3_timesDarkWaterIiiWasRemoved=phase3_timesDarkWaterIiiWasRemoved;
             bool targetPositionConfirmed=false;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
@@ -2948,144 +2960,92 @@ namespace MyScriptNamespace
             currentProperty.Color=accessory.Data.DefaultSafeColor;
             currentProperty.DestoryAt=4750;
 
-            if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
-                bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
-                if(Enable_Developer_Mode_启用开发者模式) {
-                    
-                    accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. The value of timesStatus2458Disappeared is: {timesStatus2458Disappeared}. This debug message may be sent twice.");
-                    
+                if(Enable_Developer_Mode) {
+
+                    accessory.Method.SendChat($"""
+                                               /e 
+                                               goLeft={goLeft}
+                                               copyOf_phase3_timesDarkWaterIiiWasRemoved={copyOf_phase3_timesDarkWaterIiiWasRemoved}
+                                               
+                                               """);
+
                 }
-
-                if(goToLeft) {
-
-                    if(timesStatus2458Disappeared<2) {
-                        // First time of Dark Water III.
-
-                        currentProperty.TargetPosition=new Vector3(93,0,100);
-                        targetPositionConfirmed=true;
-                        
-                    }
-
-                    else {
-                        
-                        if(timesStatus2458Disappeared<4) {
-                            // Second time of Dark Water III.
-
-                            currentProperty.TargetPosition=new Vector3(96,0,100);
-                            targetPositionConfirmed=true;
-                        
-                        }
-
-                        else {
-                            
-                            if(timesStatus2458Disappeared<6) {
-                                // Third time of Dark Water III.
-                                // Suggested by @lunarflower223 on Discord. Thank you!
-
-                                for(int i=0;i<8;++i) {
-
-                                    if(typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
-                                        
-                                        var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
-                                        
-                                        temporaryProperty.Name="Phase3_Range_Guidance_Of_Dark_Water_III_黑暗狂水范围指路";
-                                        temporaryProperty.Scale=new(6);
-                                        temporaryProperty.Owner=accessory.Data.PartyList[i];
-                                        temporaryProperty.DestoryAt=5000;
-
-                                        if(shouldThePartyMemberGoLeftWhileDoubleGroup(i)) {
-
-                                            temporaryProperty.Color=accessory.Data.DefaultSafeColor;
-
-                                        }
-
-                                        else {
-
-                                            temporaryProperty.Color=accessory.Data.DefaultDangerColor;
-
-                                        }
-                                        
-                                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,temporaryProperty);
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                        // No guidance for the third time since I'm unable to acquire the boss position here.
-                        
-                    }
-
-                    accessory.Method.TextInfo("Stack on the left 去左侧分摊",2500);
-                    accessory.Method.TTS("Stack on the left 去左侧分摊");
+                
+                if(copyOf_phase3_timesDarkWaterIiiWasRemoved<2) {
+                    // First round of Dark Water III.
+                    
+                    currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                    targetPositionConfirmed=true;
 
                 }
 
                 else {
-                    
-                    if(timesStatus2458Disappeared<2) {
+                        
+                    if(copyOf_phase3_timesDarkWaterIiiWasRemoved<4) {
+                        // Second round of Dark Water III.
 
-                        currentProperty.TargetPosition=new Vector3(107,0,100);
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(96,0,100)):(new Vector3(104,0,100));
                         targetPositionConfirmed=true;
                         
                     }
 
                     else {
-                        
-                        if(timesStatus2458Disappeared<4) {
-
-                            currentProperty.TargetPosition=new Vector3(104,0,100);
-                            targetPositionConfirmed=true;
-                        
-                        }
-
-                        else {
-
-                            if(timesStatus2458Disappeared<6) {
-
-                                for(int i=0;i<8;++i) {
-
-                                    if(typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
-                                        
-                                        var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
-                                        
-                                        temporaryProperty.Name="Phase3_Range_Guidance_Of_Dark_Water_III_黑暗狂水范围指路";
-                                        temporaryProperty.Scale=new(6);
-                                        temporaryProperty.Owner=accessory.Data.PartyList[i];
-                                        temporaryProperty.DestoryAt=5000;
-
-                                        if(shouldThePartyMemberGoLeftWhileDoubleGroup(i)) {
-
-                                            temporaryProperty.Color=accessory.Data.DefaultDangerColor;
-
-                                        }
-
-                                        else {
-
-                                            temporaryProperty.Color=accessory.Data.DefaultSafeColor;
-
-                                        }
-                                        
-                                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,temporaryProperty);
-                                        
-                                    }
-                                    
-                                }
-                                
-                            }
                             
+                        if(copyOf_phase3_timesDarkWaterIiiWasRemoved<6) {
+                            // Third round of Dark Water III.
+                            // The idea was suggested by @lunarflower223 on Discord. Appreciate!
+
+                            for(int i=0;i<8;++i) {
+
+                                if(phase3_typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
+                                        
+                                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                                    currentProperty.Name="Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路";
+                                    currentProperty.Scale=new(6);
+                                    currentProperty.Owner=accessory.Data.PartyList[i];
+                                    currentProperty.DestoryAt=5000;
+
+                                    if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
+
+                                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                                    }
+
+                                    else {
+
+                                        currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                                    }
+                                        
+                                    accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
+                                }
+                                    
+                            }
+                                
                         }
-                        
+                            
                     }
+                        
+                }
+
+                if(goLeft) {
+                    
+                    accessory.Method.TextInfo("Stack on the left 去左侧分摊",2500);
+                    accessory.Method.TTS("Stack on the left 去左侧分摊");
+                    
+                }
+
+                else {
                     
                     accessory.Method.TextInfo("Stack on the right 去右侧分摊",2500);
                     accessory.Method.TTS("Stack on the right 去右侧分摊");
-
+                    
                 }
 
             }
@@ -3096,36 +3056,32 @@ namespace MyScriptNamespace
                 
             }
             
-            lock(lockOfTimesStatus2458Disappeared) {
-
-                ++timesStatus2458Disappeared;
-
-            }
+            ++phase3_timesDarkWaterIiiWasRemoved;
 
         }
 
-        private bool shouldThePartyMemberGoLeftWhileDoubleGroup(int originalIndex) {
+        private bool phase3_doubleGroup_shouldGoLeft(int currentIndex) {
             
-            int currentIndexWhileDoubleGroup=getIndexWhileDoubleGroup(originalIndex);
-            Phase3_Types_Of_Dark_Water_III currentType=typeOfDarkWaterIii[originalIndex];
-            bool result=false;
+            int doubleGroupIndex=phase3_doubleGroup_getDoubleGroupIndex(currentIndex);
+            Phase3_Types_Of_Dark_Water_III currentType=phase3_typeOfDarkWaterIii[currentIndex];
+            bool goLeft=true;
 
             for(int i=0;i<8;++i) {
 
-                if(typeOfDarkWaterIii[indexWhileDoubleGroup[i]]==currentType&&i!=currentIndexWhileDoubleGroup) {
+                if(phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[i]]==currentType&&i!=doubleGroupIndex) {
 
-                    if(i>currentIndexWhileDoubleGroup) {
+                    if(i>doubleGroupIndex) {
 
-                        result=true;
+                        goLeft=true;
                         // Should go left.
 
                         break;
 
                     }
 
-                    if(i<currentIndexWhileDoubleGroup) {
+                    if(i<doubleGroupIndex) {
 
-                        result=false;
+                        goLeft=false;
                         // Should go right.
 
                         break;
@@ -3136,15 +3092,15 @@ namespace MyScriptNamespace
                     
             }
 
-            return result;
+            return goLeft;
 
         }
 
-        private int getIndexWhileDoubleGroup(int originalIndex) {
+        private int phase3_doubleGroup_getDoubleGroupIndex(int currentIndex) {
 
             for(int i=0;i<8;++i) {
 
-                if(originalIndex==indexWhileDoubleGroup[i]) {
+                if(currentIndex==phase3_doubleGroup_priority_asAConstant[i]) {
 
                     return i;
 
@@ -3152,12 +3108,12 @@ namespace MyScriptNamespace
                 
             }
 
-            return originalIndex;
+            return currentIndex;
             // Just a placeholder and should never be reached.
 
         }
         
-        [ScriptMethod(name:"Phase3_Range_Of_Spirit_Taker_碎灵一击范围",
+        [ScriptMethod(name:"Phase3 Range Of Spirit Taker 碎灵一击(分散)范围",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40288"])]
         
@@ -3191,7 +3147,7 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase3_Guidance_Of_Spirit_Taker_碎灵一击指路",
+        [ScriptMethod(name:"Phase3 Guidance Of Spirit Taker 碎灵一击(分散)指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40288"])]
         
@@ -3214,11 +3170,11 @@ namespace MyScriptNamespace
             currentProperty.Delay=1000;
             currentProperty.DestoryAt=2750;
 
-            if(Phase3_Strats_Of_The_Second_Half_二运策略==Phase3_Strats_Of_The_Second_Half.MMW_Double_Group_双分组法) {
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
 
-                int myIndexWhileDoubleGroup=getIndexWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                int myDoubleGroupIndex=phase3_doubleGroup_getDoubleGroupIndex(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
-                switch(myIndexWhileDoubleGroup) {
+                switch(myDoubleGroupIndex) {
 
                     case 0: {
                         // H1
@@ -3233,27 +3189,20 @@ namespace MyScriptNamespace
                     case 1: {
                         // H2
                         
-                        bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                        bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
-                        if(Enable_Developer_Mode_启用开发者模式) {
-                    
-                            accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent six times.");
-                    
-                        }
+                        if(Enable_Developer_Mode) {
 
-                        if(goToLeft) {
-                            
-                            currentProperty.TargetPosition=new Vector3(93,0,92);
-                            targetPositionConfirmed=true;
-                            
-                        }
+                            accessory.Method.SendChat($"""
+                                                       /e 
+                                                       goLeft={goLeft}
 
-                        else {
-                            
-                            currentProperty.TargetPosition=new Vector3(107,0,92);
-                            targetPositionConfirmed=true;
-                            
+                                                       """);
+
                         }
+                        
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,92)):(new Vector3(107,0,92));
+                        targetPositionConfirmed=true;
 
                         break;
 
@@ -3282,27 +3231,20 @@ namespace MyScriptNamespace
                     case 4: {
                         // M1 or D1
                         
-                        bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                        bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
-                        if(Enable_Developer_Mode_启用开发者模式) {
-                    
-                            accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent six times.");
-                    
-                        }
+                        if(Enable_Developer_Mode) {
 
-                        if(goToLeft) {
-                            
-                            currentProperty.TargetPosition=new Vector3(93,0,100);
-                            targetPositionConfirmed=true;
-                            
-                        }
+                            accessory.Method.SendChat($"""
+                                                       /e 
+                                                       goLeft={goLeft}
 
-                        else {
-                            
-                            currentProperty.TargetPosition=new Vector3(107,0,100);
-                            targetPositionConfirmed=true;
-                            
+                                                       """);
+
                         }
+                        
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                        targetPositionConfirmed=true;
 
                         break;
                         
@@ -3321,27 +3263,20 @@ namespace MyScriptNamespace
                     case 6: {
                         // R1 or D3
                         
-                        bool goToLeft=shouldThePartyMemberGoLeftWhileDoubleGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                        bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
-                        if(Enable_Developer_Mode_启用开发者模式) {
-                    
-                            accessory.Method.SendChat($"The value of goToLeft is: {goToLeft}. This debug message may be sent six times.");
-                    
-                        }
+                        if(Enable_Developer_Mode) {
 
-                        if(goToLeft) {
-                            
-                            currentProperty.TargetPosition=new Vector3(93,0,108);
-                            targetPositionConfirmed=true;
-                            
-                        }
+                            accessory.Method.SendChat($"""
+                                                       /e 
+                                                       goLeft={goLeft}
 
-                        else {
-                            
-                            currentProperty.TargetPosition=new Vector3(107,0,108);
-                            targetPositionConfirmed=true;
-                            
+                                                       """);
+
                         }
+                        
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,108)):(new Vector3(107,0,108));
+                        targetPositionConfirmed=true;
 
                         break;
                         
@@ -3417,7 +3352,7 @@ namespace MyScriptNamespace
             
         }
         
-        [ScriptMethod(name:"Phase3_Range_Of_Darkest_Dance_暗夜舞蹈范围",
+        [ScriptMethod(name:"Phase3 Range Of Darkest Dance 暗夜舞蹈(最远死刑)范围",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40181"])]
         
@@ -3437,7 +3372,7 @@ namespace MyScriptNamespace
 
             bool goBait=false;
 
-            if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT
+            if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT
                &&
                accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0) { 
                 
@@ -3445,7 +3380,7 @@ namespace MyScriptNamespace
 
             }
 
-            if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.OT_ST
+            if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.OT_ST
                &&
                accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
                 
@@ -3459,7 +3394,7 @@ namespace MyScriptNamespace
             currentProperty.Scale=new(8);
             currentProperty.Owner=sourceId;
             currentProperty.CentreResolvePattern=PositionResolvePatternEnum.PlayerFarestOrder;
-            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1.5f);
             currentProperty.Delay=2200;
             currentProperty.DestoryAt=4000;
 
@@ -3476,7 +3411,7 @@ namespace MyScriptNamespace
 
             else {
 
-                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+                if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT) {
                     
                     accessory.Method.TextInfo("Stay away from MT 远离MT",1500);
                     accessory.Method.TTS("Stay away from MT 远离MT");
@@ -3494,7 +3429,7 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase3_Guidance_Of_Darkest_Dance_暗夜舞蹈指路",
+        [ScriptMethod(name:"Phase3 Guidance Of Darkest Dance 暗夜舞蹈(最远死刑)指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40181"])]
         
@@ -3509,7 +3444,7 @@ namespace MyScriptNamespace
             var tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.Me);
             bool goBait=false;
 
-            if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+            if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT) {
 
                 tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.PartyList[0]);
 
@@ -3569,17 +3504,17 @@ namespace MyScriptNamespace
 
             else {
 
-                if(Phase3_Who_Baits_Darkest_Dance_谁引导暗夜舞蹈==Phase3_Who_Baits_Darkest_Dance.MT) {
+                if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT) {
 
                     currentProperty.Owner=accessory.Data.PartyList[0];
-                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1.5f);
 
                 }
 
                 else {
 
                     currentProperty.Owner=accessory.Data.PartyList[1];
-                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance_暗夜舞蹈的颜色.V4.WithW(1.5f);
+                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1.5f);
 
                 }
 
@@ -4200,8 +4135,8 @@ namespace MyScriptNamespace
             P4OtherBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             P4WhiteCirclePos = [];
             P4WaterPos = [];
-            residueIdFromEastToWest=[0,0,0,0];
-            residueGuidanceHasBeenGenerated=false;
+            phase4_residueIdsFromEastToWest=[0,0,0,0];
+            phase4_guidanceOfResiduesHasBeenGenerated=false;
         }
         [ScriptMethod(name: "P4_时间结晶_Buff收集", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(326[34]|2454|246[0123])$"], userControl: false)]
         public void P4_时间结晶_Buff收集(Event @event, ScriptAccessory accessory)
@@ -4255,12 +4190,12 @@ namespace MyScriptNamespace
             P4BlueTether = PositionTo6Dir(pos, new(100, 0, 100)) % 3;
         }
         
-        [ScriptMethod(name:"Phase4_Determine_Residues_Of_Drachen_Wanderers_确定圣龙气息白圈",
+        [ScriptMethod(name:"Phase4 Determine Relative Positions Of Residues 确定白圈相对位置",
             eventType:EventTypeEnum.ObjectChanged,
             eventCondition:["DataId:2014529"],
             userControl:false)]
         
-        public void Phase4_Determine_Residues_Of_Drachen_Wanderers_确定圣龙气息白圈(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Determine_Relative_Positions_Of_Residues_确定白圈相对位置(Event @event, ScriptAccessory accessory) {
             
             if(parse!=4.3) {
 
@@ -4282,80 +4217,79 @@ namespace MyScriptNamespace
             
             var sourcePositionInJson=JObject.Parse(@event["SourcePosition"]);
             float currentX=sourcePositionInJson["X"]?.Value<float>()??0;
+            
+            if(currentX<100) {
 
-            if(residueIdFromEastToWest[0]==0
-               ||
-               residueIdFromEastToWest[3]==0) {
-
-                if(currentX<100) {
-
-                    lock(residueIdFromEastToWest) {
-
-                        residueIdFromEastToWest[3]=sourceId;
-                        // The rightmost while facing south.
-                        
-                    }
-
-                }
-
-                if(currentX>100) {
-
-                    lock(residueIdFromEastToWest) {
-
-                        residueIdFromEastToWest[0]=sourceId;
-                        // The leftmost while facing south.
-                        
-                    }
-
-                }
-                
-            }
-
-            else {
-
-                if(residueIdFromEastToWest[1]==0
-                   ||
-                   residueIdFromEastToWest[2]==0) { 
+                if(phase4_residueIdsFromEastToWest[3]!=0) {
                     
-                    if(currentX<100) {
+                    lock(phase4_residueIdsFromEastToWest) {
 
-                        lock(residueIdFromEastToWest) {
-
-                            residueIdFromEastToWest[2]=sourceId;
-                            // The about right while facing south.
-
-                        }
-
+                        phase4_residueIdsFromEastToWest[2]=sourceId;
+                        // The about right one while facing south.
+                        
                     }
-
-                    if(currentX>100) {
-
-                        lock(residueIdFromEastToWest) {
-
-                            residueIdFromEastToWest[1]=sourceId;
-                            // The about left while facing south.
-
-                        }
-
-                    }
-
+                    
                 }
-                
+
+                else {
+                    
+                    lock(phase4_residueIdsFromEastToWest) {
+
+                        phase4_residueIdsFromEastToWest[3]=sourceId;
+                        // The rightmost one while facing south.
+                        
+                    }
+                    
+                }
+
             }
 
-            if(Enable_Developer_Mode_启用开发者模式) {
-                
-                accessory.Method.SendChat($"The SourceId of this ObjectChanged event is: {@event["SourceId"]}, the decimal sourceId acquired by parsing is: {sourceId}. The SourcePosition of this ObjectChanged event is: {@event["SourcePosition"]}, the X value acquired by parsing is: {currentX}.");
-                
+            if(currentX>100) {
+
+                if(phase4_residueIdsFromEastToWest[0]!=0) {
+                    
+                    lock(phase4_residueIdsFromEastToWest) {
+
+                        phase4_residueIdsFromEastToWest[1]=sourceId;
+                        // The about left one while facing south.
+                        
+                    }
+                    
+                }
+
+                else {
+                    
+                    lock(phase4_residueIdsFromEastToWest) {
+
+                        phase4_residueIdsFromEastToWest[0]=sourceId;
+                        // The leftmost one while facing south.
+                        
+                    }
+                    
+                }
+
+            }
+
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           @event["SourceId"]={@event["SourceId"]}
+                                           sourceId={sourceId}
+                                           @event["SourcePosition"]={@event["SourcePosition"]}
+                                           currentX={currentX}
+                                           
+                                           """);
+
             }
         
         }
 
-        [ScriptMethod(name:"Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路",
+        [ScriptMethod(name:"Phase4 Guidance Of Residues 白圈指路",
             eventType:EventTypeEnum.ActionEffect,
             eventCondition:["ActionId:regex:^(40252|40253)$"])]
 
-        public void Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Guidance_Of_Residues_白圈指路(Event @event, ScriptAccessory accessory) {
 
             if(parse!=4.3) {
 
@@ -4363,7 +4297,7 @@ namespace MyScriptNamespace
 
             }
 
-            if(residueGuidanceHasBeenGenerated) {
+            if(phase4_guidanceOfResiduesHasBeenGenerated) {
 
                 return;
 
@@ -4376,45 +4310,56 @@ namespace MyScriptNamespace
             }
 
             int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            Phase4_Positions_Of_Drachen_Wanderer_Residues positionOfMyResidue=getResiduePositionByIndex(myIndex);
-            uint idOfMyResidue=getResidueIdByPosition(positionOfMyResidue);
+            Phase4_Relative_Positions_Of_Residues relativePositionOfMyResidue=phase4_getRelativePosition(myIndex);
+            uint idOfMyResidue=phase4_getResidueId(relativePositionOfMyResidue);
 
-            if(Enable_Developer_Mode_启用开发者模式) {
-                
-                accessory.Method.SendChat($"The object IDs acquired which are stored in residueIdFromEastToWest are: {residueIdFromEastToWest[0]}, {residueIdFromEastToWest[1]}, {residueIdFromEastToWest[2]}, {residueIdFromEastToWest[3]}.");
-                accessory.Method.SendChat($"The value of myIndex is: {myIndex}, the value of P4ClawBuff[{myIndex}] is: {P4ClawBuff[myIndex]}, the value of P4OtherBuff[{myIndex}] is: {P4OtherBuff[myIndex]}, the value of positionOfMyResidue is: {positionOfMyResidue}, the value of idOfMyResidue is: {idOfMyResidue}.");
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           phase4_residueIdsFromEastToWest[]={phase4_residueIdsFromEastToWest[0]},{phase4_residueIdsFromEastToWest[1]},{phase4_residueIdsFromEastToWest[2]},{phase4_residueIdsFromEastToWest[3]}
+                                           P4ClawBuff={P4ClawBuff[myIndex]}
+                                           P4OtherBuff={P4OtherBuff[myIndex]}
+                                           relativePositionOfMyResidue={relativePositionOfMyResidue}
+                                           idOfMyResidue={idOfMyResidue}
+                                           
+                                           """);
                 
             }
 
-            if(positionOfMyResidue!=Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知
+            if(relativePositionOfMyResidue!=Phase4_Relative_Positions_Of_Residues.Unknown_未知
                &&
                idOfMyResidue!=0) { 
 
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-                currentProperty.Name="Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路";
+                currentProperty.Name="Phase4_Guidance_Of_Residues_白圈指路";
                 currentProperty.Scale=new(2);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色.V4.WithW(1f);
+                currentProperty.Color=Phase4_Colour_Of_Residue_Guidance.V4.WithW(1f);
                 currentProperty.DestoryAt=23000;
 
                 var residueObject=accessory.Data.Objects.SearchById(idOfMyResidue);
 
                 if(residueObject!=null) {
                         
-                    residueGuidanceHasBeenGenerated=true;
+                    phase4_guidanceOfResiduesHasBeenGenerated=true;
                     
                     currentProperty.TargetPosition=residueObject.Position;
 
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
-                    accessory.Method.TextInfo(getResidueTextByPosition(positionOfMyResidue),2500);
-                    accessory.Method.TTS(getResidueTextByPosition(positionOfMyResidue));
+                    accessory.Method.TextInfo(phase4_getResidueDescription(relativePositionOfMyResidue),2500);
+                    accessory.Method.TTS(phase4_getResidueDescription(relativePositionOfMyResidue));
                     
-                    if(Enable_Developer_Mode_启用开发者模式) {
-                            
-                        accessory.Method.SendChat($"The position retrieved from objects is: {residueObject.Position}.");
-                            
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   residueObject.Position={residueObject.Position}
+                                                   
+                                                   """);
+
                     }
                     
                 }
@@ -4423,12 +4368,12 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase4_Remove_Guidance_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈指路",
+        [ScriptMethod(name:"Phase4 Remove Guidance Of Residues 移除白圈指路",
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:3264"],
             userControl:false)]
 
-        public void Phase4_Remove_Guidance_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈指路(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Remove_Guidance_Of_Residues_移除白圈指路(Event @event, ScriptAccessory accessory) {
 
             if(parse!=4.3) {
 
@@ -4436,7 +4381,7 @@ namespace MyScriptNamespace
 
             }
 
-            if(!residueGuidanceHasBeenGenerated) {
+            if(!phase4_guidanceOfResiduesHasBeenGenerated) {
 
                 return;
 
@@ -4454,15 +4399,15 @@ namespace MyScriptNamespace
 
             }
             
-            accessory.Method.RemoveDraw("Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路");
+            accessory.Method.RemoveDraw("Phase4_Guidance_Of_Residues_白圈指路");
 
         }
 
-        [ScriptMethod(name:"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮",
+        [ScriptMethod(name:"Phase4 Highlight Of Residues 白圈高亮",
             eventType:EventTypeEnum.ObjectChanged,
             eventCondition:["DataId:2014529"])]
 
-        public void Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Highlight_Of_Residues_白圈高亮(Event @event, ScriptAccessory accessory) {
 
             if(parse!=4.3) {
 
@@ -4484,7 +4429,7 @@ namespace MyScriptNamespace
 
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-            currentProperty.Name=$"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮_{sourceId}";
+            currentProperty.Name=$"Phase4_Highlight_Of_Residues_白圈高亮_{sourceId}";
             currentProperty.Scale=new(1f);
             currentProperty.InnerScale=new(0.8f);
             currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
@@ -4496,12 +4441,12 @@ namespace MyScriptNamespace
 
         }
 
-        [ScriptMethod(name:"Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈高亮",
+        [ScriptMethod(name:"Phase4 Remove Highlights Of Residues 移除白圈高亮",
             eventType:EventTypeEnum.ObjectChanged,
             eventCondition:["DataId:2014529"],
             userControl:false)]
 
-        public void Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_移除圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Remove_Highlights_Of_Residues_移除白圈高亮(Event @event, ScriptAccessory accessory) {
 
             if(parse!=4.3) {
 
@@ -4521,21 +4466,21 @@ namespace MyScriptNamespace
                 
             }
             
-            accessory.Method.RemoveDraw($"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮_{sourceId}");
+            accessory.Method.RemoveDraw($"Phase4_Highlight_Of_Residues_白圈高亮_{sourceId}");
 
-            uint idOfMyResidue=getResidueIdByPosition(getResiduePositionByIndex(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
+            uint idOfMyResidue=phase4_getResidueId(phase4_getRelativePosition(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
 
             if(idOfMyResidue!=0
                &&
                idOfMyResidue==sourceId) {
                 
-                accessory.Method.RemoveDraw("Phase4_Guidance_Of_Drachen_Wanderer_Residues_圣龙气息白圈指路");
+                accessory.Method.RemoveDraw("Phase4_Guidance_Of_Residues_白圈指路");
                 
             }
 
         }
         
-        [ScriptMethod(name:"Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_In_Advance_提前移除圣龙气息白圈高亮",
+        [ScriptMethod(name:"Phase4 Remove Highlights Of Residues In Advance 提前移除白圈高亮",
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:3264"],
             userControl:false)]
@@ -4546,7 +4491,7 @@ namespace MyScriptNamespace
         // Obviously, the method will not be able to help if a player with the Wyrmclaw debuff (the red debuff) takes a residue. However that's already a wipe, so whatever.
         // Thanks to Cyf5119 for providing a Dalamud way to detect if the entity is dead, so that the method would skip the StatusRemove events caused by death.
 
-        public void Phase4_Remove_Highlights_Of_Drachen_Wanderer_Residues_In_Advance_提前移除圣龙气息白圈高亮(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Remove_Highlights_Of_Residues_In_Advance_提前移除白圈高亮(Event @event, ScriptAccessory accessory) {
             
             if(parse!=4.3) {
 
@@ -4584,18 +4529,18 @@ namespace MyScriptNamespace
             }
 
             int closestResidue=-1;
-            float closestDistance=float.PositiveInfinity;
+            float distanceToTheClosestResidue=float.PositiveInfinity;
 
             for(int i=0;i<4;++i) {
 
-                var residueObject=accessory.Data.Objects.SearchByEntityId(residueIdFromEastToWest[i]);
+                var residueObject=accessory.Data.Objects.SearchByEntityId(phase4_residueIdsFromEastToWest[i]);
 
                 if(residueObject!=null) {
 
-                    if(Vector3.Distance(targetPosition,residueObject.Position)<closestDistance) {
+                    if(Vector3.Distance(targetPosition,residueObject.Position)<distanceToTheClosestResidue) {
 
                         closestResidue=i;
-                        closestDistance=Vector3.Distance(targetPosition,residueObject.Position);
+                        distanceToTheClosestResidue=Vector3.Distance(targetPosition,residueObject.Position);
 
                     }
                     
@@ -4603,26 +4548,40 @@ namespace MyScriptNamespace
 
             }
 
-            if(0<=closestResidue&&closestResidue<4) {
+            if(0<=closestResidue&&closestResidue<=3) {
                 
-                accessory.Method.RemoveDraw($"Phase4_Highlights_Of_Drachen_Wanderer_Residues_圣龙气息白圈高亮_{residueIdFromEastToWest[closestResidue]}");
+                accessory.Method.RemoveDraw($"Phase4_Highlight_Of_Residues_白圈高亮_{phase4_residueIdsFromEastToWest[closestResidue]}");
+
+                if(targetId!=accessory.Data.Me) {
+                    
+                    uint idOfMyResidue=phase4_getResidueId(phase4_getRelativePosition(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
+
+                    if(idOfMyResidue!=0
+                       &&
+                       idOfMyResidue==phase4_residueIdsFromEastToWest[closestResidue]) {
+                
+                        accessory.Method.RemoveDraw("Phase4_Guidance_Of_Residues_白圈指路");
+                
+                    }
+                    
+                }
                 
             }
 
         }
         
-        private Phase4_Positions_Of_Drachen_Wanderer_Residues getResiduePositionByIndex(int currentIndex) {
+        private Phase4_Relative_Positions_Of_Residues phase4_getRelativePosition(int currentIndex) {
 
             if(currentIndex<0||currentIndex>7) {
                 
-                return Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知;
+                return Phase4_Relative_Positions_Of_Residues.Unknown_未知;
                 
             }
             
             if(P4ClawBuff[currentIndex]==1||P4ClawBuff[currentIndex]==2) {
                 // 1 stands for short Wyrmclaw (the red debuff), 2 stands for long Wyrmclaw (also the red debuff).
 
-                return Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知;
+                return Phase4_Relative_Positions_Of_Residues.Unknown_未知;
 
             }
 
@@ -4632,67 +4591,67 @@ namespace MyScriptNamespace
                 if(P4OtherBuff[currentIndex]==4) {
                     // 4 stands for Dark Eruption.
 
-                    return Phase4_Residue_For_Dark_Eruption_暗炎喷发的白圈;
+                    return Phase4_Residue_Belongs_To_Dark_Eruption;
 
                 }
 
                 if(P4OtherBuff[currentIndex]==5) {
                     // 5 stands for Unholy Darkness.
 
-                    return Phase4_Residue_For_Unholy_Darkness_黑暗神圣的白圈;
+                    return Phase4_Residue_Belongs_To_Unholy_Darkness;
 
                 }
 
                 if(P4OtherBuff[currentIndex]==1) {
                     // 1 stands for Dark Blizzard III.
 
-                    return Phase4_Residue_For_Dark_Blizzard_III_黑暗冰封的白圈;
+                    return Phase4_Residue_Belongs_To_Dark_Blizzard_III;
 
                 }
 
                 if(P4OtherBuff[currentIndex]==3) {
                     // 3 stands for Dark Water III.
 
-                    return Phase4_Residue_For_Dark_Water_III_黑暗狂水的白圈;
+                    return Phase4_Residue_Belongs_To_Dark_Water_III;
 
                 }
 
             }
 
-            return Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知;
+            return Phase4_Relative_Positions_Of_Residues.Unknown_未知;
             // Just a placeholder and should never be reached.
 
         }
 
-        private uint getResidueIdByPosition(Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition) {
+        private uint phase4_getResidueId(Phase4_Relative_Positions_Of_Residues relativePosition) {
             
-            switch(residuePosition) {
+            switch(relativePosition) {
 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.EASTMOST_最东侧): {
+                case(Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧): {
 
-                    return residueIdFromEastToWest[0];
-
-                }
-                
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_EAST_次东侧): {
-
-                    return residueIdFromEastToWest[1];
+                    return phase4_residueIdsFromEastToWest[0];
 
                 }
                 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_WEST_次西侧): {
+                case(Phase4_Relative_Positions_Of_Residues.About_East_次东侧): {
 
-                    return residueIdFromEastToWest[2];
+                    return phase4_residueIdsFromEastToWest[1];
+
+                }
+                
+                case(Phase4_Relative_Positions_Of_Residues.About_West_次西侧): {
+
+                    return phase4_residueIdsFromEastToWest[2];
 
                 }
 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧): {
+                case(Phase4_Relative_Positions_Of_Residues.Westmost_最西侧): {
 
-                    return residueIdFromEastToWest[3];
+                    return phase4_residueIdsFromEastToWest[3];
 
                 }
 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知): {
+                case(Phase4_Relative_Positions_Of_Residues.Unknown_未知): {
 
                     return 0;
 
@@ -4709,43 +4668,43 @@ namespace MyScriptNamespace
             
         }
 
-        private String getResidueTextByPosition(Phase4_Positions_Of_Drachen_Wanderer_Residues residuePosition) {
+        private String phase4_getResidueDescription(Phase4_Relative_Positions_Of_Residues relativePosition) {
 
-            switch (residuePosition) {
+            switch (relativePosition) {
 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.EASTMOST_最东侧): {
+                case(Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧): {
 
                     return "Leftmost/Eastmost 最左/最东";
 
                 }
                 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_EAST_次东侧): {
+                case(Phase4_Relative_Positions_Of_Residues.About_East_次东侧): {
 
                     return "About left/About east 次左/次东";
 
                 }
                 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.ABOUT_WEST_次西侧): {
+                case(Phase4_Relative_Positions_Of_Residues.About_West_次西侧): {
 
                     return "About right/About west 次右/次西";
 
                 }
 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.WESTMOST_最西侧): {
+                case(Phase4_Relative_Positions_Of_Residues.Westmost_最西侧): {
 
                     return "Rightmost/Westmost 最右/最西";
 
                 }
 
-                case(Phase4_Positions_Of_Drachen_Wanderer_Residues.UNKNOWN_未知): {
+                case(Phase4_Relative_Positions_Of_Residues.Unknown_未知): {
                     
-                    return "Unknown residue 白圈未知";
+                    return "Unknown residue 未知白圈";
                     
                 }
 
                 default: {
 
-                    return "Unknown residue 白圈未知";
+                    return "Unknown residue 未知白圈";
                     // Just a placeholder and should never be reached.
 
                 }
@@ -4754,11 +4713,11 @@ namespace MyScriptNamespace
             
         }
         
-        [ScriptMethod(name:"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱",
+        [ScriptMethod(name:"Phase4 Hitbox Of Drachen Wanderers 圣龙气息(龙头)碰撞箱",
             eventType:EventTypeEnum.AddCombatant,
             eventCondition:["DataId:17836"])]
 
-        public void Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱(Event @event, ScriptAccessory accessory) {
 
             if(parse!=4.3) {
 
@@ -4774,9 +4733,9 @@ namespace MyScriptNamespace
 
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-            currentProperty.Name=$"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
-            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Hitboxes_龙头碰撞箱长度);
-            currentProperty.Color=Phase4_Colour_Of_Hitboxes_And_Guidance_碰撞箱及指路的颜色.V4.WithW(25f);
+            currentProperty.Name=$"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
+            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes);
+            currentProperty.Color=Phase4_Colour_Of_Residue_Guidance.V4.WithW(25f);
             currentProperty.Offset=new(0f,0f,1f);
             currentProperty.Owner=sourceId;
             currentProperty.DestoryAt=34000;
@@ -4785,11 +4744,11 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围",
+        [ScriptMethod(name:"Phase4 Explosion Range Of Drachen Wanderers 圣龙气息(龙头)爆炸范围",
             eventType:EventTypeEnum.AddCombatant,
             eventCondition:["DataId:17836"])]
 
-        public void Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围(Event @event, ScriptAccessory accessory) {
+        public void Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围(Event @event, ScriptAccessory accessory) {
 
             if(parse!=4.3) {
 
@@ -4805,7 +4764,7 @@ namespace MyScriptNamespace
 
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-            currentProperty.Name=$"Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}";
+            currentProperty.Name=$"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}";
             currentProperty.Scale=new(12);
             currentProperty.Owner=sourceId;
             currentProperty.Color=accessory.Data.DefaultDangerColor;
@@ -4815,7 +4774,7 @@ namespace MyScriptNamespace
 
         }
         
-        [ScriptMethod(name:"Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_移除圣龙气息碰撞箱与爆炸范围",
+        [ScriptMethod(name:"Phase4 Remove Hitboxes And Explosion Ranges Of Drachen Wanderers 移除圣龙气息(龙头)碰撞箱与爆炸范围",
             eventType:EventTypeEnum.RemoveCombatant,
             eventCondition:["DataId:17836"],
             userControl:false)]
@@ -4834,8 +4793,8 @@ namespace MyScriptNamespace
 
             }
 
-            accessory.Method.RemoveDraw($"Phase4_Hitboxes_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}");
-            accessory.Method.RemoveDraw($"Phase4_Explosion_Ranges_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}");
+            accessory.Method.RemoveDraw($"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}");
+            accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}");
 
         }
 
@@ -5381,7 +5340,7 @@ namespace MyScriptNamespace
 
             }
 
-            if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
 
                 Vector3 initialPositionOfMt=RotatePoint(positionOfTheFirstTower,new Vector3(100, 0, 100),float.Pi);
 
@@ -5470,7 +5429,7 @@ namespace MyScriptNamespace
 
             }
 
-            if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
 
                 Vector3 mtPosition1=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
                 // Just opposite the first tower.
@@ -5523,7 +5482,7 @@ namespace MyScriptNamespace
                     currentProperty.DestoryAt=4500;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                     
-                    if(Phase5_Hints_Of_Provoking_挑衅提示) {
+                    if(Phase5_Reminder_To_Provoke) {
                         
                         System.Threading.Thread.Sleep(2000);
                         
@@ -5599,7 +5558,7 @@ namespace MyScriptNamespace
                     currentProperty.DestoryAt=6000;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
-                    if(Phase5_Hints_Of_Provoking_挑衅提示) {
+                    if(Phase5_Reminder_To_Provoke) {
                         
                         System.Threading.Thread.Sleep(2000);
                         
@@ -5648,7 +5607,7 @@ namespace MyScriptNamespace
 
             }
             
-            if(Phase5_Strats_Of_Wings_Dark_And_Light_光与暗之翼策略==Phase5_Strats_Of_Wings_Dark_And_Light.GREY9_灰九式) {
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
                 
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
@@ -6244,7 +6203,7 @@ namespace MyScriptNamespace
             
             // ----- -----
 
-            if(Phase5_Hints_Of_Provoking_挑衅提示) {
+            if(Phase5_Reminder_To_Provoke) {
 
                 if(myIndex==0) {
                     
@@ -6270,7 +6229,7 @@ namespace MyScriptNamespace
 
         private int getRoundByIndex(int currentIndex) {
 
-            if(Phase5_Orders_During_Polarizing_Strikes_挡枪顺序==Phase5_Orders_During_Polarizing_Strikes.TANKS_MELEES_RANGES_HEALERS_坦克近战远程奶妈) {
+            if(Phase5_Order_During_Polarizing_Strikes==Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈) {
 
                 if(currentIndex==0||currentIndex==1) {
                     // Tanks.
@@ -6302,7 +6261,7 @@ namespace MyScriptNamespace
                 
             }
             
-            if(Phase5_Orders_During_Polarizing_Strikes_挡枪顺序==Phase5_Orders_During_Polarizing_Strikes.TANKS_HEALERS_MELEES_RANGES_坦克奶妈近战远程) {
+            if(Phase5_Order_During_Polarizing_Strikes==Phase5_Orders_During_Polarizing_Strikes.Tanks_Healers_Melees_Ranges_坦克奶妈近战远程) {
                 
                 if(currentIndex==0||currentIndex==1) {
                     // Tanks.
