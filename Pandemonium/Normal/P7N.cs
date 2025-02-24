@@ -17,33 +17,41 @@ using Newtonsoft.Json.Linq;
 
 namespace CicerosKodakkuAssist.Pandemonium.Normal;
 
-[ScriptType(name:"P7N",
+[ScriptType(name:"Abyssos: The Seventh Circle 万魔殿 炼净之狱3",
     territorys:[1085],
     guid:"073ca5d8-9a34-41ff-8757-c3862c465be0",
-    version:"0.0.0.8",
-    author:"_marcus_tullius_cicero_",
-    note:"A script for Abyssos: The Seventh Circle (Normal). 万魔殿炼净之狱3(普通难度)的脚本。")]
+    version:"0.0.0.9",
+    author:"Cicero 灵视",
+    note:"A script for Abyssos: The Seventh Circle.\n万魔殿 炼净之狱3的脚本。")]
 
 public class P7N
 {
     
-    [UserSetting("Enable Text Prompts 启用文字提示")]
-    public bool Enable_Text_Prompts_启用文字提示 { get; set; } = true;
+    [UserSetting("启用文本提示")]
+    public bool Enable_Text_Prompts { get; set; } = true;
     
-    [UserSetting("Enable Developer Mode 启用开发者模式")]
-    public bool Enable_Developer_Mode_启用开发者模式 { get; set; } = false;
+    [UserSetting("文本提示语言")]
+    public Languages_Of_Text_Prompts Language_Of_Text_Prompts { get; set; }
     
-    private bool bladesWerePrompted;
-    private long timestampOfLastBlade;
+    [UserSetting("启用开发者模式")]
+    public bool Enable_Developer_Mode { get; set; } = false;
+    
+    volatile bool bladePromptsHasBeenSent;
+
+    public enum Languages_Of_Text_Prompts {
+        
+        Simplified_Chinese_简体中文,
+        English_英文
+        
+    }
     
     public void Init(ScriptAccessory accessory) {
 
-        bladesWerePrompted=false;
-        timestampOfLastBlade=0;
+        bladePromptsHasBeenSent=false;
 
     }
     
-    [ScriptMethod(name:"Bough of Attis(Front) 阿提斯的巨枝(前)",
+    [ScriptMethod(name:"Bough of Attis (Front) 阿提斯的巨枝 (前)",
         eventType:EventTypeEnum.StartCasting,
         eventCondition:["ActionId:30714"])]
     
@@ -64,15 +72,25 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
 
-        if(Enable_Text_Prompts_启用文字提示) {
-            
-            accessory.Method.TextInfo("Stay away from the Boss 远离Boss", 2500);
+        if(Enable_Text_Prompts) {
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
+
+                accessory.Method.TextInfo("远离Boss",2500);
+
+            }
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
+                
+                accessory.Method.TextInfo("Stay away from the Boss",2500);
+                
+            }
             
         }
         
     }
     
-    [ScriptMethod(name:"Bough of Attis(Back) 阿提斯的巨枝(后)",
+    [ScriptMethod(name:"Bough of Attis (Back) 阿提斯的巨枝 (后)",
         eventType:EventTypeEnum.StartCasting,
         eventCondition:["ActionId:30719"])]
     
@@ -93,15 +111,25 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
         
-        if(Enable_Text_Prompts_启用文字提示) {
+        if(Enable_Text_Prompts) {
             
-            accessory.Method.TextInfo("Approach the Boss 靠近Boss", 2500);
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
+
+                accessory.Method.TextInfo("靠近Boss",2500);
+
+            }
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
+                
+                accessory.Method.TextInfo("Approach the Boss",2500);
+                
+            }
             
         }
         
     }
     
-    [ScriptMethod(name:"Bough of Attis(Side) 阿提斯的巨枝(侧)",
+    [ScriptMethod(name:"Bough of Attis (Side) 阿提斯的巨枝 (侧)",
         eventType:EventTypeEnum.StartCasting,
         eventCondition:["ActionId:30717"])]
     
@@ -125,27 +153,37 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
         
-        if(Enable_Text_Prompts_启用文字提示) {
+        if(Enable_Text_Prompts) {
 
-            if(currentX<70||currentX>130) {
+            if(currentX<100) {
+                // The EffectPosition when the Boss hits the left side is {"X":80.70,"Y":0.08,"Z":83.09}
                 
-                accessory.Method.TextInfo("Dodge the knock-back combo 躲避后续击退", 1500);
-                
-            }
+                if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
 
-            else {
-
-                if(currentX<100) {
-                    // The EffectPosition acquired while hitting the left is {"X":80.70,"Y":0.08,"Z":83.09}
-
-                    accessory.Method.TextInfo("Dodge on the right 去右边躲避", 1500);
+                    accessory.Method.TextInfo("去右边躲避",1500);
 
                 }
+
+                if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
                 
-                else {
-                    // The EffectPosition acquired while hitting the right is {"X":119.28,"Y":0.08,"Z":83.09}
+                    accessory.Method.TextInfo("Dodge on the right",1500);
                 
-                    accessory.Method.TextInfo("Dodge on the left 去左边躲避",1500);
+                }
+
+            }
+                
+            if(currentX>100) {
+                // The EffectPosition when the Boss hits the right side is {"X":119.28,"Y":0.08,"Z":83.09}
+                
+                if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
+
+                    accessory.Method.TextInfo("去左边躲避",1500);
+
+                }
+
+                if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
+                
+                    accessory.Method.TextInfo("Dodge on the left",1500);
                 
                 }
                 
@@ -153,10 +191,14 @@ public class P7N
 
         }
         
-        if(Enable_Developer_Mode_启用开发者模式) {
+        if(Enable_Developer_Mode) {
             
-            accessory.Method.SendChat($"The EffectPosition of ActionId 30717 is: {@event["EffectPosition"]}");
-            accessory.Method.SendChat($"The X value acquired by parsing is: {currentX}");
+            accessory.Method.SendChat($"""
+                                       /e 
+                                       @event["EffectPosition"]={@event["EffectPosition"]}
+                                       currentX={currentX}
+                                       
+                                       """);
             
         }
         
@@ -183,9 +225,19 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
         
-        if(Enable_Text_Prompts_启用文字提示) {
+        if(Enable_Text_Prompts) {
             
-            accessory.Method.TextInfo("Stay away from behemoths 远离贝希摩斯", 1500);
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
+
+                accessory.Method.TextInfo("远离贝希摩斯",1500);
+
+            }
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
+                
+                accessory.Method.TextInfo("Stay away from behemoths",1500);
+                
+            }
             
         }
         
@@ -212,9 +264,19 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
         
-        if(Enable_Text_Prompts_启用文字提示) {
+        if(Enable_Text_Prompts) {
             
-            accessory.Method.TextInfo("Stay away from the front of birds 远离怪鸟正面", 1500);
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
+
+                accessory.Method.TextInfo("远离怪鸟正面",1500);
+
+            }
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
+                
+                accessory.Method.TextInfo("Stay away from the front of birds",1500);
+                
+            }
             
         }
         
@@ -242,26 +304,22 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
 
-        if(Enable_Text_Prompts_启用文字提示&&!bladesWerePrompted) {
+        if(Enable_Text_Prompts&&!bladePromptsHasBeenSent) {
             
-            accessory.Method.TextInfo("Dodge stepping AOEs 躲避步进式AOE", 7700);
+            bladePromptsHasBeenSent=true;
             
-            bladesWerePrompted=true;
-            
-        }
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
 
-        if(Enable_Developer_Mode_启用开发者模式) {
-            
-            long currentTimestamp=Stopwatch.GetTimestamp();
+                accessory.Method.TextInfo("躲避步进式AOE",7700);
 
-            if(timestampOfLastBlade>0) {
+            }
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
                 
-                accessory.Method.SendChat($"The timestamp interval from last blade is: {currentTimestamp-timestampOfLastBlade}");
+                accessory.Method.TextInfo("Dodge stepping AOEs",7700);
                 
             }
             
-            timestampOfLastBlade=currentTimestamp;
-
         }
         
     }
@@ -290,14 +348,6 @@ public class P7N
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
         
         currentProperty=accessory.Data.GetDefaultDrawProperties();
-        
-        if(Enable_Developer_Mode_启用开发者模式) {
-                
-            accessory.Method.SendChat($"The value of currentProperty.ScaleMode is: {currentProperty.ScaleMode}");
-            accessory.Method.SendChat($"The value of ScaleMode.YByDistance is: {ScaleMode.YByDistance}");
-            accessory.Method.SendChat($"The result of currentProperty.ScaleMode|ScaleMode.YByDistance is: {currentProperty.ScaleMode|ScaleMode.YByDistance}");
-
-        }
 
         currentProperty.Owner=sourceId;
         currentProperty.TargetObject=accessory.Data.Me;
@@ -308,9 +358,19 @@ public class P7N
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
         
-        if(Enable_Text_Prompts_启用文字提示) {
+        if(Enable_Text_Prompts) {
+            
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.Simplified_Chinese_简体中文) {
+
+                accessory.Method.TextInfo("击退",2000);
+
+            }
+
+            if(Language_Of_Text_Prompts==Languages_Of_Text_Prompts.English_英文) {
                 
-            accessory.Method.TextInfo("Knock back 击退", 2000);
+                accessory.Method.TextInfo("Knock back",2000);
+                
+            }
 
         }
         
