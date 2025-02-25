@@ -2,19 +2,19 @@
   {
     "Name":"Abyssos The Seventh Circle 万魔殿 炼净之狱3",
     "Guid":"073ca5d8-9a34-41ff-8757-c3862c465be0",
-    "Version":"0.0.0.11",
+    "Version":"0.0.0.12",
     "Author":"Cicero 灵视",
     "TerritoryIds":[1085],
     "DownloadUrl":"https://raw.githubusercontent.com/AdmiralLvtzov/CicerosKodakkuAssist/refs/heads/main/Pandemonium/Normal/Abyssos%20The%20Seventh%20Circle%20%E4%B8%87%E9%AD%94%E6%AE%BF%20%E7%82%BC%E5%87%80%E4%B9%8B%E7%8B%B13.cs",
-    "UpdateInfo":"The script has been completed. 已完工。"
+    "UpdateInfo":"The script is completed. 已完工。"
   },
   {
-    "Name":"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 （灵视改装版）",
+    "Name":"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
     "Guid":"148718fd-575d-493a-8ac7-1cc7092aff85",
-    "Version":"0.0.0.36",
+    "Version":"0.0.0.37",
     "Author":"Karlin",
     "TerritoryIds":[1238],
     "DownloadUrl":"https://raw.githubusercontent.com/AdmiralLvtzov/CicerosKodakkuAssist/refs/heads/main/FuturesRewrittenUltimate/Karlin's%20FRU%20script%20(Customized%20by%20Cicero)%20Karlin%E7%9A%84%E7%BB%9D%E4%BC%8A%E7%94%B8%E8%84%9A%E6%9C%AC(%E7%81%B5%E8%A7%86%E6%94%B9%E8%A3%85%E7%89%88).cs",
-    "UpdateInfo":"Now working on a 21-day plan... Trying to post a refined version before Futures Rewritten (Ultimate) is released on CN.\n正在写那个21天计划，详见Discord……争取在国服开绝伊甸之前发布一个精修完的版本。"
+    "UpdateInfo":"Now working on a 21-day plan... Try to post a refined version before Futures Rewritten Ultimate is released on CN.\n正在写21天计划,详见Discord...争取在国服开绝伊甸之前发布一个精修完的版本。"
   }
 ]

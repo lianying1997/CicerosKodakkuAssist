@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.36",
+        version:"0.0.0.37",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -32,7 +32,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         const string notesOfTheScript=
         """
         ***** Please read the note here carefully before running the script! *****
-        ***** 请在使用此脚本前仔细阅读此处的说明！ *****
+        ***** 请在使用此脚本前仔细阅读此处的说明! *****
         
         This is a customized version of Karlin's script for Futures Rewritten (Ultimate).
         The script was branched out from the version 0.0.0.10 and extensively customized by Cicero.
@@ -41,16 +41,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         Regarding Phase 5, the script assumes that there would be only two provocations during the entire Phase 5, both would happen during Wings Dark And Light (towers and tank busters).
         The first provocation would be from OT and the second would be from MT, no other tank swapping. The script also assumes that the tank with the highest enmity at the beginning of Phase 5 would be MT.
-        If the provocative timeline mentioned above is not followed, the guidance may no longer be reliable.
+        If the provocative timeline mentioned above is not followed, the guidance for tanks may no longer be reliable. The guidance for others would not be affected.
         
         这是Karlin的另一个未来(绝伊甸)脚本的改装版本。
-        脚本是基于0.0.0.10版本的，灵视对脚本进行了大幅度改装。
-        在使用前请记得按照原版脚本重新配置一下这个脚本的用户设置！
-        当然也不请要同时开着改装脚本和原版脚本。
+        脚本是基于0.0.0.10版本的,灵视对脚本进行了大幅度改装。
+        在使用前请记得按照原版脚本重新配置一下这个脚本的用户设置!
+        当然也请不要同时开着改装脚本和原版脚本。
         
-        关于P5，指路是基于整个P5全程只有两次挑衅，且都发生在光与暗之翼(塔+死刑)期间。
-        第一次是ST挑衅，第二次是MT挑衅，除此之外没有其他涉及仇恨的行为。同时，开场时MT需要是一仇。
-        如果不按照这个轴挑衅，指路可能会电椅。
+        关于P5,指路是基于整个P5全程只有两次挑衅的轴,且都发生在光与暗之翼(塔+死刑)期间。
+        第一次是ST挑衅,第二次是MT挑衅,除此之外没有其他涉及仇恨的行为,且开场时MT必须是一仇。
+        如果不按照这个轴挑衅,T的指路可能会电椅。其他人的指路不受影响。
         
         ***** New Features *****
         ***** 新功能 *****
@@ -64,13 +64,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Guidance of Wings Dark And Light;
          - Guidance of Polarizing Strikes.
         
-        P3：
-         - 二运指路；
-        P4：
-         - 二运圣龙气息(龙头)白圈相关的指路；
-         - 二运原版指路精修；
-        P5：
-         - 光与暗之翼(踩塔)指路；
+        P3:
+         - 二运指路;
+        P4:
+         - 二运圣龙气息(龙头)白圈相关的指路;
+         - 二运原版指路精修;
+        P5:
+         - 光与暗之翼(踩塔)指路;
          - 极化打击(挡枪)指路。
         """;
         
