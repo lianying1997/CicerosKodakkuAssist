@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.33",
+        version:"0.0.0.34",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -48,8 +48,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         [UserSetting("启用文本提示")]
         public bool Enable_Text_Prompts { get; set; } = true;
-        [UserSetting("文本提示语言")]
-        public Languages_Of_Text_Prompts Language_Of_Text_Prompts { get; set; }
+        [UserSetting("启用TTS提示")]
+        public bool Enable_TTS_Prompts { get; set; } = true;
+        [UserSetting("提示的语言")]
+        public Languages_Of_Prompts Language_Of_Prompts { get; set; }
 
         [UserSetting("P1_转轮召分组依据")]
         public P1BrightFireEnum P1BrightFireGroup { get; set; }
@@ -68,7 +70,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P3二运 攻略")]
         public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
         [UserSetting("P3二运 引导暗夜舞蹈(最远死刑)的T")]
-        public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; }
+        public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; } = Tanks.OT_ST;
         [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
         public ScriptColor Phase3_Colour_Of_Darkest_Dance { get; set; } = new() { V4=new(1f,0f,0f,1f) };
 
@@ -177,7 +179,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Vector3 positionToStandbyOnTheRight=new Vector3(101.22f,0,106.89f);
         // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
         
-        public enum Languages_Of_Text_Prompts {
+        public enum Languages_Of_Prompts {
         
             Simplified_Chinese_简体中文,
             English_英文
@@ -2673,13 +2675,52 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
         }
 
-        [ScriptMethod(name: "P3_时间压缩_破盾一击集合提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40286"])]
-        public void P3_时间压缩_破盾一击集合提示(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 3.1) return;
-            accessory.Method.TextInfo("场中集合",3000);
-            accessory.Method.TTS("场中集合");
+        [ScriptMethod(name:"Phase3 Prompt Before Shell Crusher 破盾一击前提示",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40286"])]
+        
+        public void Phase3_Prompt_Before_Shell_Crusher_破盾一击前提示(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=3.1) {    
+
+                return;
+
+            }
+
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("场中集合分摊",3000);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Stack in the center",3000);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS("场中集合分摊");
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS("Stack in the center");
+                    
+                }
+                
+            }
+            
         }
+        
         [ScriptMethod(name: "P3_时间压缩_黑暗光环", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40290"])]
         public void P3_时间压缩_黑暗光环(Event @event, ScriptAccessory accessory)
         {
@@ -3036,15 +3077,73 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(goLeft) {
                     
-                    accessory.Method.TextInfo("Stack on the left 去左侧分摊",2500);
-                    accessory.Method.TTS("Stack on the left 去左侧分摊");
+                    if(Enable_Text_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TextInfo("左侧分摊",2500);
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TextInfo("Stack on the left",2500);
+                    
+                        }
+                
+                    }
+            
+                    if(Enable_TTS_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TTS("左侧分摊");
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TTS("Stack on the left");
+                    
+                        }
+                
+                    }
                     
                 }
 
                 else {
                     
-                    accessory.Method.TextInfo("Stack on the right 去右侧分摊",2500);
-                    accessory.Method.TTS("Stack on the right 去右侧分摊");
+                    if(Enable_Text_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TextInfo("右侧分摊",2500);
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TextInfo("Stack on the right",2500);
+                    
+                        }
+                
+                    }
+            
+                    if(Enable_TTS_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TTS("右侧分摊");
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TTS("Stack on the right");
+                    
+                        }
+                
+                    }
                     
                 }
 
@@ -3142,8 +3241,37 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             System.Threading.Thread.Sleep(1000);
             
-            accessory.Method.TextInfo("Spread 分散",2000);
-            accessory.Method.TTS("Spread 分散");
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("分散",2000);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Spread",2000);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS("分散");
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS("Spread");
+                    
+                }
+                
+            }
 
         }
         
@@ -3403,9 +3531,38 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             System.Threading.Thread.Sleep(2200);
             
             if(goBait) {
+                
+                if(Enable_Text_Prompts) {
 
-                accessory.Method.TextInfo("Go bait 引导死刑",1500);
-                accessory.Method.TTS("Go bait 引导死刑");
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                        accessory.Method.TextInfo("最远死刑",1500);
+                    
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                        accessory.Method.TextInfo("Stay away and bait",1500);
+                    
+                    }
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                        accessory.Method.TTS("最远死刑");
+                    
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                        accessory.Method.TTS("Stay away and bait");
+                    
+                    }
+                
+                }
 
             }
 
@@ -3413,15 +3570,73 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT) {
                     
-                    accessory.Method.TextInfo("Stay away from MT 远离MT",1500);
-                    accessory.Method.TTS("Stay away from MT 远离MT");
+                    if(Enable_Text_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TextInfo("远离MT",1500);
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TextInfo("Stay away from MT",1500);
+                    
+                        }
+                
+                    }
+            
+                    if(Enable_TTS_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TTS("远离MT");
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TTS("Stay away from MT");
+                    
+                        }
+                
+                    }
                     
                 }
 
-                else {
+                if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.OT_ST) {
                     
-                    accessory.Method.TextInfo("Stay away from OT 远离ST",1500);
-                    accessory.Method.TTS("Stay away from OT 远离ST");
+                    if(Enable_Text_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TextInfo("远离ST",1500);
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TextInfo("Stay away from OT",1500);
+                    
+                        }
+                
+                    }
+            
+                    if(Enable_TTS_Prompts) {
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                            accessory.Method.TTS("远离ST");
+                    
+                        }
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                            accessory.Method.TTS("Stay away from OT");
+                    
+                        }
+                
+                    }
                     
                 }
 
@@ -3631,17 +3846,85 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.DestoryAt = 8000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
-        [ScriptMethod(name: "P4_具象化_天光轮回集合提醒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40246"])]
-        public void P4_具象化_天光轮回集合提醒(Event @event, ScriptAccessory accessory)
-        {
-            accessory.Method.TextInfo("集合", 9500);
-            accessory.Method.TTS("集合");
+        
+        [ScriptMethod(name:"Phase4 Prompt Before Akh Rhai 天光轮回前提示",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40246"])]
+        
+        public void Phase4_Prompt_Before_Akh_Rhai_天光轮回前提示(Event @event, ScriptAccessory accessory) {
+            
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("集合",9500);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Get together",9500);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS("集合");
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS("Get together");
+                    
+                }
+                
+            }
+            
         }
-        [ScriptMethod(name: "P4_具象化_天光轮回躲避提醒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40186"])]
-        public void P4_具象化_天光轮回躲避提醒(Event @event, ScriptAccessory accessory)
-        {
-            accessory.Method.TextInfo("快跑", 3000);
-            accessory.Method.TTS("快跑");
+        
+        [ScriptMethod(name:"Phase4 Prompt To Dodge Akh Rhai 天光轮回躲避提示",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40186"])]
+        
+        public void Phase4_Prompt_To_Dodge_Akh_Rhai_天光轮回躲避提示(Event @event, ScriptAccessory accessory) {
+            
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("跑！",3000);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Run!",3000);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS("跑！");
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS("Run!");
+                    
+                }
+                
+            }
+            
         }
 
         [ScriptMethod(name: "P4_暗光龙诗_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40239"], userControl: false)]
@@ -4349,8 +4632,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     currentProperty.TargetPosition=residueObject.Position;
 
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
-                    accessory.Method.TextInfo(phase4_getResidueDescription(relativePositionOfMyResidue),2500);
-                    accessory.Method.TTS(phase4_getResidueDescription(relativePositionOfMyResidue));
+
+                    if(Enable_Text_Prompts) {
+                        
+                        accessory.Method.TextInfo(phase4_getResidueDescription(relativePositionOfMyResidue),2500);
+                        
+                    }
+
+                    if(Enable_TTS_Prompts) {
+                        
+                        accessory.Method.TTS(phase4_getResidueDescription(relativePositionOfMyResidue));
+                        
+                    }
+
+                    
                     
                     if(Enable_Developer_Mode) {
 
@@ -4673,44 +4968,96 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             switch (relativePosition) {
 
                 case(Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧): {
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    return "Leftmost/Eastmost 最左/最东";
+                        return "最左/最东";
+
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        return "Leftmost/Eastmost";
+
+                    }
+                    
+                    return "";
+                    // Just a placeholder and should never be reached.
 
                 }
                 
                 case(Phase4_Relative_Positions_Of_Residues.About_East_次东侧): {
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    return "About left/About east 次左/次东";
+                        return "次左/次东";
+
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        return "About left/About east";
+
+                    }
+                    
+                    return "";
+                    // Just a placeholder and should never be reached.
 
                 }
                 
                 case(Phase4_Relative_Positions_Of_Residues.About_West_次西侧): {
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    return "About right/About west 次右/次西";
+                        return "次右/次西";
+
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        return "About right/About west";
+
+                    }
+                    
+                    return "";
+                    // Just a placeholder and should never be reached.
 
                 }
 
                 case(Phase4_Relative_Positions_Of_Residues.Westmost_最西侧): {
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    return "Rightmost/Westmost 最右/最西";
+                        return "最右/最西";
+
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        return "Rightmost/Westmost";
+
+                    }
+                    
+                    return "";
+                    // Just a placeholder and should never be reached.
 
                 }
 
                 case(Phase4_Relative_Positions_Of_Residues.Unknown_未知): {
                     
-                    return "Unknown residue 未知白圈";
+                    return "";
                     
                 }
 
                 default: {
 
-                    return "Unknown residue 未知白圈";
+                    return "";
                     // Just a placeholder and should never be reached.
 
                 }
                 
             }
-            
+
         }
         
         [ScriptMethod(name:"Phase4 Hitbox Of Drachen Wanderers 圣龙气息(龙头)碰撞箱",

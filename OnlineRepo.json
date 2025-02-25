@@ -11,10 +11,10 @@
   {
     "Name":"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
     "Guid":"148718fd-575d-493a-8ac7-1cc7092aff85",
-    "Version":"0.0.0.33",
+    "Version":"0.0.0.34",
     "Author":"Karlin",
     "TerritoryIds":[1238],
     "DownloadUrl":"https://raw.githubusercontent.com/AdmiralLvtzov/CicerosKodakkuAssist/refs/heads/main/FuturesRewrittenUltimate/Karlin's%20FRU%20script%20(Customized%20by%20Cicero)%20Karlin%E7%9A%84%E7%BB%9D%E4%BC%8A%E7%94%B8%E8%84%9A%E6%9C%AC(%E7%81%B5%E8%A7%86%E6%94%B9%E8%A3%85%E7%89%88).cs",
-    "UpdateInfo":"Add guidance for the second half of Phase 3, guidance related to Drachen Wanderers and refinements for the second half of Phase 4, guidance for Wings Dark And Light in Phase 5, guidance for Polarizing Strikes in Phase 5. 添加了P3二运指路，P4二运指路的精修和圣龙气息(白圈)相关指路，P5光与暗之翼(踩塔)指路，P5失调打击(挡枪)指路。"
+    "UpdateInfo":"Now working on a 21-day plan... Trying to post a refined version before Futures Rewritten (Ultimate) is released on CN.\n正在进行一个21天计划，详见Discord……争取在国服开绝伊甸之前发布一个精修完的版本。"
   }
 ]
