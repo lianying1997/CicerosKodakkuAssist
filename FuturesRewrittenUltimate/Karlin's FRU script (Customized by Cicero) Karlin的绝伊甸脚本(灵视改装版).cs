@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.34",
+        version:"0.0.0.35",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -31,19 +31,45 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     {
         const string notesOfTheScript=
         """
-        Karlin's script of Futures Rewritten (Ultimate). Customized by Cicero, branched out from Version 0.0.0.10.
-        Add guidance for the second half of Phase 3,
-        guidance related to Drachen Wanderers and refinements for the second half of Phase 4,
-        guidance for Wings Dark And Light in Phase 5,
-        guidance for Polarizing Strikes in Phase 5.
-        Please re-configure the user settings of this customized script according to your settings in the original script!
+        ***** Please read the note here carefully before running the script! *****
+        ***** 请在使用此脚本前仔细阅读此处的说明！ *****
         
-        Karlin的另一个未来(绝伊甸)脚本。灵视基于0.0.0.10版本进行了大幅改装。
-        添加了P3二运指路，
-        P4二运指路的精修和圣龙气息(白圈)相关指路，
-        P5光与暗之翼(踩塔)指路，
-        P5失调打击(挡枪)指路。
-        请记得按照原版脚本重新配置一下这个脚本的用户设置！
+        This is a customized version of Karlin's script for Futures Rewritten (Ultimate).
+        The script was branched out from the version 0.0.0.10 and extensively customized by Cicero.
+        Please configure the user settings of the script according to your user settings of the vanilla script before running it!
+        
+        Regarding Phase 5, the script assumes that there would be only two provocations during the entire Phase 5, both would happen during Wings Dark And Light (towers and tank busters).
+        The first provocation would be from OT and the second would be from MT, no other tank swapping. The script also assumes that the tank with the highest enmity at the beginning of Phase 5 would be MT.
+        If the provocative timeline mentioned above is not followed, the guidance may no longer be reliable.
+        
+        这是Karlin的另一个未来(绝伊甸)脚本的改装版本。
+        脚本是基于0.0.0.10版本的，灵视对脚本进行了大幅度改装。
+        在使用前请记得按照原版脚本重新配置一下这个脚本的用户设置！
+        
+        关于P5，指路是基于整个P5全程只有两次挑衅，且都发生在光与暗之翼(塔+死刑)期间。
+        第一次是ST挑衅，第二次是MT挑衅，除此之外没有其他涉及仇恨的行为。同时，开场时MT需要是一仇。
+        如果不按照这个轴挑衅，指路可能会电椅。
+        
+        ***** New Features *****
+        ***** 新功能 *****
+        
+        Phase 3:
+         - Guidance of the second half;
+        Phase 4:
+         - Guidance related to Drachen Wanderer residues of the second half;
+         - Refinements for vanilla guidance of the second half;
+        Phase 5:
+         - Guidance of Wings Dark And Light;
+         - Guidance of Polarizing Strikes.
+        
+        P3：
+         - 二运指路；
+        P4：
+         - 二运圣龙气息(龙头)白圈相关的指路；
+         - 二运原版指路精修；
+        P5：
+         - 光与暗之翼(踩塔)指路；
+         - 极化打击(挡枪)指路。
         """;
         
         [UserSetting("启用文本提示")]
@@ -103,6 +129,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         int? firstTargetIcon = null;
         double parse = 0;
+        volatile bool isInPhase5=false;
 
         int P1雾龙计数 =0;
         int[] P1雾龙记录 = [0, 0, 0, 0];
@@ -157,26 +184,25 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         // The leftmost (0), the about left (1), the about right (2), the rightmost (3) while facing south.
         volatile bool phase4_guidanceOfResiduesHasBeenGenerated=false;
 
-        volatile bool hasAcquiredTheFirstTower=false;
-        string indexOfTheFirstTower="";
-        bool hasDrawnTheInitialPositionOfMT=false;
-        Vector3 leftSideOfSouth=new Vector3(98,0,107);
-        Vector3 rightSideOfSouth=new Vector3(102,0,107);
-        Vector3 leftSideOfNortheast=new Vector3(107.06f,0,98.23f);
-        Vector3 rightSideOfNortheast=new Vector3(105.06f,0,94.77f);
-        Vector3 leftSideOfNorthwest=new Vector3(94.94f,0,94.77f);
-        Vector3 rightSideOfNorthwest=new Vector3(92.94f,0,98.23f);
-        // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
-        Vector3 standbyPositionBetweenNortheastAndNorthwest=new Vector3(100,0,93);
-        Vector3 standbyPositionBetweenNorthwestAndSouth=new Vector3(93.94f,0,103.50f);
-        Vector3 standbyPositionBetweenNortheastAndSouth=new Vector3(106.06f,0,103.50f);
-
-        Vector3 positionToTakeHitsOnTheLeft=new Vector3(95.93f,0,104.07f);
-        Vector3 positionToBeCoveredOnTheLeft=new Vector3(93.81f,0,106.19f);
-        Vector3 positionToStandbyOnTheLeft=new Vector3(98.78f,0,106.89f);
-        Vector3 positionToTakeHitsOnTheRight=new Vector3(104.07f,0,104.07f);
-        Vector3 positionToBeCoveredOnTheRight=new Vector3(106.19f,0,106.19f);
-        Vector3 positionToStandbyOnTheRight=new Vector3(101.22f,0,106.89f);
+        volatile int phase5_roundControl=0;
+        volatile bool phase5_hasAcquiredTheFirstTower=false;
+        volatile string phase5_indexOfTheFirstTower="";
+        volatile bool phase5_hasConfirmedTheInitialPosition=false;
+        Vector3 phase5_leftSideOfTheSouth_asAConstant=new Vector3(98,0,107);
+        Vector3 phase5_rightSideOfTheSouth_asAConstant=new Vector3(102,0,107);
+        Vector3 phase5_leftSideOfTheNortheast_asAConstant=new Vector3(107.06f,0,98.23f);
+        Vector3 phase5_rightSideOfTheNortheast_asAConstant=new Vector3(105.06f,0,94.77f);
+        Vector3 phase5_leftSideOfTheNorthwest_asAConstant=new Vector3(94.94f,0,94.77f);
+        Vector3 phase5_rightSideOfTheNorthwest_asAConstant=new Vector3(92.94f,0,98.23f);
+        Vector3 phase5_standbyPointBetweenSouthAndNortheast_asAConstant=new Vector3(106.06f,0,103.50f);
+        Vector3 phase5_standbyPointBetweenSouthAndNorthwest_asAConstant=new Vector3(93.94f,0,103.50f);
+        Vector3 phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant=new Vector3(100,0,93);
+        Vector3 phase5_positionToTakeHitsOnTheLeft_asAConstant=new Vector3(95.93f,0,104.07f);
+        Vector3 phase5_positionToBeCoveredOnTheLeft_asAConstant=new Vector3(93.81f,0,106.19f);
+        Vector3 phase5_positionToStandbyOnTheLeft_asAConstant=new Vector3(98.78f,0,106.89f);
+        Vector3 phase5_positionToTakeHitsOnTheRight_asAConstant=new Vector3(104.07f,0,104.07f);
+        Vector3 phase5_positionToBeCoveredOnTheRight_asAConstant=new Vector3(106.19f,0,106.19f);
+        Vector3 phase5_positionToStandbyOnTheRight_asAConstant=new Vector3(101.22f,0,106.89f);
         // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
         
         public enum Languages_Of_Prompts {
@@ -269,6 +295,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (p1Thther4Marker)
                 accessory.Method.MarkClear();
             parse = 1d;
+            isInPhase5=false;
+            
             P1雾龙记录 = [0, 0, 0, 0];
             P1雾龙计数 = 0;
             P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -295,9 +323,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase4_residueIdsFromEastToWest=[0,0,0,0];
             phase4_guidanceOfResiduesHasBeenGenerated=false;
 
-            hasAcquiredTheFirstTower=false;
-            indexOfTheFirstTower="";
-            hasDrawnTheInitialPositionOfMT=false;
+            phase5_roundControl=0;
+            phase5_hasAcquiredTheFirstTower=false;
+            phase5_indexOfTheFirstTower="";
+            phase5_hasConfirmedTheInitialPosition=false;
         }
 
         #region P1
@@ -5513,9 +5542,59 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         #endregion
 
         #region P5
+        
+        [ScriptMethod(name:"Phase5 Initialization 初始化",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:17839"],
+            userControl:false)]
+        
+        public void Phase5_Initialization_初始化(Event @event, ScriptAccessory accessory) {
+            
+            isInPhase5=true;
+            
+            phase5_roundControl=0;
+            phase5_hasAcquiredTheFirstTower=false;
+            phase5_indexOfTheFirstTower="";
+            phase5_hasConfirmedTheInitialPosition=false;
+
+        }
+        
+        [ScriptMethod(name:"Phase5 Destruction 析构",
+            eventType:EventTypeEnum.RemoveCombatant,
+            eventCondition:["DataId:17839"],
+            userControl:false)]
+        
+        public void Phase5_Destruction_析构(Event @event, ScriptAccessory accessory) {
+
+            isInPhase5=false;
+            
+            phase5_roundControl=0;
+            phase5_hasAcquiredTheFirstTower=false;
+            phase5_indexOfTheFirstTower="";
+            phase5_hasConfirmedTheInitialPosition=false;
+
+        }
+        
+        [ScriptMethod(name:"Phase5 Round Control 轮数控制",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40306"],
+            userControl:false)]
+        
+        public void Phase5_Round_Control_轮数控制(Event @event, ScriptAccessory accessory) {
+
+            ++phase5_roundControl;
+
+        }
+        
         [ScriptMethod(name: "P5_地火", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40118|40307)$"])]
         public void P5_地火(Event @event, ScriptAccessory accessory)
         {
+            if(!isInPhase5) {
+
+                return;
+
+            }
+            
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
 
             var dp = accessory.Data.GetDefaultDrawProperties();
@@ -5540,6 +5619,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name: "P5_地火消除", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(40118|4030[789])$"],userControl:false)]
         public void P5_地火消除(Event @event, ScriptAccessory accessory)
         {
+            if(!isInPhase5) {
+
+                return;
+
+            }
+            
             if (!float.TryParse(@event["SourceRotation"],out var rot)) return;
             var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             Vector3 centre = new(100, 0, 100);
@@ -5553,6 +5638,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name: "P5_光与暗之翼", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40313|40233)$"])]
         public void P5_光与暗之翼(Event @event, ScriptAccessory accessory)
         {
+            if(!isInPhase5) {
+
+                return;
+
+            }
+            
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
 
             var r = 225f;
@@ -5603,85 +5694,111 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
         
-        [ScriptMethod(name:"Phase5_Reset_Data_Of_Wings_Dark_And_Light_重置光与暗之翼的数据",
+        [ScriptMethod(name:"Phase5 Initialization Of Wings Dark And Light 光与暗之翼(踩塔)初始化",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40319"],
             userControl:false)]
         
-        public void Phase5_Reset_Data_Of_Wings_Dark_And_Light_重置光与暗之翼的数据(Event @event, ScriptAccessory accessory) {
+        public void Phase5_Initialization_Of_Wings_Dark_And_Light_光与暗之翼初始化(Event @event, ScriptAccessory accessory) {
             
-            hasAcquiredTheFirstTower=false;
-            indexOfTheFirstTower="";
-            hasDrawnTheInitialPositionOfMT=false;
+            if(!isInPhase5) {
+
+                return;
+
+            }
+            
+            phase5_hasAcquiredTheFirstTower=false;
+            phase5_indexOfTheFirstTower="";
+            phase5_hasConfirmedTheInitialPosition=false;
             
         }
         
-        [ScriptMethod(name:"Phase5_Acquire_The_First_Tower_Of_Wings_Dark_And_Light_获取光与暗之翼的第一座塔",
+        [ScriptMethod(name:"Phase5 Acquire The First Tower 获取一塔",
             eventType:EventTypeEnum.EnvControl,
             eventCondition:["DirectorId:800375BF","State:00010004","Index:regex:^(0000003[012])"],
             userControl:false)]
         
-        public void Phase5_Acquire_The_First_Tower_Of_Wings_Dark_And_Light_获取光与暗之翼的第一座塔(Event @event, ScriptAccessory accessory) {
+        public void Phase5_Acquire_The_First_Tower_获取一塔(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
 
-            if(!hasAcquiredTheFirstTower) {
+                return;
+
+            }
+
+            if(!phase5_hasAcquiredTheFirstTower) {
                 
-                indexOfTheFirstTower=@event["Index"];
+                phase5_indexOfTheFirstTower=@event["Index"];
                 
-                hasAcquiredTheFirstTower=true;
+                phase5_hasAcquiredTheFirstTower=true;
                 
             }
             
         }
         
-        [ScriptMethod(name:"Phase5_Initial_Position_Of_MT_During_Wings_Dark_And_Light_光与暗之翼MT初始位置",
+        [ScriptMethod(name:"Phase5 Initial Position For Tanks During Towers 踩塔期间T的起始位置",
             eventType:EventTypeEnum.EnvControl,
             eventCondition:["DirectorId:800375BF","State:00010004","Index:regex:^(0000003[012])"])]
         
-        public void Phase5_Initial_Position_Of_MT_During_Wings_Dark_And_Light_光与暗之翼MT初始位置(Event @event, ScriptAccessory accessory) {
-
-            if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0) {
+        public void Phase5_Initial_Position_For_Tanks_During_Towers_踩塔期间T的起始位置(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
 
                 return;
 
             }
             
-            if(hasDrawnTheInitialPositionOfMT) {
+            if(phase5_hasConfirmedTheInitialPosition) {
 
                 return;
                 
             }
+            
+            if(phase5_roundControl!=1&&phase5_roundControl!=2) {
 
-            while(!hasAcquiredTheFirstTower);
+                return;
+
+            }
+
+            if(phase5_roundControl==1&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0) {
+                // The player with the highest enmity at the beginning of the first round is MT.
+
+                return;
+
+            }
+            
+            if(phase5_roundControl==2&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=1) {
+                // The player with the highest enmity at the beginning of the second round is OT.
+
+                return;
+
+            }
+
+            while(!phase5_hasAcquiredTheFirstTower);
+            
+            phase5_hasConfirmedTheInitialPosition=true;
 
             Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
 
-            if(indexOfTheFirstTower.Equals("00000030")) {
-                
-                hasDrawnTheInitialPositionOfMT=true;
+            if(phase5_indexOfTheFirstTower.Equals("00000030")) {
 
                 positionOfTheFirstTower=new Vector3(93.94f,0,96.50f);
 
             }
             
-            if(indexOfTheFirstTower.Equals("00000031")) {
-                
-                hasDrawnTheInitialPositionOfMT=true;
+            if(phase5_indexOfTheFirstTower.Equals("00000031")) {
                 
                 positionOfTheFirstTower=new Vector3(106.06f,0,96.50f);
                 
             }
             
-            if(indexOfTheFirstTower.Equals("00000032")) {
-                
-                hasDrawnTheInitialPositionOfMT=true;
+            if(phase5_indexOfTheFirstTower.Equals("00000032")) {
                 
                 positionOfTheFirstTower=new Vector3(100,0,107);
                 
             }
 
-            if(!hasDrawnTheInitialPositionOfMT) {
-                
-                hasDrawnTheInitialPositionOfMT=true;
+            if(positionOfTheFirstTower.Equals(new Vector3(0,0,0))) {
 
                 return;
 
@@ -5689,14 +5806,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
 
-                Vector3 initialPositionOfMt=RotatePoint(positionOfTheFirstTower,new Vector3(100, 0, 100),float.Pi);
-
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-                currentProperty.Name="Phase5_Initial_Position_Of_MT_During_Wings_Dark_And_Light_光与暗之翼MT初始位置";
+                currentProperty.Name="Phase5_Initial_Position_For_Tanks_During_Towers_踩塔期间T的起始位置";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=initialPositionOfMt;
+                currentProperty.TargetPosition=RotatePoint(positionOfTheFirstTower,new Vector3(100, 0, 100),float.Pi);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.DestoryAt=2300;
@@ -5707,11 +5822,35 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name:"Phase5_Guidance_For_Tanks_During_Wings_Dark_And_Light_光与暗之翼坦克指路",
+        [ScriptMethod(name:"Phase5 Guidance For Tanks During Towers 坦克踩塔指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:regex:^(40313|40233)$"])]
         
-        public void Phase5_Guidance_For_Tanks_During_Wings_Dark_And_Light_光与暗之翼坦克指路(Event @event, ScriptAccessory accessory) {
+        public void Phase5_Guidance_For_Tanks_During_Towers_坦克踩塔指路(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
+
+                return;
+
+            }
+            
+            if(phase5_roundControl!=1&&phase5_roundControl!=2) {
+
+                return;
+
+            }
+
+            if(phase5_roundControl==1&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0) {
+
+                return;
+
+            }
+            
+            if(phase5_roundControl==2&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=1) {
+
+                return;
+
+            }
             
             if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0
                &&
@@ -5721,7 +5860,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(!hasAcquiredTheFirstTower) {
+            if(!phase5_hasAcquiredTheFirstTower) {
 
                 return;
                 
@@ -5746,7 +5885,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
             bool hasConfirmedThePositionOfTheFirstTower=false;
 
-            if(indexOfTheFirstTower.Equals("00000030")) {
+            if(phase5_indexOfTheFirstTower.Equals("00000030")) {
 
                 positionOfTheFirstTower=new Vector3(93.94f,0,96.50f);
                 
@@ -5754,7 +5893,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(indexOfTheFirstTower.Equals("00000031")) {
+            if(phase5_indexOfTheFirstTower.Equals("00000031")) {
                 
                 positionOfTheFirstTower=new Vector3(106.06f,0,96.50f);
                 
@@ -5762,7 +5901,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
-            if(indexOfTheFirstTower.Equals("00000032")) {
+            if(phase5_indexOfTheFirstTower.Equals("00000032")) {
                 
                 positionOfTheFirstTower=new Vector3(100,0,107);
                 
@@ -5778,51 +5917,55 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
 
-                Vector3 mtPosition1=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
+                Vector3 position1OfCurrentMt=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
                 // Just opposite the first tower.
-                Vector3 mtPosition2=isLeftFirstAndFarFirst?
-                    new((mtPosition1.X-100)/7+100,0,(mtPosition1.Z-100)/7+100):
-                    new((mtPosition1.X-100)/7*18+100,0,(mtPosition1.Z-100)/7*18+100);
+                Vector3 position2OfCurrentMt=isLeftFirstAndFarFirst?
+                    new((position1OfCurrentMt.X-100)/7+100,0,(position1OfCurrentMt.Z-100)/7+100):
+                    new((position1OfCurrentMt.X-100)/7*18+100,0,(position1OfCurrentMt.Z-100)/7*18+100);
                 // The calculations of Position 2 were directly inherited from Karlin's script.
                 // I don't know the mathematical ideas behind the algorithm, but it works and it definitely works great.
                 // So as a result, except the multiplier was adjusted from 15 to 18, I just keep the part as is.
                 
-                Vector3 otPosition2=RotatePoint(mtPosition1,new(100,0,100),isLeftFirstAndFarFirst?
+                Vector3 position2OfCurrentOt=RotatePoint(position1OfCurrentMt,new(100,0,100),isLeftFirstAndFarFirst?
                     120f.DegToRad():
                     // Rotate right, since the boss will hit left.
                     -120f.DegToRad());
                     // Rotate left.
-                Vector3 otPosition1=isLeftFirstAndFarFirst?
-                    new((otPosition2.X-100)/7*18+100,0,(otPosition2.Z-100)/7*18+100):
-                    new((otPosition2.X-100)/7+100,0,(otPosition2.Z-100)/7+100);
+                Vector3 position1OfCurrentOt=isLeftFirstAndFarFirst? 
+                    new((position2OfCurrentOt.X-100)/7*18+100,0,(position2OfCurrentOt.Z-100)/7*18+100):
+                    new((position2OfCurrentOt.X-100)/7+100,0,(position2OfCurrentOt.Z-100)/7+100);
                 
-                if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0) {
+                if((phase5_roundControl==1&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0)
+                   ||
+                   (phase5_roundControl==2&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1)) {
+                    // The contingent expression here stands for the player with the highest enmity at that moment.
+                    // That would be MT in the first round and OT in the second round.
 
                     var currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_MT_Position_1_During_Wings_Dark_And_Light_光与暗之翼MT位置1";
+                    currentProperty.Name="Phase5_Guidance_1_For_The_Current_MT_During_Towers_当前MT踩塔指路1";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
-                    currentProperty.TargetPosition=mtPosition1;
+                    currentProperty.TargetPosition=position1OfCurrentMt;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.DestoryAt=6900;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_MT_Position_2_Preview_During_Wings_Dark_And_Light_光与暗之翼MT位置2预览";
+                    currentProperty.Name="Phase5_Guidance_2_Preview_For_The_Current_MT_During_Towers_当前MT踩塔指路2预览";
                     currentProperty.Scale=new(2);
-                    currentProperty.Position=mtPosition1;
-                    currentProperty.TargetPosition=mtPosition2;
+                    currentProperty.Position=position1OfCurrentMt;
+                    currentProperty.TargetPosition=position2OfCurrentMt;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.DestoryAt=6900;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_MT_Position_2_During_Wings_Dark_And_Light_光与暗之翼MT位置2";
+                    currentProperty.Name="Phase5_Guidance_2_For_The_Current_MT_During_Towers_当前MT踩塔指路2";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
-                    currentProperty.TargetPosition=mtPosition2;
+                    currentProperty.TargetPosition=position2OfCurrentMt;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.Delay=6900;
@@ -5832,40 +5975,113 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     if(Phase5_Reminder_To_Provoke) {
                         
                         System.Threading.Thread.Sleep(2000);
+
+                        if(phase5_roundControl==1&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0) {
+                            
+                            if(Enable_Text_Prompts) {
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                                    accessory.Method.TextInfo("等待ST挑衅后退避",2500);
+                    
+                                }
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                                    accessory.Method.TextInfo("After OT provokes, you should shirk",2500);
+                    
+                                }
+                
+                            }
+            
+                            if(Enable_TTS_Prompts) {
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                                    accessory.Method.TTS("等待ST挑衅后退避");
+                    
+                                }
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                                    accessory.Method.TTS("After OT provokes, you should shirk");
+                    
+                                }
+                
+                            }
+                            
+                        }
                         
-                        accessory.Method.TextInfo("OT provoke not you! ST挑衅不是你！",2500);
-                        accessory.Method.TTS("OT provoke not you! ST挑衅不是你！");
+                        if(phase5_roundControl==2&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+                            
+                            if(Enable_Text_Prompts) {
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                                    accessory.Method.TextInfo("等待MT挑衅后退避",2500);
+                    
+                                }
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                                    accessory.Method.TextInfo("After MT provokes, you should shirk",2500);
+                    
+                                }
+                
+                            }
+            
+                            if(Enable_TTS_Prompts) {
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                                    accessory.Method.TTS("等待MT挑衅后退避");
+                    
+                                }
+
+                                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                                    accessory.Method.TTS("After MT provokes, you should shirk");
+                    
+                                }
+                
+                            }
+                            
+                        }
                         
                     }
 
                 }
 
-                if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+                if((phase5_roundControl==1&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1)
+                   ||
+                   (phase5_roundControl==2&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0)) {
+                    // The contingent expression here stands for the player with the second highest enmity at that moment.
+                    // That would be OT in the first round and MT in the second round.
 
                     var currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_OT_Position_1_During_Wings_Dark_And_Light_光与暗之翼ST位置1";
+                    currentProperty.Name="Phase5_Guidance_1_For_The_Current_OT_During_Towers_当前ST踩塔指路1";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
-                    currentProperty.TargetPosition=otPosition1;
+                    currentProperty.TargetPosition=position1OfCurrentOt;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.DestoryAt=7900;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_OT_Position_2_Preview_During_Wings_Dark_And_Light_光与暗之翼ST位置2预览";
+                    currentProperty.Name="Phase5_Guidance_2_Preview_For_The_Current_OT_During_Towers_当前ST踩塔指路2预览";
                     currentProperty.Scale=new(2);
-                    currentProperty.Position=otPosition1;
-                    currentProperty.TargetPosition=otPosition2;
+                    currentProperty.Position=position1OfCurrentOt;
+                    currentProperty.TargetPosition=position2OfCurrentOt;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.DestoryAt=7900;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                     
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_OT_Position_3_Preview_During_Wings_Dark_And_Light_光与暗之翼ST位置3预览";
+                    currentProperty.Name="Phase5_Guidance_3_Preview_For_The_Current_OT_During_Towers_当前ST踩塔指路3预览";
                     currentProperty.Scale=new(2);
-                    currentProperty.Position=otPosition2;
+                    currentProperty.Position=position2OfCurrentOt;
                     currentProperty.TargetPosition=new Vector3(100,0,93);
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
@@ -5873,10 +6089,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_OT_Position_2_During_Wings_Dark_And_Light_光与暗之翼ST位置2";
+                    currentProperty.Name="Phase5_Guidance_2_For_The_Current_OT_During_Towers_当前ST踩塔指路2";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
-                    currentProperty.TargetPosition=otPosition2;
+                    currentProperty.TargetPosition=position2OfCurrentOt;
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
                     currentProperty.Delay=7900;
@@ -5884,9 +6100,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                     
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_OT_Position_3_Preview_During_Wings_Dark_And_Light_光与暗之翼ST位置3预览";
+                    currentProperty.Name="Phase5_Guidance_3_Preview_For_The_Current_OT_During_Towers_当前ST踩塔指路3预览";
                     currentProperty.Scale=new(2);
-                    currentProperty.Position=otPosition2;
+                    currentProperty.Position=position2OfCurrentOt;
                     currentProperty.TargetPosition=new Vector3(100,0,93);
                     currentProperty.ScaleMode|=ScaleMode.YByDistance;
                     currentProperty.Color=accessory.Data.DefaultSafeColor;
@@ -5895,7 +6111,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                     
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
-                    currentProperty.Name="Phase5_OT_Position_3_During_Wings_Dark_And_Light_光与暗之翼ST位置3";
+                    currentProperty.Name="Phase5_Guidance_3_For_The_Current_OT_During_Towers_当前ST踩塔指路3";
                     currentProperty.Scale=new(2);
                     currentProperty.Owner=accessory.Data.Me;
                     currentProperty.TargetPosition=new Vector3(100,0,93);
@@ -5909,8 +6125,37 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         System.Threading.Thread.Sleep(2000);
                         
-                        accessory.Method.TextInfo("Provoke! 挑衅！",2500);
-                        accessory.Method.TTS("Provoke! 挑衅！");
+                        if(Enable_Text_Prompts) {
+
+                            if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                                accessory.Method.TextInfo("立即挑衅！",2500);
+                    
+                            }
+
+                            if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                                accessory.Method.TextInfo("Now provoke!",2500);
+                    
+                            }
+                
+                        }
+            
+                        if(Enable_TTS_Prompts) {
+
+                            if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                                accessory.Method.TTS("立即挑衅！");
+                    
+                            }
+
+                            if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                                accessory.Method.TTS("Now provoke!");
+                    
+                            }
+                
+                        }
                         
                     }
 
@@ -5920,11 +6165,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name:"Phase5_Guidance_For_Others_During_Wings_Dark_And_Light_光与暗之翼人群指路",
+        [ScriptMethod(name:"Phase5 Guidance For Others During Towers 人群踩塔指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:regex:^(40313|40233)$"])]
         
-        public void Phase5_Guidance_For_Others_During_Wings_Dark_And_Light_光与暗之翼人群指路(Event @event, ScriptAccessory accessory) {
+        public void Phase5_Guidance_For_Others_During_Towers_人群踩塔指路(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
+
+                return;
+
+            }
             
             if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0
                ||
@@ -5934,7 +6185,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(!hasAcquiredTheFirstTower) {
+            if(!phase5_hasAcquiredTheFirstTower) {
 
                 return;
                 
@@ -5958,7 +6209,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-                if(indexOfTheFirstTower.Equals("00000030")) {
+                if(phase5_indexOfTheFirstTower.Equals("00000030")) {
                     // The first tower is in the northwest.
                     
                     if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
@@ -5968,10 +6219,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?rightSideOfNorthwest:leftSideOfNorthwest;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_rightSideOfTheNorthwest_asAConstant:phase5_leftSideOfTheNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=7300;
@@ -5980,10 +6231,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?rightSideOfNorthwest:leftSideOfNorthwest;
-                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_rightSideOfTheNorthwest_asAConstant:phase5_leftSideOfTheNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=7300;
@@ -5992,10 +6243,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=7300;
@@ -6012,10 +6263,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6024,10 +6275,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
-                        currentProperty.TargetPosition=rightSideOfSouth;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheSouth_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6036,10 +6287,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=rightSideOfSouth;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheSouth_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=6900;
@@ -6056,10 +6307,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6068,10 +6319,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNorthwestAndSouth:standbyPositionBetweenNortheastAndNorthwest;
-                        currentProperty.TargetPosition=leftSideOfNortheast;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6080,10 +6331,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=leftSideOfNortheast;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=6900;
@@ -6095,7 +6346,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 }
             
-                if(indexOfTheFirstTower.Equals("00000031")) {
+                if(phase5_indexOfTheFirstTower.Equals("00000031")) {
                     // The first tower is in the northeast.
                     
                     if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
@@ -6104,10 +6355,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?rightSideOfNortheast:leftSideOfNortheast;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_rightSideOfTheNortheast_asAConstant:phase5_leftSideOfTheNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=7300;
@@ -6116,10 +6367,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?rightSideOfNortheast:leftSideOfNortheast;
-                        currentProperty.TargetPosition=standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_rightSideOfTheNortheast_asAConstant:phase5_leftSideOfTheNortheast_asAConstant;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=7300;
@@ -6128,10 +6379,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=7300;
@@ -6147,10 +6398,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6159,10 +6410,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
-                        currentProperty.TargetPosition=rightSideOfNorthwest;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6171,10 +6422,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=rightSideOfNorthwest;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=6900;
@@ -6190,10 +6441,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6202,10 +6453,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndNorthwest:standbyPositionBetweenNortheastAndSouth;
-                        currentProperty.TargetPosition=leftSideOfSouth;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheSouth_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6214,10 +6465,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=leftSideOfSouth;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheSouth_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=6900;
@@ -6229,7 +6480,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 }
             
-                if(indexOfTheFirstTower.Equals("00000032")) {
+                if(phase5_indexOfTheFirstTower.Equals("00000032")) {
                     // The first tower is in the south.
                     
                     if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
@@ -6238,10 +6489,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?rightSideOfSouth:leftSideOfSouth;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_rightSideOfTheSouth_asAConstant:phase5_leftSideOfTheSouth_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=7300;
@@ -6250,10 +6501,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?rightSideOfSouth:leftSideOfSouth;
-                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_rightSideOfTheSouth_asAConstant:phase5_leftSideOfTheSouth_asAConstant;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=7300;
@@ -6262,10 +6513,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Wings_Dark_And_Light_光与暗之翼近战指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=standbyPositionBetweenNortheastAndNorthwest;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=7300;
@@ -6281,10 +6532,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6293,10 +6544,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
-                        currentProperty.TargetPosition=rightSideOfNortheast;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6305,10 +6556,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Wings_Dark_And_Light_光与暗之翼远程指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=rightSideOfNortheast;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNortheast_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=6900;
@@ -6324,10 +6575,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路1";
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6336,10 +6587,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2预览";
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
                         currentProperty.Scale=new(2);
-                        currentProperty.Position=isLeftFirstAndFarFirst?standbyPositionBetweenNortheastAndSouth:standbyPositionBetweenNorthwestAndSouth;
-                        currentProperty.TargetPosition=leftSideOfNorthwest;
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.DestoryAt=6900;
@@ -6348,10 +6599,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Wings_Dark_And_Light_光与暗之翼奶妈指路2";
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
                         currentProperty.Scale=new(2);
                         currentProperty.Owner=accessory.Data.Me;
-                        currentProperty.TargetPosition=leftSideOfNorthwest;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNorthwest_asAConstant;
                         currentProperty.ScaleMode|=ScaleMode.YByDistance;
                         currentProperty.Color=accessory.Data.DefaultSafeColor;
                         currentProperty.Delay=6900;
@@ -6368,17 +6619,23 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name:"Phase5_Guidance_Of_Polarizing_Strikes_失调打击指路",
+        [ScriptMethod(name:"Phase5 Guidance Of Polarizing Strikes 极化打击(挡枪)指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40316"])]
         
-        public void Phase5_Guidance_Of_Polarizing_Strikes_失调打击指路(Event @event, ScriptAccessory accessory) {
+        public void Phase5_Guidance_Of_Polarizing_Strikes_极化打击指路(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
+
+                return;
+
+            }
 
             int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            int myRoundToTakeHits=getRoundToTakeHits(myIndex);
             bool inTheLeftGroup=true;
-            int myRoundToTakeHits=getRoundByIndex(myIndex);
+            int timelineControl=0;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
-            int timeline=0;
 
             if(myRoundToTakeHits<1||myRoundToTakeHits>4) {
 
@@ -6416,14 +6673,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_失调打击初始指路";
+                currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_极化打击初始指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?positionToTakeHitsOnTheLeft:positionToTakeHitsOnTheRight;
+                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToTakeHitsOnTheLeft_asAConstant:phase5_positionToTakeHitsOnTheRight_asAConstant;
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.DestoryAt=4550;
-                timeline+=4550;
+                timelineControl+=4550;
                         
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
@@ -6433,14 +6690,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_失调打击初始指路";
+                currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_极化打击初始指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheLeft:positionToBeCoveredOnTheRight;
+                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToBeCoveredOnTheLeft_asAConstant:phase5_positionToBeCoveredOnTheRight_asAConstant;
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.DestoryAt=4550;
-                timeline+=4550;
+                timelineControl+=4550;
                         
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
@@ -6452,29 +6709,29 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Name="Phase5_Inward_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_极化打击当前组进指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheLeft:positionToBeCoveredOnTheRight;
+                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToBeCoveredOnTheLeft_asAConstant:phase5_positionToBeCoveredOnTheRight_asAConstant;
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
-                currentProperty.Delay=timeline;
+                currentProperty.Delay=timelineControl;
                 currentProperty.DestoryAt=2450;
-                timeline+=2450;
+                timelineControl+=2450;
                 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_失调打击当前分组指路";
+                currentProperty.Name="Phase5_Outward_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_极化打击当前组出指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheLeft:positionToStandbyOnTheRight;
+                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToStandbyOnTheLeft_asAConstant:phase5_positionToStandbyOnTheRight_asAConstant;
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
-                currentProperty.Delay=timeline;
+                currentProperty.Delay=timelineControl;
                 currentProperty.DestoryAt=2250;
-                timeline+=2250;
+                timelineControl+=2250;
                 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
@@ -6486,29 +6743,29 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-            currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_失调打击挡枪指路";
+            currentProperty.Name="Phase5_Inward_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_极化打击挡枪进指路";
             currentProperty.Scale=new(2);
             currentProperty.Owner=accessory.Data.Me;
-            currentProperty.TargetPosition=inTheLeftGroup?positionToTakeHitsOnTheLeft:positionToTakeHitsOnTheRight;
+            currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToTakeHitsOnTheLeft_asAConstant:phase5_positionToTakeHitsOnTheRight_asAConstant;
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
-            currentProperty.Delay=timeline;
+            currentProperty.Delay=timelineControl;
             currentProperty.DestoryAt=2450;
-            timeline+=2450;
+            timelineControl+=2450;
                 
             accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
             currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-            currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_失调打击挡枪指路";
+            currentProperty.Name="Phase5_Outward_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_极化打击挡枪出指路";
             currentProperty.Scale=new(2);
             currentProperty.Owner=accessory.Data.Me;
-            currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheRight:positionToStandbyOnTheLeft;
+            currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToStandbyOnTheRight_asAConstant:phase5_positionToStandbyOnTheLeft_asAConstant;
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
-            currentProperty.Delay=timeline;
+            currentProperty.Delay=timelineControl;
             currentProperty.DestoryAt=2250;
-            timeline+=2250;
+            timelineControl+=2250;
                 
             accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
             
@@ -6520,61 +6777,37 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_失调打击对组指路";
+                currentProperty.Name="Phase5_Inward_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_极化打击对组进指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?positionToBeCoveredOnTheRight:positionToBeCoveredOnTheLeft;
+                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToBeCoveredOnTheRight_asAConstant:phase5_positionToBeCoveredOnTheLeft_asAConstant;
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
-                currentProperty.Delay=timeline;
+                currentProperty.Delay=timelineControl;
                 currentProperty.DestoryAt=2450;
-                timeline+=2450;
+                timelineControl+=2450;
                 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
-                currentProperty.Name="Phase5_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_失调打击对组指路";
+                currentProperty.Name="Phase5_Outward_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_极化打击对组出指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?positionToStandbyOnTheRight:positionToStandbyOnTheLeft;
+                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToStandbyOnTheRight_asAConstant:phase5_positionToStandbyOnTheLeft_asAConstant;
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
-                currentProperty.Delay=timeline;
+                currentProperty.Delay=timelineControl;
                 currentProperty.DestoryAt=2250;
-                timeline+=2250;
+                timelineControl+=2250;
                 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
-                
-            }
-            
-            // ----- -----
-
-            if(Phase5_Reminder_To_Provoke) {
-
-                if(myIndex==0) {
-                    
-                    System.Threading.Thread.Sleep(timeline);
-                        
-                    accessory.Method.TextInfo("Provoke! 挑衅！",2500);
-                    accessory.Method.TTS("Provoke! 挑衅！");
-                    
-                }
-
-                if(myIndex==1) {
-                    
-                    System.Threading.Thread.Sleep(timeline);
-                        
-                    accessory.Method.TextInfo("MT provoke not you! MT挑衅不是你！",2500);
-                    accessory.Method.TTS("MT provoke not you! MT挑衅不是你！");
-                    
-                }
                 
             }
 
         }
 
-        private int getRoundByIndex(int currentIndex) {
+        private int getRoundToTakeHits(int currentIndex) {
 
             if(Phase5_Order_During_Polarizing_Strikes==Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈) {
 
