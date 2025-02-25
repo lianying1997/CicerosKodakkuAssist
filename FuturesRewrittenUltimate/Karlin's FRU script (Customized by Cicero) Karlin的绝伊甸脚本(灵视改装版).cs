@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.35",
+        version:"0.0.0.36",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -37,6 +37,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         This is a customized version of Karlin's script for Futures Rewritten (Ultimate).
         The script was branched out from the version 0.0.0.10 and extensively customized by Cicero.
         Please configure the user settings of the script according to your user settings of the vanilla script before running it!
+        And of course, please don't run the customized script and the vanilla script simultaneously.
         
         Regarding Phase 5, the script assumes that there would be only two provocations during the entire Phase 5, both would happen during Wings Dark And Light (towers and tank busters).
         The first provocation would be from OT and the second would be from MT, no other tank swapping. The script also assumes that the tank with the highest enmity at the beginning of Phase 5 would be MT.
@@ -45,6 +46,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         这是Karlin的另一个未来(绝伊甸)脚本的改装版本。
         脚本是基于0.0.0.10版本的，灵视对脚本进行了大幅度改装。
         在使用前请记得按照原版脚本重新配置一下这个脚本的用户设置！
+        当然也不请要同时开着改装脚本和原版脚本。
         
         关于P5，指路是基于整个P5全程只有两次挑衅，且都发生在光与暗之翼(塔+死刑)期间。
         第一次是ST挑衅，第二次是MT挑衅，除此之外没有其他涉及仇恨的行为。同时，开场时MT需要是一仇。
