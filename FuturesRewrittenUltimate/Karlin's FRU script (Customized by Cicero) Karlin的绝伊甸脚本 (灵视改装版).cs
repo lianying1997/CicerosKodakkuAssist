@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.40",
+        version:"0.0.0.41",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -119,6 +119,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
+        [UserSetting("P5 Boss中轴线的颜色")]
+        public ScriptColor Phase5_Colour_Of_The_Boss_Central_Axis { get; set; } = new() { V4=new(1f,0f,0f,1f) };
+        [UserSetting("P5 璀璨之刃(地火)后Boss面向人群")]
+        public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
         [UserSetting("P5 光与暗之翼(踩塔)攻略")]
         public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; }
         [UserSetting("P5 挑衅提醒")]
@@ -201,10 +205,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Vector3 phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant=new Vector3(100,0,93);
         Vector3 phase5_positionToTakeHitsOnTheLeft_asAConstant=new Vector3(95.93f,0,104.07f);
         Vector3 phase5_positionToBeCoveredOnTheLeft_asAConstant=new Vector3(93.81f,0,106.19f);
-        Vector3 phase5_positionToStandbyOnTheLeft_asAConstant=new Vector3(98.78f,0,106.89f);
+        Vector3 phase5_positionToStandbyOnTheLeft_asAConstant=new Vector3(99.24f,0,108.72f);
         Vector3 phase5_positionToTakeHitsOnTheRight_asAConstant=new Vector3(104.07f,0,104.07f);
         Vector3 phase5_positionToBeCoveredOnTheRight_asAConstant=new Vector3(106.19f,0,106.19f);
-        Vector3 phase5_positionToStandbyOnTheRight_asAConstant=new Vector3(101.22f,0,106.89f);
+        Vector3 phase5_positionToStandbyOnTheRight_asAConstant=new Vector3(100.76f,0,108.72f);
         // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
         
         public enum Languages_Of_Prompts {
@@ -5646,6 +5650,155 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 accessory.Method.RemoveDraw($"P5_地火_前进_{@event["SourceId"]}");
             }
         }
+        
+        [ScriptMethod(name:"Phase5 Boss Central Axis After Fulgent Blade 璀璨之刃(地火)后Boss中轴线",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40310"])]
+        
+        public void Phase5_Boss_Central_Axis_After_Fulgent_Blade_璀璨之刃后Boss中轴线(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase5_Boss_Front_Axis_After_Fulgent_Blade_璀璨之刃后Boss前轴线";
+            currentProperty.Owner=sourceId;
+            currentProperty.Scale=new(0.5f,10);
+            currentProperty.Color=Phase5_Colour_Of_The_Boss_Central_Axis.V4.WithW(25f);
+            currentProperty.DestoryAt=9000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase5_Boss_Rear_Axis_After_Fulgent_Blade_璀璨之刃后Boss后轴线";
+            currentProperty.Owner=sourceId;
+            currentProperty.Scale=new(0.5f,10);
+            currentProperty.Rotation=float.Pi;
+            currentProperty.Color=Phase5_Colour_Of_The_Boss_Central_Axis.V4.WithW(25f);
+            currentProperty.DestoryAt=9000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+
+        }
+        
+        [ScriptMethod(name:"Phase5 Side To Stack After Fulgent Blade 璀璨之刃(地火)后的分摊侧",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40310"])]
+        
+        public void Phase5_Side_To_Stack_After_Fulgent_Blade_璀璨之刃后的分摊侧(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+
+            if(myIndex<0||myIndex>7) {
+
+                return;
+
+            }
+            
+            bool goLeft=false;
+
+            if(myIndex==0
+               ||
+               myIndex==2
+               ||
+               myIndex==4
+               ||
+               myIndex==6) { 
+                
+                goLeft=true;
+
+            }
+            
+            if(myIndex==1
+               ||
+               myIndex==3
+               ||
+               myIndex==5
+               ||
+               myIndex==7) { 
+                
+                goLeft=false;
+
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase5_Left_Side_After_Fulgent_Blade_璀璨之刃后的左侧";
+            currentProperty.Owner=sourceId;
+            currentProperty.Scale=new(4);
+            currentProperty.Radian=float.Pi;
+            currentProperty.Rotation=float.Pi/2;
+            currentProperty.DestoryAt=9000;
+
+            if(Phase5_Boss_Faces_Players_After_Fulgent_Blade) {
+
+                currentProperty.Color=goLeft?
+                    accessory.Data.DefaultDangerColor.WithW(25f):
+                    accessory.Data.DefaultSafeColor.WithW(25f);
+
+            }
+
+            else {
+                
+                currentProperty.Color=goLeft?
+                    accessory.Data.DefaultSafeColor.WithW(25f):
+                    accessory.Data.DefaultDangerColor.WithW(25f);
+                
+            }
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase5_Right_Side_After_Fulgent_Blade_璀璨之刃后的右侧";
+            currentProperty.Owner=sourceId;
+            currentProperty.Scale=new(4);
+            currentProperty.Radian=float.Pi;
+            currentProperty.Rotation=-(float.Pi/2);
+            currentProperty.DestoryAt=9000;
+            
+            if(Phase5_Boss_Faces_Players_After_Fulgent_Blade) {
+
+                currentProperty.Color=goLeft?
+                    accessory.Data.DefaultSafeColor.WithW(25f):
+                    accessory.Data.DefaultDangerColor.WithW(25f);
+
+            }
+
+            else {
+                
+                currentProperty.Color=goLeft?
+                    accessory.Data.DefaultDangerColor.WithW(25f):
+                    accessory.Data.DefaultSafeColor.WithW(25f);
+                
+            }
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+
+        }
 
         [ScriptMethod(name: "P5_光与暗之翼", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40313|40233)$"])]
         public void P5_光与暗之翼(Event @event, ScriptAccessory accessory)
@@ -6645,6 +6798,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
+        [ScriptMethod(name:"Phase5 Boss Central Axis During Polarizing Strikes 极化打击(挡枪)期间Boss中轴线",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40316"])]
+        
+        public void Phase5_Boss_Central_Axis_During_Polarizing_Strikes_极化打击期间Boss中轴线(Event @event, ScriptAccessory accessory) {
+            
+            if(!isInPhase5) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase5_Boss_Front_Axis_During_Polarizing_Strikes_极化打击期间Boss前轴线";
+            currentProperty.Owner=sourceId;
+            currentProperty.Scale=new(0.5f,10);
+            currentProperty.Color=Phase5_Colour_Of_The_Boss_Central_Axis.V4.WithW(25f);
+            currentProperty.DestoryAt=24000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase5_Boss_Rear_Axis_During_Polarizing_Strikes_极化打击期间Boss后轴线";
+            currentProperty.Owner=sourceId;
+            currentProperty.Scale=new(0.5f,10);
+            currentProperty.Rotation=float.Pi;
+            currentProperty.Color=Phase5_Colour_Of_The_Boss_Central_Axis.V4.WithW(25f);
+            currentProperty.DestoryAt=24000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+
+        }
+        
         [ScriptMethod(name:"Phase5 Guidance Of Polarizing Strikes 极化打击(挡枪)指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40316"])]
@@ -6679,6 +6873,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             int myRoundToTakeHits=phase5_getRoundToTakeHits(myIndex);
             bool inTheLeftGroup=true;
             int timelineControl=0;
+            int timeToTakeHits=0;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
             if(myRoundToTakeHits<1||myRoundToTakeHits>4) {
@@ -6792,6 +6987,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             // ----- -----
             
             // ----- Take hits and swap the group -----
+
+            timeToTakeHits=timelineControl-1125;
             
             currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
@@ -6862,6 +7059,40 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 timelineControl+=2250;
                 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+            
+            System.Threading.Thread.Sleep(timeToTakeHits);
+            
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("挡枪然后换组",1500);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Take hits and swap the group",1500);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS("挡枪然后换组");
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS("Take hits and swap the group");
+                    
+                }
                 
             }
 
