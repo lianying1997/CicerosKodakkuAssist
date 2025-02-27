@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.39",
+        version:"0.0.0.40",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -6657,8 +6657,26 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
+            if(!float.TryParse(@event["SourceRotation"], out float currentRotation)) {
+
+                return;
+
+            }
+
+            currentRotation=-(currentRotation-float.Pi);
+            
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           currentRotation={currentRotation}
+
+                                           """);
+
+            }
+            
             int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            int myRoundToTakeHits=getRoundToTakeHits(myIndex);
+            int myRoundToTakeHits=phase5_getRoundToTakeHits(myIndex);
             bool inTheLeftGroup=true;
             int timelineControl=0;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
@@ -6702,7 +6720,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_极化打击初始指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToTakeHitsOnTheLeft_asAConstant:phase5_positionToTakeHitsOnTheRight_asAConstant;
+                currentProperty.TargetPosition=inTheLeftGroup?
+                    RotatePoint(phase5_positionToTakeHitsOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation):
+                    RotatePoint(phase5_positionToTakeHitsOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.DestoryAt=4550;
@@ -6719,7 +6739,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Name="Phase5_Initial_Guidance_Of_Polarizing_Strikes_极化打击初始指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToBeCoveredOnTheLeft_asAConstant:phase5_positionToBeCoveredOnTheRight_asAConstant;
+                currentProperty.TargetPosition=inTheLeftGroup?
+                    RotatePoint(phase5_positionToBeCoveredOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation):
+                    RotatePoint(phase5_positionToBeCoveredOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.DestoryAt=4550;
@@ -6738,7 +6760,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Name="Phase5_Inward_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_极化打击当前组进指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToBeCoveredOnTheLeft_asAConstant:phase5_positionToBeCoveredOnTheRight_asAConstant;
+                currentProperty.TargetPosition=inTheLeftGroup?
+                    RotatePoint(phase5_positionToBeCoveredOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation):
+                    RotatePoint(phase5_positionToBeCoveredOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.Delay=timelineControl;
@@ -6752,7 +6776,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Name="Phase5_Outward_Guidance_Of_Polarizing_Strikes_In_The_Current_Group_极化打击当前组出指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToStandbyOnTheLeft_asAConstant:phase5_positionToStandbyOnTheRight_asAConstant;
+                currentProperty.TargetPosition=inTheLeftGroup?
+                    RotatePoint(phase5_positionToStandbyOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation):
+                    RotatePoint(phase5_positionToStandbyOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.Delay=timelineControl;
@@ -6772,7 +6798,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Name="Phase5_Inward_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_极化打击挡枪进指路";
             currentProperty.Scale=new(2);
             currentProperty.Owner=accessory.Data.Me;
-            currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToTakeHitsOnTheLeft_asAConstant:phase5_positionToTakeHitsOnTheRight_asAConstant;
+            currentProperty.TargetPosition=inTheLeftGroup?
+                RotatePoint(phase5_positionToTakeHitsOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation):
+                RotatePoint(phase5_positionToTakeHitsOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation);
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
             currentProperty.Delay=timelineControl;
@@ -6786,7 +6814,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Name="Phase5_Outward_Guidance_Of_Polarizing_Strikes_While_Taking_Hits_极化打击挡枪出指路";
             currentProperty.Scale=new(2);
             currentProperty.Owner=accessory.Data.Me;
-            currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToStandbyOnTheRight_asAConstant:phase5_positionToStandbyOnTheLeft_asAConstant;
+            currentProperty.TargetPosition=inTheLeftGroup?
+                RotatePoint(phase5_positionToStandbyOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation):
+                RotatePoint(phase5_positionToStandbyOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation);
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
             currentProperty.Delay=timelineControl;
@@ -6806,7 +6836,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Name="Phase5_Inward_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_极化打击对组进指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToBeCoveredOnTheRight_asAConstant:phase5_positionToBeCoveredOnTheLeft_asAConstant;
+                currentProperty.TargetPosition=inTheLeftGroup?
+                    RotatePoint(phase5_positionToBeCoveredOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation):
+                    RotatePoint(phase5_positionToBeCoveredOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.Delay=timelineControl;
@@ -6820,7 +6852,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Name="Phase5_Outward_Guidance_Of_Polarizing_Strikes_In_The_Opposite_Group_极化打击对组出指路";
                 currentProperty.Scale=new(2);
                 currentProperty.Owner=accessory.Data.Me;
-                currentProperty.TargetPosition=inTheLeftGroup?phase5_positionToStandbyOnTheRight_asAConstant:phase5_positionToStandbyOnTheLeft_asAConstant;
+                currentProperty.TargetPosition=inTheLeftGroup?
+                    RotatePoint(phase5_positionToStandbyOnTheRight_asAConstant,new Vector3(100,0,100),currentRotation):
+                    RotatePoint(phase5_positionToStandbyOnTheLeft_asAConstant,new Vector3(100,0,100),currentRotation);
                 currentProperty.ScaleMode|=ScaleMode.YByDistance;
                 currentProperty.Color=accessory.Data.DefaultSafeColor;
                 currentProperty.Delay=timelineControl;
@@ -6833,7 +6867,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        private int getRoundToTakeHits(int currentIndex) {
+        private int phase5_getRoundToTakeHits(int currentIndex) {
 
             if(Phase5_Order_During_Polarizing_Strikes==Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈) {
 
