@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.38",
+        version:"0.0.0.39",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -5586,6 +5586,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             ++phase5_roundControl;
 
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           phase5_roundControl={phase5_roundControl}
+                                           
+                                           """);
+
+            }
+
         }
         
         [ScriptMethod(name: "P5_地火", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40118|40307)$"])]
@@ -5755,6 +5765,23 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 return;
                 
             }
+
+            else {
+                
+                phase5_hasConfirmedTheInitialPosition=true;
+                
+            }
+            
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           phase5_roundControl={phase5_roundControl}
+                                           accessory.Data.PartyList.IndexOf(accessory.Data.Me)={accessory.Data.PartyList.IndexOf(accessory.Data.Me)}
+
+                                           """);
+
+            }
             
             if(phase5_roundControl!=1&&phase5_roundControl!=2) {
 
@@ -5777,8 +5804,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
 
             while(!phase5_hasAcquiredTheFirstTower);
-            
-            phase5_hasConfirmedTheInitialPosition=true;
 
             Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
 
@@ -5836,19 +5861,24 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(phase5_roundControl!=1&&phase5_roundControl!=2) {
+            if(!phase5_hasAcquiredTheFirstTower) {
 
                 return;
-
+                
             }
+            
+            if(Enable_Developer_Mode) {
 
-            if(phase5_roundControl==1&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=0) {
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           phase5_roundControl={phase5_roundControl}
+                                           accessory.Data.PartyList.IndexOf(accessory.Data.Me)={accessory.Data.PartyList.IndexOf(accessory.Data.Me)}
 
-                return;
+                                           """);
 
             }
             
-            if(phase5_roundControl==2&&accessory.Data.PartyList.IndexOf(accessory.Data.Me)!=1) {
+            if(phase5_roundControl!=1&&phase5_roundControl!=2) {
 
                 return;
 
@@ -5860,12 +5890,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 return;
 
-            }
-            
-            if(!phase5_hasAcquiredTheFirstTower) {
-
-                return;
-                
             }
 
             bool isLeftFirstAndFarFirst=true;
