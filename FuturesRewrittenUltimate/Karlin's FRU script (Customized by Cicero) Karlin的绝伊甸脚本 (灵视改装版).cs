@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.41",
+        version:"0.0.0.42",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -5751,6 +5751,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Scale=new(4);
             currentProperty.Radian=float.Pi;
             currentProperty.Rotation=float.Pi/2;
+            currentProperty.Offset=new Vector3(-0.25f,0,0);
             currentProperty.DestoryAt=9000;
 
             if(Phase5_Boss_Faces_Players_After_Fulgent_Blade) {
@@ -5778,6 +5779,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Scale=new(4);
             currentProperty.Radian=float.Pi;
             currentProperty.Rotation=-(float.Pi/2);
+            currentProperty.Offset=new Vector3(0.25f,0,0);
             currentProperty.DestoryAt=9000;
             
             if(Phase5_Boss_Faces_Players_After_Fulgent_Blade) {
@@ -6988,7 +6990,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             // ----- Take hits and swap the group -----
 
-            timeToTakeHits=timelineControl-1125;
+            timeToTakeHits=timelineControl-250;
             
             currentProperty=accessory.Data.GetDefaultDrawProperties();
                 
