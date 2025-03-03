@@ -20,11 +20,11 @@ namespace CicerosKodakkuAssist.Pandemonium.Normal;
 [ScriptType(name:"Abyssos The Seventh Circle 万魔殿 炼净之狱3",
     territorys:[1085],
     guid:"073ca5d8-9a34-41ff-8757-c3862c465be0",
-    version:"0.0.0.12",
+    version:"0.0.0.13",
     author:"Cicero 灵视",
     note:"A script for Abyssos The Seventh Circle.\n万魔殿 炼净之狱3的脚本。")]
 
-public class P7N
+public class Abyssos_The_Seventh_Circle
 {
     
     [UserSetting("启用文本提示")]
@@ -57,7 +57,7 @@ public class P7N
         
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
         
-        currentProperty.Owner=Convert.ToUInt32(@event["SourceId"],16);
+        currentProperty.Owner=sourceId;
         currentProperty.Scale=new(19);
         currentProperty.DestoryAt=7700;
         currentProperty.Color=accessory.Data.DefaultDangerColor;
@@ -96,7 +96,7 @@ public class P7N
         
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
         
-        currentProperty.Owner=Convert.ToUInt32(@event["SourceId"],16);
+        currentProperty.Owner=sourceId;
         currentProperty.Scale=new(25);
         currentProperty.DestoryAt=7700;
         currentProperty.Color=accessory.Data.DefaultDangerColor;
@@ -137,7 +137,7 @@ public class P7N
         var effectPositionInJson=JObject.Parse(@event["EffectPosition"]);
         float currentX=effectPositionInJson["X"]?.Value<float>()??0;
         
-        currentProperty.Owner=Convert.ToUInt32(@event["SourceId"],16);
+        currentProperty.Owner=sourceId;
         currentProperty.Offset=new Vector3(0,0,10);
         currentProperty.Scale=new(25,50);
         currentProperty.DestoryAt=4700;
@@ -210,7 +210,7 @@ public class P7N
         
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
         
-        currentProperty.Owner=Convert.ToUInt32(@event["SourceId"],16);
+        currentProperty.Owner=sourceId;
         currentProperty.Scale=new(10);
         currentProperty.DestoryAt=4700;
         currentProperty.Color=accessory.Data.DefaultDangerColor;
@@ -249,8 +249,8 @@ public class P7N
         
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
         
-        currentProperty.Owner=Convert.ToUInt32(@event["SourceId"],16);
-        currentProperty.Scale=new(8,39);
+        currentProperty.Owner=sourceId;
+        currentProperty.Scale=new(8,60);
         currentProperty.DestoryAt=4700;
         currentProperty.Color=accessory.Data.DefaultDangerColor;
         
@@ -288,7 +288,7 @@ public class P7N
         
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
         
-        currentProperty.Owner=Convert.ToUInt32(@event["SourceId"],16);
+        currentProperty.Owner=sourceId;
         currentProperty.Offset=new Vector3(0,0,-8);
         currentProperty.Scale=new(7);
         currentProperty.DestoryAt=1250;
@@ -328,17 +328,6 @@ public class P7N
         
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
-        currentProperty.Owner=accessory.Data.Me;
-        currentProperty.TargetObject=sourceId;
-        currentProperty.Rotation=float.Pi;
-        currentProperty.Scale=new(1.5f,25);
-        currentProperty.DestoryAt=6700;
-        currentProperty.Color=accessory.Data.DefaultDangerColor;
-        
-        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
-        
-        currentProperty=accessory.Data.GetDefaultDrawProperties();
-
         currentProperty.Owner=sourceId;
         currentProperty.TargetObject=accessory.Data.Me;
         currentProperty.ScaleMode|=ScaleMode.YByDistance;
@@ -347,6 +336,19 @@ public class P7N
         currentProperty.Color=accessory.Data.DefaultDangerColor;
         
         accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
+        // The indicator from the source to the character.
+        
+        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+        currentProperty.Owner=accessory.Data.Me;
+        currentProperty.TargetObject=sourceId;
+        currentProperty.Rotation=float.Pi;
+        currentProperty.Scale=new(1.5f,25);
+        currentProperty.DestoryAt=6700;
+        currentProperty.Color=accessory.Data.DefaultDangerColor;
+        
+        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
+        // The indicator from the character to the destination.
         
         if(Enable_Text_Prompts) {
             
@@ -366,7 +368,7 @@ public class P7N
         
     }
     
-    private static bool parseObjectId(string? idStr, out uint id) {
+    private static bool parseObjectId(string? idStr, out ulong id) {
         // This function was directly copied from Karlin's scripts.
         // Really appreciate the implementations of common functions!
         
@@ -375,7 +377,7 @@ public class P7N
         try
         {
             var idStr2 = idStr.Replace("0x", "");
-            id = uint.Parse(idStr2, System.Globalization.NumberStyles.HexNumber);
+            id = ulong.Parse(idStr2, System.Globalization.NumberStyles.HexNumber);
             return true;
         }
         catch (Exception)

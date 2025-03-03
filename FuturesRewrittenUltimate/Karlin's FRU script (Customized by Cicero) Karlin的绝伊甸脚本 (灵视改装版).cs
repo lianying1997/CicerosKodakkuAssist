@@ -23,11 +23,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.42",
+        version:"0.0.0.43",
         note:notesOfTheScript,
         author:"Karlin")]
     
-    public class EdenUltimate
+    public class Futures_Rewritten_Ultimate
     {
         const string notesOfTheScript=
         """
@@ -150,7 +150,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         bool P2DDDircle = false;
         List<int> P2DDIceDir = [];
         List<int> P2RedMirror = [];
-        uint P2BossId = 0;
+        ulong P2BossId = 0;
         List<int> P2LightRampantCircle = [];
         List<int> P2LightRampantBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P2LightRampantTetherDone = new();
@@ -177,7 +177,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
         
-        uint P4FragmentId;
+        ulong P4FragmentId;
         List<int> P4Tether = [-1, -1, -1, -1, -1, -1, -1, -1];
         List<int> P4Stack = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P4TetherDone = false;
@@ -186,7 +186,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         int P4BlueTether = 0;
         List<Vector3> P4WhiteCirclePos = [];
         List<Vector3> P4WaterPos = [];
-        List<uint> phase4_residueIdsFromEastToWest=[0,0,0,0];
+        List<ulong> phase4_residueIdsFromEastToWest=[0,0,0,0];
         // The leftmost (0), the about left (1), the about right (2), the rightmost (3) while facing south.
         volatile bool phase4_guidanceOfResiduesHasBeenGenerated=false;
 
@@ -507,7 +507,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             if (parse != 1d) return;
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
-            var obj= accessory.Data.Objects.SearchByEntityId(sid+1);
+            var obj= accessory.Data.Objects.SearchByEntityId(((uint)sid)+1);
             if(obj == null) return;
             var dir8= PositionTo8Dir(obj.Position, new(100, 0, 100));
             P1雾龙记录[dir8 % 4] = 1;
@@ -753,7 +753,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             lock (this)
             {
-                P1转轮召抓人[accessory.Data.PartyList.IndexOf(tid)] = 1;
+                P1转轮召抓人[accessory.Data.PartyList.IndexOf(((uint)tid))] = 1;
             }
         }
         [ScriptMethod(name: "P1_转轮召_击退处理位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40152)$"])]
@@ -864,7 +864,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             if (parse != 1d) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var index= accessory.Data.PartyList.IndexOf(tid);
+            var index= accessory.Data.PartyList.IndexOf(((uint)tid));
             var id = @event["Id"] == "00F9" ? 10 : 20;
             P1四连线.Add(id + index);
         }
@@ -1452,7 +1452,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             var myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
             int[] group = [6, 7, 4, 5, 2, 3, 0, 1];
-            if (accessory.Data.PartyList.IndexOf(tid) != group[myIndex]) return;
+            if (accessory.Data.PartyList.IndexOf(((uint)tid)) != group[myIndex]) return;
             var rot = myIndex switch
             {
                 0 => 6,
@@ -1872,7 +1872,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (ParsTargetIcon(@event["Id"]) != 157) return;
             if (parse != 2.3) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var index=accessory.Data.PartyList.IndexOf(tid);
+            var index=accessory.Data.PartyList.IndexOf(((uint)tid));
             lock (P2LightRampantCircle)
             {
                 P2LightRampantCircle.Add(index);
@@ -1885,7 +1885,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 2.3) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             if (!int.TryParse(@event["StackCount"], out var count)) return;
-            var index = accessory.Data.PartyList.IndexOf(tid);
+            var index = accessory.Data.PartyList.IndexOf(((uint)tid));
             lock (P2LightRampantBuff)
             {
                 P2LightRampantBuff[index] = count;
@@ -2294,7 +2294,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 3.1) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             if(!float.TryParse(@event["Duration"], out var dur)) return;
-            var index = accessory.Data.PartyList.IndexOf(tid);
+            var index = accessory.Data.PartyList.IndexOf(((uint)tid));
             if (index == -1) return;
             //冰
             if (@event["StatusID"] == "2462")
@@ -2955,8 +2955,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            int currentIndex=accessory.Data.PartyList.IndexOf(targetId);
+            int currentIndex=accessory.Data.PartyList.IndexOf(((uint)targetId));
             int duration=Convert.ToInt32(@event["DurationMilliseconds"],10);
+
+            if(currentIndex<0||currentIndex>7) {
+
+                return;
+
+            }
 
             if(duration>36000) {
                 // Actually it's 38000ms (38s), but just in case.
@@ -3025,7 +3031,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            int copyOf_phase3_timesDarkWaterIiiWasRemoved=phase3_timesDarkWaterIiiWasRemoved;
+            int phase3_timesDarkWaterIiiWasRemoved_copy=phase3_timesDarkWaterIiiWasRemoved;
             bool targetPositionConfirmed=false;
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
@@ -3045,13 +3051,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.SendChat($"""
                                                /e 
                                                goLeft={goLeft}
-                                               copyOf_phase3_timesDarkWaterIiiWasRemoved={copyOf_phase3_timesDarkWaterIiiWasRemoved}
+                                               phase3_timesDarkWaterIiiWasRemoved_copy={phase3_timesDarkWaterIiiWasRemoved_copy}
                                                
                                                """);
 
                 }
                 
-                if(copyOf_phase3_timesDarkWaterIiiWasRemoved<2) {
+                if(phase3_timesDarkWaterIiiWasRemoved_copy<2) {
                     // First round of Dark Water III.
                     
                     currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
@@ -3061,7 +3067,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 else {
                         
-                    if(copyOf_phase3_timesDarkWaterIiiWasRemoved<4) {
+                    if(phase3_timesDarkWaterIiiWasRemoved_copy<4) {
                         // Second round of Dark Water III.
 
                         currentProperty.TargetPosition=(goLeft)?(new Vector3(96,0,100)):(new Vector3(104,0,100));
@@ -3071,7 +3077,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     else {
                             
-                        if(copyOf_phase3_timesDarkWaterIiiWasRemoved<6) {
+                        if(phase3_timesDarkWaterIiiWasRemoved_copy<6) {
                             // Third round of Dark Water III.
                             // The idea was suggested by @lunarflower223 on Discord. Appreciate!
 
@@ -3691,7 +3697,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            var tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.Me);
+            var tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.PartyList[1]);
             bool goBait=false;
 
             if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT) {
@@ -3706,7 +3712,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            else {
+            if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.OT_ST) {
 
                 tankWhoBaitsDarkestDance=accessory.Data.Objects.SearchById(accessory.Data.PartyList[1]);
                 
@@ -3892,13 +3898,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
                     
-                    accessory.Method.TextInfo("集合",9500);
+                    accessory.Method.TextInfo("集合并远离未来的碎片",9500);
                     
                 }
 
                 if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
                     
-                    accessory.Method.TextInfo("Get together",9500);
+                    accessory.Method.TextInfo("Get together and stay away from Fragment of Fate",9500);
                     
                 }
                 
@@ -3908,13 +3914,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
                     
-                    accessory.Method.TTS("集合");
+                    accessory.Method.TTS("集合并远离未来的碎片");
                     
                 }
 
                 if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
                     
-                    accessory.Method.TTS("Get together");
+                    accessory.Method.TTS("Get together and stay away from Fragment of Fate");
                     
                 }
                 
@@ -3975,7 +3981,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             if (parse != 4.2) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var tIndex = accessory.Data.PartyList.IndexOf(tid);
+            var tIndex = accessory.Data.PartyList.IndexOf(((uint)tid));
             P4Stack[tIndex] = 1;
         }
         [ScriptMethod(name: "P4_暗光龙诗_连线收集", eventType: EventTypeEnum.Tether, eventCondition: ["Id:006E"], userControl: false)]
@@ -3984,8 +3990,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 4.2) return;
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var sIndex = accessory.Data.PartyList.IndexOf(sid);
-            var tIndex = accessory.Data.PartyList.IndexOf(tid);
+            var sIndex = accessory.Data.PartyList.IndexOf(((uint)sid));
+            var tIndex = accessory.Data.PartyList.IndexOf(((uint)tid));
             P4Tether[sIndex] = tIndex;
         }
         [ScriptMethod(name: "P4_暗光龙诗_引导扇形", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40187"])]
@@ -4462,7 +4468,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 4.3) return;
             var id = @event["StatusID"];
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var index = accessory.Data.PartyList.IndexOf(tid);
+            var index = accessory.Data.PartyList.IndexOf(((uint)tid));
             //3623红爪 1短2长
             if (id == "3263")
             {
@@ -4521,7 +4527,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(@event["Operate"].Equals("Remove")) {
+            if(!@event["Operate"].Equals("Add")) {
 
                 return;
 
@@ -4621,15 +4627,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
-
-                return;
-
-            }
-
             int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
             Phase4_Relative_Positions_Of_Residues relativePositionOfMyResidue=phase4_getRelativePosition(myIndex);
-            uint idOfMyResidue=phase4_getResidueId(relativePositionOfMyResidue);
+            ulong idOfMyResidue=phase4_getResidueId(relativePositionOfMyResidue);
 
             if(Enable_Developer_Mode) {
 
@@ -4798,7 +4798,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             accessory.Method.RemoveDraw($"Phase4_Highlight_Of_Residues_白圈高亮_{sourceId}");
 
-            uint idOfMyResidue=phase4_getResidueId(phase4_getRelativePosition(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
+            ulong idOfMyResidue=phase4_getResidueId(phase4_getRelativePosition(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
 
             if(idOfMyResidue!=0
                &&
@@ -4845,7 +4845,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             Vector3 targetPosition=targetObject.Position;
 
-            if((IBattleChara?)targetObject==null) {
+            if(((IBattleChara?)targetObject)==null) {
 
                 return;
 
@@ -4863,7 +4863,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             for(int i=0;i<4;++i) {
 
-                var residueObject=accessory.Data.Objects.SearchByEntityId(phase4_residueIdsFromEastToWest[i]);
+                var residueObject=accessory.Data.Objects.SearchById(phase4_residueIdsFromEastToWest[i]);
 
                 if(residueObject!=null) {
 
@@ -4884,7 +4884,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(targetId!=accessory.Data.Me) {
                     
-                    uint idOfMyResidue=phase4_getResidueId(phase4_getRelativePosition(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
+                    ulong idOfMyResidue=phase4_getResidueId(phase4_getRelativePosition(accessory.Data.PartyList.IndexOf(accessory.Data.Me)));
 
                     if(idOfMyResidue!=0
                        &&
@@ -4953,7 +4953,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        private uint phase4_getResidueId(Phase4_Relative_Positions_Of_Residues relativePosition) {
+        private ulong phase4_getResidueId(Phase4_Relative_Positions_Of_Residues relativePosition) {
             
             switch(relativePosition) {
 
@@ -5116,7 +5116,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
             currentProperty.Name=$"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
-            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes);
+            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes>=0?
+                                                Phase4_Length_Of_Drachen_Wanderer_Hitboxes:
+                                                3.5f);
             currentProperty.Color=Phase4_Colour_Of_Residue_Guidance.V4.WithW(25f);
             currentProperty.Offset=new(0f,0f,1f);
             currentProperty.Owner=sourceId;
@@ -6050,14 +6052,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             bool isLeftFirstAndFarFirst=true;
 
             if(@event["ActionId"].Equals("40313")) {
-                // 40313 stands for left first then right, far first then near.
+                // 40313 stands for left first then right, far first then close.
 
                 isLeftFirstAndFarFirst=true;
 
             }
 
             if(@event["ActionId"].Equals("40233")) {
-                // 40233 stands for right first then left, near first then far.
+                // 40233 stands for right first then left, close first then far.
 
                 isLeftFirstAndFarFirst=false;
 
@@ -7178,14 +7180,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             firstTargetIcon ??= int.Parse(id, System.Globalization.NumberStyles.HexNumber);
             return int.Parse(id, System.Globalization.NumberStyles.HexNumber) - (int)firstTargetIcon;
         }
-        private static bool ParseObjectId(string? idStr, out uint id)
+        private static bool ParseObjectId(string? idStr, out ulong id)
         {
             id = 0;
             if (string.IsNullOrEmpty(idStr)) return false;
             try
             {
                 var idStr2 = idStr.Replace("0x", "");
-                id = uint.Parse(idStr2, System.Globalization.NumberStyles.HexNumber);
+                id = ulong.Parse(idStr2, System.Globalization.NumberStyles.HexNumber);
                 return true;
             }
             catch (Exception)
