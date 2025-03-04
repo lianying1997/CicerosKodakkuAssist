@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.44",
+        version:"0.0.0.45",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -335,6 +335,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         }
 
         #region P1
+        
+        [ScriptMethod(name:"----- Phase 1 -----",
+            eventType:EventTypeEnum.NpcYell,
+            eventCondition:["Give me your tired",
+                            "给我你们疲倦的人"])]
+        
+        public void Phase1_Placeholder(Event @event, ScriptAccessory accessory) { }
 
         [ScriptMethod(name: "P1_八方雷火_引导扇形",eventType: EventTypeEnum.StartCasting,eventCondition: ["ActionId:regex:^((4014[48])|40329|40330)$"])]
         public void P1_八方雷火_引导扇形(Event @event, ScriptAccessory accessory)
@@ -1283,6 +1290,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         #endregion
 
         #region P2
+        
+        [ScriptMethod(name:"----- Phase 2 -----",
+            eventType:EventTypeEnum.NpcYell,
+            eventCondition:["Your poor",
+                            "给我你们贫穷的人"])]
+        
+        public void Phase2_Placeholder(Event @event, ScriptAccessory accessory) { }
+        
         [ScriptMethod(name: "P2_换P", eventType: EventTypeEnum.Director, eventCondition: ["Instance:800375BF", "Command:8000001E"],userControl:false)]
         public void P2_换P(Event @event, ScriptAccessory accessory)
         {
@@ -2260,6 +2275,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
         }
+        
+        [ScriptMethod(name:"----- Phase 2.5 -----",
+            eventType:EventTypeEnum.NpcYell,
+            eventCondition:["Your huddled masses yearning to breathe free",
+                            "蜷缩着祈盼自由呼吸的人"])]
+        
+        public void Phase2point5_Placeholder(Event @event, ScriptAccessory accessory) { }
 
         [ScriptMethod(name: "P2.5_暗水晶AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40262"])]
         public void P2_暗水晶AOE(Event @event, ScriptAccessory accessory)
@@ -2277,6 +2299,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         #endregion
 
         #region P3
+        
+        [ScriptMethod(name:"----- Phase 3 -----",
+            eventType:EventTypeEnum.NpcYell,
+            eventCondition:["The wretched refuse of your teeming shore",
+                            "被你们的繁荣拒之门外受苦的人"])]
+        
+        public void Phase3_Placeholder(Event @event, ScriptAccessory accessory) { }
+        
         [ScriptMethod(name: "P3_时间压缩_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40266)$"], userControl: false)]
         public void P3_时间压缩_分P(Event @event, ScriptAccessory accessory)
         {
@@ -2789,150 +2819,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
             phase3_timesDarkWaterIiiWasRemoved=0;
-        }
-        [ScriptMethod(name: "P3_延迟咏唱回响_地火", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"])]
-        public void P3_延迟咏唱回响_地火(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 3.2) return;
-            lock (this)
-            {
-                if (P3FloorFireDone) return;
-                P3FloorFireDone = true;
-            }
-            Vector3 centre = new(100, 0, 100);
-            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-            var clockwise = @event["Id2"] == "64" ? -1 : 1;
-            var preTime = 100;
-            //间隔11 2 2 2 2 2
-
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_中心";
-            dp.Scale = new(9);
-            dp.Position = centre;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 3000;
-            dp.DestoryAt = 9700;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_起始点_11";
-            dp.Scale = new(9);
-            dp.Position = pos;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 3000;
-            dp.DestoryAt = 12000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_起始点_12";
-            dp.Scale = new(9);
-            dp.Position = pos;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 17000 - preTime;
-            dp.DestoryAt = 4000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_起始点_21";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 3000;
-            dp.DestoryAt = 12000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_起始点_22";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 17000 - preTime;
-            dp.DestoryAt = 4000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第二点_11";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 3000;
-            dp.DestoryAt = 14000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第二点_12";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 19000 - preTime;
-            dp.DestoryAt = 2000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第二点_21";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise + float.Pi);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 3000;
-            dp.DestoryAt = 14000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第二点_22";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise + float.Pi);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 19000 - preTime;
-            dp.DestoryAt = 2000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第三点_11";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise);
-            dp.Color = (accessory.Data.DefaultDangerColor + accessory.Data.DefaultSafeColor) / 2;
-            dp.Delay = 3000;
-            dp.DestoryAt = 8000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第三点_12";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 11000 - preTime;
-            dp.DestoryAt = 8000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第三点_21";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise + float.Pi);
-            dp.Color = (accessory.Data.DefaultDangerColor + accessory.Data.DefaultSafeColor) / 2;
-            dp.Delay = 3000;
-            dp.DestoryAt = 8000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第三点_22";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise + float.Pi);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 11000 - preTime;
-            dp.DestoryAt = 8000 - preTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第四点_11";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * 3 * clockwise);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 15000 - preTime;
-            dp.DestoryAt = 6000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_二运_地火_第四点_21";
-            dp.Scale = new(9);
-            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * 3 * clockwise + float.Pi);
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 15000 - preTime;
-            dp.DestoryAt = 6000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
         }
         
         [ScriptMethod(name:"Phase3 Determine Types Of Dark Water III 确定黑暗狂水(分摊)类型",
@@ -3479,45 +3365,149 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name: "P3_延迟咏唱回响_击退提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40182", "TargetIndex:1"])]
-        public void P3_延迟咏唱回响_击退提示(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 3.2) return;
-            if (!ParseObjectId(@event["SourceId"], out var sid)) return;
-
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_延迟咏唱回响_击退提示1";
-            dp.Scale = new(2,21);
-            dp.Owner = accessory.Data.Me;
-            dp.TargetObject = sid;
-            dp.Rotation = float.Pi;
-            dp.Color = accessory.Data.DefaultDangerColor.WithW(3);
-            dp.DestoryAt = 3000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P3_延迟咏唱回响_击退提示2";
-            dp.Scale = new(2);
-            dp.Owner = sid;
-            dp.TargetObject = accessory.Data.Me;
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Color = accessory.Data.DefaultDangerColor.WithW(3);
-            dp.DestoryAt = 3000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
-        }
-        [ScriptMethod(name: "P3_延迟咏唱回响_地火记录", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"],userControl:false)]
-        public void P3_延迟咏唱回响_地火记录(Event @event, ScriptAccessory accessory)
+        [ScriptMethod(name: "P3_延迟咏唱回响_地火", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"])]
+        public void P3_延迟咏唱回响_地火(Event @event, ScriptAccessory accessory)
         {
             if (parse != 3.2) return;
             lock (this)
             {
-                if (P3FloorFire != -1) return;
-                Vector3 centre = new(100, 0, 100);
-                var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-                P3FloorFire = PositionTo8Dir(pos,new(100,0,100));
-                P3FloorFire+= @event["Id2"] == "64" ? 10 : 20;
+                if (P3FloorFireDone) return;
+                P3FloorFireDone = true;
             }
-            
+            Vector3 centre = new(100, 0, 100);
+            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            var clockwise = @event["Id2"] == "64" ? -1 : 1;
+            var preTime = 100;
+            //间隔11 2 2 2 2 2
+
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_中心";
+            dp.Scale = new(9);
+            dp.Position = centre;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 3000;
+            dp.DestoryAt = 9700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_起始点_11";
+            dp.Scale = new(9);
+            dp.Position = pos;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 3000;
+            dp.DestoryAt = 12000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_起始点_12";
+            dp.Scale = new(9);
+            dp.Position = pos;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 17000 - preTime;
+            dp.DestoryAt = 4000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_起始点_21";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 3000;
+            dp.DestoryAt = 12000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_起始点_22";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 17000 - preTime;
+            dp.DestoryAt = 4000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第二点_11";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 3000;
+            dp.DestoryAt = 14000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第二点_12";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 19000 - preTime;
+            dp.DestoryAt = 2000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第二点_21";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise + float.Pi);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 3000;
+            dp.DestoryAt = 14000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第二点_22";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * clockwise + float.Pi);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 19000 - preTime;
+            dp.DestoryAt = 2000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第三点_11";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise);
+            dp.Color = (accessory.Data.DefaultDangerColor + accessory.Data.DefaultSafeColor) / 2;
+            dp.Delay = 3000;
+            dp.DestoryAt = 8000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第三点_12";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 11000 - preTime;
+            dp.DestoryAt = 8000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第三点_21";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise + float.Pi);
+            dp.Color = (accessory.Data.DefaultDangerColor + accessory.Data.DefaultSafeColor) / 2;
+            dp.Delay = 3000;
+            dp.DestoryAt = 8000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第三点_22";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise + float.Pi);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 11000 - preTime;
+            dp.DestoryAt = 8000 - preTime;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第四点_11";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * 3 * clockwise);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 15000 - preTime;
+            dp.DestoryAt = 6000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_二运_地火_第四点_21";
+            dp.Scale = new(9);
+            dp.Position = RotatePoint(pos, centre, float.Pi / 4 * 3 * clockwise + float.Pi);
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 15000 - preTime;
+            dp.DestoryAt = 6000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
         }
         
         [ScriptMethod(name:"Phase3 Range Of Darkest Dance 暗夜舞蹈(最远死刑)范围",
@@ -3785,6 +3775,48 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
         }
+        
+        [ScriptMethod(name: "P3_延迟咏唱回响_击退提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40182", "TargetIndex:1"])]
+        public void P3_延迟咏唱回响_击退提示(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 3.2) return;
+            if (!ParseObjectId(@event["SourceId"], out var sid)) return;
+
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_延迟咏唱回响_击退提示1";
+            dp.Scale = new(2,21);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetObject = sid;
+            dp.Rotation = float.Pi;
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(3);
+            dp.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P3_延迟咏唱回响_击退提示2";
+            dp.Scale = new(2);
+            dp.Owner = sid;
+            dp.TargetObject = accessory.Data.Me;
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(3);
+            dp.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+        }
+        [ScriptMethod(name: "P3_延迟咏唱回响_地火记录", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"],userControl:false)]
+        public void P3_延迟咏唱回响_地火记录(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 3.2) return;
+            lock (this)
+            {
+                if (P3FloorFire != -1) return;
+                Vector3 centre = new(100, 0, 100);
+                var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+                P3FloorFire = PositionTo8Dir(pos,new(100,0,100));
+                P3FloorFire+= @event["Id2"] == "64" ? 10 : 20;
+            }
+            
+        }
+        
 
         private int MyLampIndex(int myPartyIndex)
         {
@@ -3860,8 +3892,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         #endregion
 
         #region P4
-
-       
+        
+        [ScriptMethod(name:"----- Phase 4 -----",
+            eventType:EventTypeEnum.NpcYell,
+            eventCondition:["Send these, the homeless, tempest-tost to me",
+                            "送来那些无家可归，被风吹雨淋的人"])]
+        
+        public void Phase4_Placeholder(Event @event, ScriptAccessory accessory) { }
+        
         [ScriptMethod(name: "P4_具象化_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40246"], userControl: false)]
         public void P4_具象化_分P(Event @event, ScriptAccessory accessory)
         {
@@ -4512,6 +4550,457 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             P4BlueTether = PositionTo6Dir(pos, new(100, 0, 100)) % 3;
         }
+        [ScriptMethod(name: "P4_时间结晶_灯AOE", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0085"])]
+        public void P4_时间结晶_灯AOE(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            Vector3 normalPos = new(pos.X, 0, 200 - pos.Z);
+            Vector3 fastPos = new(100, 0, pos.Z > 100 ? 111 : 89);
+
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P4_时间结晶_灯AOE_快";
+            dp.Scale = new(12);
+            dp.Position = fastPos;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.DestoryAt = 7500;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P4_时间结晶_灯AOE_中";
+            dp.Scale = new(12);
+            dp.Position = normalPos;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 13000 - P4LampDisplayDur;
+            dp.DestoryAt = P4LampDisplayDur;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P4_时间结晶_灯AOE_慢";
+            dp.Scale = new(12);
+            dp.Position = pos;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 18000 - P4LampDisplayDur;
+            dp.DestoryAt = P4LampDisplayDur;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+        [ScriptMethod(name: "P4_时间结晶_土分摊范围", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2454"])]
+        public void P4_时间结晶_土分摊范围(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P4_时间结晶_土分摊范围";
+            dp.Scale = new(6);
+            dp.Owner = tid;
+            dp.Color = accessory.Data.DefaultSafeColor;
+            dp.Delay = 14000;
+            dp.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P4_时间结晶_土分摊范围_水晶";
+            dp.Scale = new(9.5f);
+            dp.Owner = P4FragmentId;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Delay = 14000;
+            dp.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+        [ScriptMethod(name: "P4_时间结晶_碎灵一击", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2452"])]
+        public void P4_时间结晶_碎灵一击(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
+            if (tid != accessory.Data.Me) return;
+
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "P4_时间结晶_碎灵一击_水晶";
+            dp.Scale = new(8.5f);
+            dp.Owner = P4FragmentId;
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.DestoryAt = 3500;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            for (int i = 0; i < 8; i++)
+            {
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_碎灵一击";
+                dp.Scale = new(5);
+                dp.Owner = accessory.Data.PartyList[i];
+                dp.Color = accessory.Data.DefaultDangerColor;
+                dp.DestoryAt = 3500;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+            
+            
+        }
+        [ScriptMethod(name: "P4_时间结晶_Buff处理位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40293"])]
+        public void P4_时间结晶_Buff处理位置(Event @event, ScriptAccessory accessory)
+        {
+            
+            //buff后3.5s
+            if (parse != 4.3) return;
+            var myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            //短红
+            if (P4ClawBuff[myIndex] == 1)
+            {
+                var isHigh = P4ClawBuff.IndexOf(1) == myIndex;
+                Vector3 dealpos= isHigh ? new(87, 0, 100) : new(113, 0, 100);
+
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_撞龙头";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 10500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                //高分摊 088 085 -> 093 082
+                //高闲   081 103 -> 081 097
+                //低分摊 112 085 -> 107 082
+                //低闲   119 103 -> 119 97
+                Vector3 dealpos2 = isHigh ? (P4BlueTether == 1 ? new(081, 0, 103) : new(088, 0, 085)) : (P4BlueTether == 1 ? new(112, 0, 085) : new(119, 0, 103));
+                Vector3 dealpos3 = isHigh ? (P4BlueTether == 1 ? new(081, 0, 097) : new(093, 0, 082)) : (P4BlueTether == 1 ? new(107, 0, 082) : new(119, 0, 097));
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_pos2预连线";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Position = dealpos;
+                dp.TargetPosition = dealpos2;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 10500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_pos2位置";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos2;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.Delay = 10500;
+                dp.DestoryAt = 3000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_pos3预连线";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Position = dealpos2;
+                dp.TargetPosition = dealpos3;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 13500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_pos3位置";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos3;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.Delay = 13500;
+                dp.DestoryAt = 3000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
+            //长红
+            if (P4ClawBuff[myIndex] == 2)
+            {
+                var isHigh = P4ClawBuff.IndexOf(2) == myIndex;
+                Vector3 dealpos1 = isHigh ? new(088.5f, 0, 115.5f) : new(111.5f, 0, 115.5f);
+                Vector3 dealpos2 = isHigh ? new(090.2f, 0, 117.0f) : new(109.8f, 0, 117.0f);
+                Vector3 dealpos3 = isHigh ? new(092.5f, 0, 118.0f) : new(107.5f, 0, 118.0f);
+                Vector3 dealpos4 = isHigh ? new(092.0f, 0, 110.0f) : new(108.0f, 0, 110.0f);
+
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_躲ac";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos1;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 7500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_躲ac->击退";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Position = dealpos1;
+                dp.TargetPosition = dealpos2;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 7500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_击退";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos2;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.Delay = 7500;
+                dp.DestoryAt = 3000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_击退->躲斜点";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Position = dealpos2;
+                dp.TargetPosition = dealpos3;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 10500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_躲斜点";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos3;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.Delay = 10500;
+                dp.DestoryAt = 2500;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_躲斜点->撞头";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Position = dealpos3;
+                dp.TargetPosition = dealpos4;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 16000;
+                // The value has been adjusted by Cicero. It was 13000 before.
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_Buff处理位置_撞头";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = dealpos2;
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.Delay = 16000;
+                // The value has been adjusted by Cicero. It was 13000 before.
+                dp.DestoryAt = 2000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
+            //蓝
+            if (P4ClawBuff[myIndex] == 3)
+            {
+                if (P4OtherBuff[myIndex] == 4)
+                {
+                    Vector3 dealpos1 = P4BlueTether == 1 ? new(112, 0, 85) : new(88, 0, 85);
+                    var dp = accessory.Data.GetDefaultDrawProperties();
+                    dp.Name = "P4_时间结晶_Buff处理位置_躲灯1";
+                    dp.Scale = new(2);
+                    dp.ScaleMode |= ScaleMode.YByDistance;
+                    dp.Owner = accessory.Data.Me;
+                    dp.TargetPosition = dealpos1;
+                    dp.Color = accessory.Data.DefaultSafeColor;
+                    dp.DestoryAt = 14500;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                }
+                else
+                {
+                    Vector3 dealpos1 = P4BlueTether == 1 ? new(88, 0, 115) : new(112, 0, 115);
+                    Vector3 dealpos2 = P4BlueTether == 1 ? new(090.8f, 0, 116.0f) : new(109.2f, 0, 116.0f);
+                    var dp = accessory.Data.GetDefaultDrawProperties();
+                    dp.Name = "P4_时间结晶_Buff处理位置_躲灯ac";
+                    dp.Scale = new(2);
+                    dp.ScaleMode |= ScaleMode.YByDistance;
+                    dp.Owner = accessory.Data.Me;
+                    dp.TargetPosition = dealpos1;
+                    dp.Color = accessory.Data.DefaultSafeColor;
+                    dp.DestoryAt = 7500;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+                    dp = accessory.Data.GetDefaultDrawProperties();
+                    dp.Name = "P4_时间结晶_Buff处理位置_躲ac->击退";
+                    dp.Scale = new(2);
+                    dp.ScaleMode |= ScaleMode.YByDistance;
+                    dp.Position = dealpos1;
+                    dp.TargetPosition = dealpos2;
+                    dp.Color = accessory.Data.DefaultSafeColor;
+                    dp.DestoryAt = 7500;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                    dp = accessory.Data.GetDefaultDrawProperties();
+                    dp.Name = "P4_时间结晶_Buff处理位置_击退";
+                    dp.Scale = new(2);
+                    dp.ScaleMode |= ScaleMode.YByDistance;
+                    dp.Owner = accessory.Data.Me;
+                    dp.TargetPosition = dealpos2;
+                    dp.Color = accessory.Data.DefaultSafeColor;
+                    dp.Delay = 7500;
+                    dp.DestoryAt = 3000;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                }
+            }
+        }
+        [ScriptMethod(name: "P4_时间结晶_白圈位置指示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40241", "TargetIndex:1"])]
+        public void P4_时间结晶_白圈位置指示(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+            var pos = JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
+            lock (P4WhiteCirclePos)
+            {
+                P4WhiteCirclePos.Add(pos);
+                if (P4WhiteCirclePos.Count == 1 || P4WhiteCirclePos.Count == 3) return;
+
+            }
+        }
+        [ScriptMethod(name: "P4_时间结晶_放回返位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40251"])]
+        public void P4_时间结晶_放回返位置(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            P4WaterPos.Add(pos);
+            if (P4WaterPos.Count == 1) return;
+            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            Vector3 centre = new(100, 0, 100);
+            var dir8 = PositionTo8Dir((P4WaterPos[0] + P4WaterPos[1]) / 2, centre)-1;
+            Vector3 mtPos = new(107, 0, 88);
+            Vector3 stPos = new(112, 0, 93);
+            Vector3 mtgPos = new(106, 0, 92);
+            Vector3 stgPos = new(108, 0, 94);
+            if (myindex==0)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_放回返位置_MT";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = RotatePoint(mtPos, centre, float.Pi / 4 * dir8);
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 9000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
+            if (myindex == 1)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_放回返位置_ST";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = RotatePoint(stPos, centre, float.Pi / 4 * dir8);
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 9000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
+            if (myindex == 2 || myindex == 4 || myindex == 6)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_放回返位置_MTG";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = RotatePoint(mtgPos, centre, float.Pi / 4 * dir8);
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 9000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
+            if (myindex == 3 || myindex == 5 || myindex == 7)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = "P4_时间结晶_放回返位置_STG";
+                dp.Scale = new(2);
+                dp.ScaleMode |= ScaleMode.YByDistance;
+                dp.Owner = accessory.Data.Me;
+                dp.TargetPosition = RotatePoint(stgPos, centre, float.Pi / 4 * dir8);
+                dp.Color = accessory.Data.DefaultSafeColor;
+                dp.DestoryAt = 9000;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            }
+        }
+        
+        [ScriptMethod(name:"Phase4 Hitbox Of Drachen Wanderers 圣龙气息(龙头)碰撞箱",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:17836"])]
+
+        public void Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            currentProperty.Name=$"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
+            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes>=0?
+                                                Phase4_Length_Of_Drachen_Wanderer_Hitboxes:
+                                                3.5f);
+            currentProperty.Color=Phase4_Colour_Of_Residue_Guidance.V4.WithW(25f);
+            currentProperty.Offset=new(0f,0f,1f);
+            currentProperty.Owner=sourceId;
+            currentProperty.DestoryAt=34000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
+
+        }
+        
+        [ScriptMethod(name:"Phase4 Explosion Range Of Drachen Wanderers 圣龙气息(龙头)爆炸范围",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:17836"])]
+
+        public void Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+            currentProperty.Name=$"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}";
+            currentProperty.Scale=new(12);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=accessory.Data.DefaultDangerColor;
+            currentProperty.DestoryAt=34000;
+                
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+
+        }
+        
+        [ScriptMethod(name:"Phase4 Remove Hitboxes And Explosion Ranges Of Drachen Wanderers 移除圣龙气息(龙头)碰撞箱与爆炸范围",
+            eventType:EventTypeEnum.RemoveCombatant,
+            eventCondition:["DataId:17836"],
+            userControl:false)]
+
+        public void Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_移除圣龙气息碰撞箱与爆炸范围(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+
+            }
+
+            accessory.Method.RemoveDraw($"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}");
+            accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}");
+
+        }
         
         [ScriptMethod(name:"Phase4 Determine Relative Positions Of Residues 确定白圈相对位置",
             eventType:EventTypeEnum.ObjectChanged,
@@ -5093,462 +5582,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
 
         }
-        
-        [ScriptMethod(name:"Phase4 Hitbox Of Drachen Wanderers 圣龙气息(龙头)碰撞箱",
-            eventType:EventTypeEnum.AddCombatant,
-            eventCondition:["DataId:17836"])]
-
-        public void Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱(Event @event, ScriptAccessory accessory) {
-
-            if(parse!=4.3) {
-
-                return;
-
-            }
-
-            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
-
-                return;
-
-            }
-
-            var currentProperty=accessory.Data.GetDefaultDrawProperties();
-
-            currentProperty.Name=$"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
-            currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes>=0?
-                                                Phase4_Length_Of_Drachen_Wanderer_Hitboxes:
-                                                3.5f);
-            currentProperty.Color=Phase4_Colour_Of_Residue_Guidance.V4.WithW(25f);
-            currentProperty.Offset=new(0f,0f,1f);
-            currentProperty.Owner=sourceId;
-            currentProperty.DestoryAt=34000;
-            
-            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
-
-        }
-        
-        [ScriptMethod(name:"Phase4 Explosion Range Of Drachen Wanderers 圣龙气息(龙头)爆炸范围",
-            eventType:EventTypeEnum.AddCombatant,
-            eventCondition:["DataId:17836"])]
-
-        public void Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围(Event @event, ScriptAccessory accessory) {
-
-            if(parse!=4.3) {
-
-                return;
-
-            }
-
-            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
-
-                return;
-
-            }
-
-            var currentProperty=accessory.Data.GetDefaultDrawProperties();
-                
-            currentProperty.Name=$"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}";
-            currentProperty.Scale=new(12);
-            currentProperty.Owner=sourceId;
-            currentProperty.Color=accessory.Data.DefaultDangerColor;
-            currentProperty.DestoryAt=34000;
-                
-            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
-
-        }
-        
-        [ScriptMethod(name:"Phase4 Remove Hitboxes And Explosion Ranges Of Drachen Wanderers 移除圣龙气息(龙头)碰撞箱与爆炸范围",
-            eventType:EventTypeEnum.RemoveCombatant,
-            eventCondition:["DataId:17836"],
-            userControl:false)]
-
-        public void Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_移除圣龙气息碰撞箱与爆炸范围(Event @event, ScriptAccessory accessory) {
-
-            if(parse!=4.3) {
-
-                return;
-
-            }
-
-            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
-
-                return;
-
-            }
-
-            accessory.Method.RemoveDraw($"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}");
-            accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}");
-
-        }
-
-        [ScriptMethod(name: "P4_时间结晶_灯AOE", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0085"])]
-        public void P4_时间结晶_灯AOE(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 4.3) return;
-            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-            Vector3 normalPos = new(pos.X, 0, 200 - pos.Z);
-            Vector3 fastPos = new(100, 0, pos.Z > 100 ? 111 : 89);
-
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P4_时间结晶_灯AOE_快";
-            dp.Scale = new(12);
-            dp.Position = fastPos;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.DestoryAt = 7500;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P4_时间结晶_灯AOE_中";
-            dp.Scale = new(12);
-            dp.Position = normalPos;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 13000 - P4LampDisplayDur;
-            dp.DestoryAt = P4LampDisplayDur;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P4_时间结晶_灯AOE_慢";
-            dp.Scale = new(12);
-            dp.Position = pos;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 18000 - P4LampDisplayDur;
-            dp.DestoryAt = P4LampDisplayDur;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-        [ScriptMethod(name: "P4_时间结晶_土分摊范围", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2454"])]
-        public void P4_时间结晶_土分摊范围(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 4.3) return;
-            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P4_时间结晶_土分摊范围";
-            dp.Scale = new(6);
-            dp.Owner = tid;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.Delay = 14000;
-            dp.DestoryAt = 3000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-            dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P4_时间结晶_土分摊范围_水晶";
-            dp.Scale = new(9.5f);
-            dp.Owner = P4FragmentId;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 14000;
-            dp.DestoryAt = 3000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-        [ScriptMethod(name: "P4_时间结晶_碎灵一击", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2452"])]
-        public void P4_时间结晶_碎灵一击(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 4.3) return;
-            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            if (tid != accessory.Data.Me) return;
-
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P4_时间结晶_碎灵一击_水晶";
-            dp.Scale = new(8.5f);
-            dp.Owner = P4FragmentId;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.DestoryAt = 3500;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            for (int i = 0; i < 8; i++)
-            {
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_碎灵一击";
-                dp.Scale = new(5);
-                dp.Owner = accessory.Data.PartyList[i];
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.DestoryAt = 3500;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-            }
-            
-            
-        }
-        [ScriptMethod(name: "P4_时间结晶_Buff处理位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40293"])]
-        public void P4_时间结晶_Buff处理位置(Event @event, ScriptAccessory accessory)
-        {
-            
-            //buff后3.5s
-            if (parse != 4.3) return;
-            var myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            //短红
-            if (P4ClawBuff[myIndex] == 1)
-            {
-                var isHigh = P4ClawBuff.IndexOf(1) == myIndex;
-                Vector3 dealpos= isHigh ? new(87, 0, 100) : new(113, 0, 100);
-
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_撞龙头";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 10500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                //高分摊 088 085 -> 093 082
-                //高闲   081 103 -> 081 097
-                //低分摊 112 085 -> 107 082
-                //低闲   119 103 -> 119 97
-                Vector3 dealpos2 = isHigh ? (P4BlueTether == 1 ? new(081, 0, 103) : new(088, 0, 085)) : (P4BlueTether == 1 ? new(112, 0, 085) : new(119, 0, 103));
-                Vector3 dealpos3 = isHigh ? (P4BlueTether == 1 ? new(081, 0, 097) : new(093, 0, 082)) : (P4BlueTether == 1 ? new(107, 0, 082) : new(119, 0, 097));
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_pos2预连线";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Position = dealpos;
-                dp.TargetPosition = dealpos2;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 10500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_pos2位置";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos2;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 10500;
-                dp.DestoryAt = 3000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_pos3预连线";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Position = dealpos2;
-                dp.TargetPosition = dealpos3;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 13500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_pos3位置";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos3;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 13500;
-                dp.DestoryAt = 3000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            }
-            //长红
-            if (P4ClawBuff[myIndex] == 2)
-            {
-                var isHigh = P4ClawBuff.IndexOf(2) == myIndex;
-                Vector3 dealpos1 = isHigh ? new(088.5f, 0, 115.5f) : new(111.5f, 0, 115.5f);
-                Vector3 dealpos2 = isHigh ? new(090.2f, 0, 117.0f) : new(109.8f, 0, 117.0f);
-                Vector3 dealpos3 = isHigh ? new(092.5f, 0, 118.0f) : new(107.5f, 0, 118.0f);
-                Vector3 dealpos4 = isHigh ? new(092.0f, 0, 110.0f) : new(108.0f, 0, 110.0f);
-
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_躲ac";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos1;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 7500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_躲ac->击退";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Position = dealpos1;
-                dp.TargetPosition = dealpos2;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 7500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_击退";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos2;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 7500;
-                dp.DestoryAt = 3000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_击退->躲斜点";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Position = dealpos2;
-                dp.TargetPosition = dealpos3;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 10500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_躲斜点";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos3;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 10500;
-                dp.DestoryAt = 2500;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_躲斜点->撞头";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Position = dealpos3;
-                dp.TargetPosition = dealpos4;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 16000;
-                // The value has been adjusted by Cicero. It was 13000 before.
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_Buff处理位置_撞头";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos2;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 16000;
-                // The value has been adjusted by Cicero. It was 13000 before.
-                dp.DestoryAt = 2000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            }
-            //蓝
-            if (P4ClawBuff[myIndex] == 3)
-            {
-                if (P4OtherBuff[myIndex] == 4)
-                {
-                    Vector3 dealpos1 = P4BlueTether == 1 ? new(112, 0, 85) : new(88, 0, 85);
-                    var dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = "P4_时间结晶_Buff处理位置_躲灯1";
-                    dp.Scale = new(2);
-                    dp.ScaleMode |= ScaleMode.YByDistance;
-                    dp.Owner = accessory.Data.Me;
-                    dp.TargetPosition = dealpos1;
-                    dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.DestoryAt = 14500;
-                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-                }
-                else
-                {
-                    Vector3 dealpos1 = P4BlueTether == 1 ? new(88, 0, 115) : new(112, 0, 115);
-                    Vector3 dealpos2 = P4BlueTether == 1 ? new(090.8f, 0, 116.0f) : new(109.2f, 0, 116.0f);
-                    var dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = "P4_时间结晶_Buff处理位置_躲灯ac";
-                    dp.Scale = new(2);
-                    dp.ScaleMode |= ScaleMode.YByDistance;
-                    dp.Owner = accessory.Data.Me;
-                    dp.TargetPosition = dealpos1;
-                    dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.DestoryAt = 7500;
-                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
-                    dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = "P4_时间结晶_Buff处理位置_躲ac->击退";
-                    dp.Scale = new(2);
-                    dp.ScaleMode |= ScaleMode.YByDistance;
-                    dp.Position = dealpos1;
-                    dp.TargetPosition = dealpos2;
-                    dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.DestoryAt = 7500;
-                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-                    dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = "P4_时间结晶_Buff处理位置_击退";
-                    dp.Scale = new(2);
-                    dp.ScaleMode |= ScaleMode.YByDistance;
-                    dp.Owner = accessory.Data.Me;
-                    dp.TargetPosition = dealpos2;
-                    dp.Color = accessory.Data.DefaultSafeColor;
-                    dp.Delay = 7500;
-                    dp.DestoryAt = 3000;
-                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-                }
-            }
-        }
-        [ScriptMethod(name: "P4_时间结晶_白圈位置指示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40241", "TargetIndex:1"])]
-        public void P4_时间结晶_白圈位置指示(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 4.3) return;
-            var pos = JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
-            lock (P4WhiteCirclePos)
-            {
-                P4WhiteCirclePos.Add(pos);
-                if (P4WhiteCirclePos.Count == 1 || P4WhiteCirclePos.Count == 3) return;
-
-            }
-        }
-        [ScriptMethod(name: "P4_时间结晶_放回返位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40251"])]
-        public void P4_时间结晶_放回返位置(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 4.3) return;
-            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-            P4WaterPos.Add(pos);
-            if (P4WaterPos.Count == 1) return;
-            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            Vector3 centre = new(100, 0, 100);
-            var dir8 = PositionTo8Dir((P4WaterPos[0] + P4WaterPos[1]) / 2, centre)-1;
-            Vector3 mtPos = new(107, 0, 88);
-            Vector3 stPos = new(112, 0, 93);
-            Vector3 mtgPos = new(106, 0, 92);
-            Vector3 stgPos = new(108, 0, 94);
-            if (myindex==0)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_放回返位置_MT";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = RotatePoint(mtPos, centre, float.Pi / 4 * dir8);
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 9000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            }
-            if (myindex == 1)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_放回返位置_ST";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = RotatePoint(stPos, centre, float.Pi / 4 * dir8);
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 9000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            }
-            if (myindex == 2 || myindex == 4 || myindex == 6)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_放回返位置_MTG";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = RotatePoint(mtgPos, centre, float.Pi / 4 * dir8);
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 9000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            }
-            if (myindex == 3 || myindex == 5 || myindex == 7)
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P4_时间结晶_放回返位置_STG";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = RotatePoint(stgPos, centre, float.Pi / 4 * dir8);
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 9000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            }
-        }
 
         #endregion
 
         #region P5
+        
+        [ScriptMethod(name:"----- Phase 5 -----",
+            eventType:EventTypeEnum.NpcYell,
+            eventCondition:["I lift my lamp beside the golden door!",
+                            "我在金门旁为他们将灯举起!"])]
+        
+        public void Phase5_Placeholder(Event @event, ScriptAccessory accessory) { }
         
         [ScriptMethod(name:"Phase5 Initialization 初始化",
             eventType:EventTypeEnum.AddCombatant,
