@@ -23,7 +23,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.45",
+        version:"0.0.0.46",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -97,6 +97,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public P3LampEmum P3LampDeal { get; set; }
         [UserSetting("P3二运 攻略")]
         public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
+        [UserSetting("P3二运 初始安全位置分配方式")]
+        public Phase3_Allocations_Of_Initial_Safe_Positions Phase3_Allocation_Of_Initial_Safe_Positions { get; set; }
         [UserSetting("P3二运 引导暗夜舞蹈(最远死刑)的T")]
         public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; } = Tanks.OT_ST;
         [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
@@ -175,6 +177,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         volatile int phase3_timesDarkWaterIiiWasRemoved=0;
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
+        volatile bool phase3_hasConfirmedInitialSafePositions=false;
+        Vector3 phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+        Vector3 phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
         
         ulong P4FragmentId;
         List<int> P4Tether = [-1, -1, -1, -1, -1, -1, -1, -1];
@@ -259,6 +264,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
+
+        public enum Phase3_Allocations_Of_Initial_Safe_Positions {
+            
+            North_To_Southwest_For_The_Left_Group_左组从正北到西南,
+            Northwest_To_South_For_The_Left_Group_左组从西北到正南,
+            Other_Allocations_Are_Work_In_Progress_其他分配方式正在施工中
+            
+        }
         
         public enum Phase3_Types_Of_Dark_Water_III {
             
@@ -324,6 +337,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
             phase3_timesDarkWaterIiiWasRemoved=0;
+            phase3_hasConfirmedInitialSafePositions=false;
+            phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
 
             phase4_residueIdsFromEastToWest=[0,0,0,0];
             phase4_guidanceOfResiduesHasBeenGenerated=false;
@@ -2819,6 +2835,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
             phase3_timesDarkWaterIiiWasRemoved=0;
+            phase3_hasConfirmedInitialSafePositions=false;
+            phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
         }
         
         [ScriptMethod(name:"Phase3 Determine Types Of Dark Water III 确定黑暗狂水(分摊)类型",
@@ -2918,6 +2937,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             int phase3_timesDarkWaterIiiWasRemoved_copy=phase3_timesDarkWaterIiiWasRemoved;
             bool targetPositionConfirmed=false;
+            string promptText="";
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
             
             currentProperty.Name="Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路";
@@ -2930,12 +2950,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
                 bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
 
                 if(Enable_Developer_Mode) {
 
                     accessory.Method.SendChat($"""
                                                /e 
                                                goLeft={goLeft}
+                                               stayInTheGroup={stayInTheGroup}
                                                phase3_timesDarkWaterIiiWasRemoved_copy={phase3_timesDarkWaterIiiWasRemoved_copy}
                                                
                                                """);
@@ -2946,7 +2968,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     // First round of Dark Water III.
                     
                     currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                    
                     targetPositionConfirmed=true;
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        promptText=(goLeft)?("左侧分摊"):("右侧分摊");
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        promptText=(goLeft)?("Stack on the left"):("Stack on the right");
+
+                    }
 
                 }
 
@@ -2955,8 +2990,72 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     if(phase3_timesDarkWaterIiiWasRemoved_copy<4) {
                         // Second round of Dark Water III.
 
-                        currentProperty.TargetPosition=(goLeft)?(new Vector3(96,0,100)):(new Vector3(104,0,100));
-                        targetPositionConfirmed=true;
+                        Vector3 positionToStackOfTheLeftGroup=new Vector3((phase3_initialSafePositionOfTheLeftGroup.X-100)/3+100,
+                                                                          phase3_initialSafePositionOfTheLeftGroup.Y,
+                                                                          (phase3_initialSafePositionOfTheLeftGroup.Z-100)/3+100);
+                        Vector3 positionToStackOfTheRightGroup=new Vector3((phase3_initialSafePositionOfTheRightGroup.X-100)/3+100,
+                                                                           phase3_initialSafePositionOfTheRightGroup.Y,
+                                                                           (phase3_initialSafePositionOfTheRightGroup.Z-100)/3+100);
+
+                        if(stayInTheGroup) {
+
+                            if(0<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+                               &&
+                               accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=3) {
+
+                                currentProperty.TargetPosition=positionToStackOfTheLeftGroup;
+                                    
+                                targetPositionConfirmed=true; 
+                                
+                            }
+
+                            if(4<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+                               &&
+                               accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=7) {
+
+                                currentProperty.TargetPosition=positionToStackOfTheRightGroup;
+                                    
+                                targetPositionConfirmed=true;
+                                    
+                            }
+                                
+                        }
+
+                        else {
+                            
+                            if(0<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+                               &&
+                               accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=3) {
+
+                                currentProperty.TargetPosition=positionToStackOfTheRightGroup;
+                                    
+                                targetPositionConfirmed=true; 
+                                
+                            }
+
+                            if(4<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+                               &&
+                               accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=7) {
+
+                                currentProperty.TargetPosition=positionToStackOfTheLeftGroup;
+                                    
+                                targetPositionConfirmed=true;
+                                    
+                            }
+                            
+                        }
+                            
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            promptText=(stayInTheGroup)?("本组分摊"):("对组分摊");
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            promptText=(stayInTheGroup)?("Stack in the current group"):("Stack in the opposite group");
+
+                        }
                         
                     }
 
@@ -2994,98 +3093,90 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                 }
                                     
                             }
-                                
-                        }
                             
-                    }
+                            if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                                
+                                promptText=(goLeft)?("左侧分摊"):("右侧分摊");
+                                
+                            }
+                            
+                            if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                                
+                                promptText=(goLeft)?("Stack on the left"):("Stack on the right");
+                                
+                            }
+                            
+                        }
                         
-                }
-
-                if(goLeft) {
-                    
-                    if(Enable_Text_Prompts) {
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-                    
-                            accessory.Method.TextInfo("左侧分摊",2500);
-                    
-                        }
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-                    
-                            accessory.Method.TextInfo("Stack on the left",2500);
-                    
-                        }
-                
-                    }
-            
-                    if(Enable_TTS_Prompts) {
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-                    
-                            accessory.Method.TTS("左侧分摊");
-                    
-                        }
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-                    
-                            accessory.Method.TTS("Stack on the left");
-                    
-                        }
-                
                     }
                     
                 }
-
-                else {
-                    
-                    if(Enable_Text_Prompts) {
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-                    
-                            accessory.Method.TextInfo("右侧分摊",2500);
-                    
-                        }
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-                    
-                            accessory.Method.TextInfo("Stack on the right",2500);
-                    
-                        }
                 
-                    }
-            
-                    if(Enable_TTS_Prompts) {
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-                    
-                            accessory.Method.TTS("右侧分摊");
-                    
-                        }
-
-                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-                    
-                            accessory.Method.TTS("Stack on the right");
-                    
-                        }
-                
-                    }
-                    
-                }
-
             }
-
+            
             if(targetPositionConfirmed) {
 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                 
             }
             
+            if(!promptText.Equals("")) {
+                    
+                if(Enable_Text_Prompts) {
+
+                    accessory.Method.TextInfo(promptText,2500);
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+
+                    accessory.Method.TTS(promptText);
+                
+                }
+                    
+            }
+            
             ++phase3_timesDarkWaterIiiWasRemoved;
+            
+        }
+
+        private bool phase3_doubleGroup_shouldStayInTheGroup(int currentIndex) {
+
+            bool inTheLeftGroup=true;
+            
+            if(0<=currentIndex&&currentIndex<=3) {
+
+                inTheLeftGroup=true;
+
+            }
+
+            if(4<=currentIndex&&currentIndex<=7) {
+
+                inTheLeftGroup=false;
+
+            }
+
+            if(inTheLeftGroup==phase3_doubleGroup_shouldGoLeft(currentIndex)) {
+
+                return true;
+
+            }
+
+            else {
+
+                return false;
+
+            }
 
         }
 
         private bool phase3_doubleGroup_shouldGoLeft(int currentIndex) {
+
+            if(currentIndex<0||currentIndex>7) {
+
+                return true;
+
+            }
             
             int doubleGroupIndex=phase3_doubleGroup_getDoubleGroupIndex(currentIndex);
             Phase3_Types_Of_Dark_Water_III currentType=phase3_typeOfDarkWaterIii[currentIndex];
@@ -3360,6 +3451,115 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if(targetPositionConfirmed) {
 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase3 Determine Initial Safe Positions Of Apocalypse 确定启示(地火)初始安全位置",
+            eventType:EventTypeEnum.ObjectEffect,
+            eventCondition:["Id1:4","Id2:regex:^(16|64)$"],
+            userControl:false)]
+        
+        public void Phase3_Determine_Initial_Safe_Positions_Of_Apocalypse_确定启示初始安全位置(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=3.2) {
+                
+                return;
+                
+            }
+
+            lock(this) {
+                
+                if(phase3_hasConfirmedInitialSafePositions) {
+                    
+                    return;
+                    
+                }
+                
+                else {
+                    
+                    phase3_hasConfirmedInitialSafePositions=true;
+                    
+                }
+                
+            }
+            
+            Vector3 firstApocalypseOnTheEdge=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            int clockwise=(@event["Id2"].Equals("64"))?(-1):(1);
+            Vector3 position1=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/4*3*clockwise);
+            Vector3 position2=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/4*3*clockwise+float.Pi);
+            int directionOfPosition1=PositionTo8Dir(position1,new Vector3(100,0,100));
+            
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           position1={position1}
+                                           position2={position2}
+                                           directionOfPosition1={directionOfPosition1}
+                                           
+                                           """);
+
+            }
+
+            if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.North_To_Southwest_For_The_Left_Group_左组从正北到西南) {
+                
+                if(directionOfPosition1==0
+                   ||
+                   directionOfPosition1==7
+                   ||
+                   directionOfPosition1==6
+                   ||
+                   directionOfPosition1==5) {
+
+                    phase3_initialSafePositionOfTheLeftGroup=position1;
+                    phase3_initialSafePositionOfTheRightGroup=position2;
+
+                }
+                
+                if(directionOfPosition1==1
+                   ||
+                   directionOfPosition1==2
+                   ||
+                   directionOfPosition1==3
+                   ||
+                   directionOfPosition1==4) {
+
+                    phase3_initialSafePositionOfTheLeftGroup=position2;
+                    phase3_initialSafePositionOfTheRightGroup=position1;
+
+                }
+                
+            }
+            
+            if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.Northwest_To_South_For_The_Left_Group_左组从西北到正南) {
+                
+                if(directionOfPosition1==7
+                   ||
+                   directionOfPosition1==6
+                   ||
+                   directionOfPosition1==5
+                   ||
+                   directionOfPosition1==4) {
+
+                    phase3_initialSafePositionOfTheLeftGroup=position1;
+                    phase3_initialSafePositionOfTheRightGroup=position2;
+
+                }
+                
+                if(directionOfPosition1==0
+                   ||
+                   directionOfPosition1==1
+                   ||
+                   directionOfPosition1==2
+                   ||
+                   directionOfPosition1==3) {
+
+                    phase3_initialSafePositionOfTheLeftGroup=position2;
+                    phase3_initialSafePositionOfTheRightGroup=position1;
+
+                }
                 
             }
 
