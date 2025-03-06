@@ -11,6 +11,7 @@ using System.Numerics;
 using Newtonsoft.Json;
 using System.Linq;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Utility.Numerics;
@@ -23,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.46",
+        version:"0.0.0.47",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -174,7 +175,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE
         ];
-        volatile int phase3_timesDarkWaterIiiWasRemoved=0;
+        volatile int phase3_roundOfDarkWaterIii=0;
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
         volatile bool phase3_hasConfirmedInitialSafePositions=false;
@@ -336,7 +337,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
-            phase3_timesDarkWaterIiiWasRemoved=0;
+            phase3_roundOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
@@ -2834,7 +2835,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
-            phase3_timesDarkWaterIiiWasRemoved=0;
+            phase3_roundOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
@@ -2925,7 +2926,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [ScriptMethod(name:"Phase3 Guidance Of Dark Water III 黑暗狂水(分摊)指路",
             eventType:EventTypeEnum.StatusRemove,
-            eventCondition:["StatusID:2458"])]
+            eventCondition:["StatusID:2458"],
+            suppress:2000)]
         
         public void Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路(Event @event, ScriptAccessory accessory) {
 
@@ -2935,7 +2937,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            int phase3_timesDarkWaterIiiWasRemoved_copy=phase3_timesDarkWaterIiiWasRemoved;
+            ++phase3_roundOfDarkWaterIii;
+            
             bool targetPositionConfirmed=false;
             string promptText="";
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
@@ -2958,38 +2961,38 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                                /e 
                                                goLeft={goLeft}
                                                stayInTheGroup={stayInTheGroup}
-                                               phase3_timesDarkWaterIiiWasRemoved_copy={phase3_timesDarkWaterIiiWasRemoved_copy}
+                                               phase3_roundOfDarkWaterIii={phase3_roundOfDarkWaterIii}
                                                
                                                """);
 
                 }
-                
-                if(phase3_timesDarkWaterIiiWasRemoved_copy<2) {
-                    // First round of Dark Water III.
-                    
-                    currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
-                    
-                    targetPositionConfirmed=true;
 
-                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                switch(phase3_roundOfDarkWaterIii) {
 
-                        promptText=(goLeft)?("左侧分摊"):("右侧分摊");
-
-                    }
-                    
-                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-
-                        promptText=(goLeft)?("Stack on the left"):("Stack on the right");
-
-                    }
-
-                }
-
-                else {
+                    case 1: {
                         
-                    if(phase3_timesDarkWaterIiiWasRemoved_copy<4) {
-                        // Second round of Dark Water III.
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                    
+                        targetPositionConfirmed=true;
 
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            promptText=(goLeft)?("左侧分摊"):("右侧分摊");
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            promptText=(goLeft)?("Stack on the left"):("Stack on the right");
+
+                        }
+
+                        break;
+
+                    }
+                    
+                    case 2: {
+                        
                         Vector3 positionToStackOfTheLeftGroup=new Vector3((phase3_initialSafePositionOfTheLeftGroup.X-100)/3+100,
                                                                           phase3_initialSafePositionOfTheLeftGroup.Y,
                                                                           (phase3_initialSafePositionOfTheLeftGroup.Z-100)/3+100);
@@ -3056,58 +3059,64 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             promptText=(stayInTheGroup)?("Stack in the current group"):("Stack in the opposite group");
 
                         }
-                        
+
+                        break;
+
                     }
 
-                    else {
-                            
-                        if(phase3_timesDarkWaterIiiWasRemoved_copy<6) {
-                            // Third round of Dark Water III.
-                            // The idea was suggested by @lunarflower223 on Discord. Appreciate!
+                    case 3: {
+                        // The idea was suggested by @lunarflower223 on Discord. Appreciate!
 
-                            for(int i=0;i<8;++i) {
+                        for(int i=0;i<8;++i) {
 
-                                if(phase3_typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
+                            if(phase3_typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
                                         
-                                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                currentProperty=accessory.Data.GetDefaultDrawProperties();
                                         
-                                    currentProperty.Name="Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路";
-                                    currentProperty.Scale=new(6);
-                                    currentProperty.Owner=accessory.Data.PartyList[i];
-                                    currentProperty.DestoryAt=5000;
+                                currentProperty.Name="Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路";
+                                currentProperty.Scale=new(6);
+                                currentProperty.Owner=accessory.Data.PartyList[i];
+                                currentProperty.DestoryAt=5000;
 
-                                    if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
+                                if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
 
-                                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                                    currentProperty.Color=accessory.Data.DefaultSafeColor;
 
-                                    }
-
-                                    else {
-
-                                        currentProperty.Color=accessory.Data.DefaultDangerColor;
-
-                                    }
-                                        
-                                    accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
-                                        
                                 }
+
+                                else {
+
+                                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                                }
+                                        
+                                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
+                            }
                                     
-                            }
-                            
-                            if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-                                
-                                promptText=(goLeft)?("左侧分摊"):("右侧分摊");
-                                
-                            }
-                            
-                            if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-                                
-                                promptText=(goLeft)?("Stack on the left"):("Stack on the right");
-                                
-                            }
-                            
                         }
-                        
+                            
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                                
+                            promptText=(goLeft)?("左侧分摊"):("右侧分摊");
+                                
+                        }
+                            
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                                
+                            promptText=(goLeft)?("Stack on the left"):("Stack on the right");
+                                
+                        }
+
+                        break;
+
+                    }
+
+                    default: {
+                        // Just a placeholder and should never be reached.
+
+                        break;
+
                     }
                     
                 }
@@ -3135,8 +3144,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
                     
             }
-            
-            ++phase3_timesDarkWaterIiiWasRemoved;
             
         }
 
@@ -3459,7 +3466,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name:"Phase3 Determine Initial Safe Positions Of Apocalypse 确定启示(地火)初始安全位置",
             eventType:EventTypeEnum.ObjectEffect,
             eventCondition:["Id1:4","Id2:regex:^(16|64)$"],
-            userControl:false)]
+            userControl:false,
+            suppress:2000)]
         
         public void Phase3_Determine_Initial_Safe_Positions_Of_Apocalypse_确定启示初始安全位置(Event @event, ScriptAccessory accessory) {
 
@@ -3469,20 +3477,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            lock(this) {
+            if(phase3_hasConfirmedInitialSafePositions) {
+                    
+                return;
+                    
+            }
                 
-                if(phase3_hasConfirmedInitialSafePositions) {
+            else {
                     
-                    return;
+                phase3_hasConfirmedInitialSafePositions=true;
                     
-                }
-                
-                else {
-                    
-                    phase3_hasConfirmedInitialSafePositions=true;
-                    
-                }
-                
             }
             
             Vector3 firstApocalypseOnTheEdge=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
@@ -3565,15 +3569,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name: "P3_延迟咏唱回响_地火", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"])]
+        [ScriptMethod(name: "P3_延迟咏唱回响_地火", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:4", "Id2:regex:^(16|64)$"], suppress: 2000)]
         public void P3_延迟咏唱回响_地火(Event @event, ScriptAccessory accessory)
         {
             if (parse != 3.2) return;
-            lock (this)
-            {
-                if (P3FloorFireDone) return;
-                P3FloorFireDone = true;
-            }
+            if (P3FloorFireDone) return;
+            P3FloorFireDone = true;
             Vector3 centre = new(100, 0, 100);
             var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             var clockwise = @event["Id2"] == "64" ? -1 : 1;
