@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.51",
+        version:"0.0.0.52",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -2945,7 +2945,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            while(phase3_numberOfDarkWaterIiiHasBeenProcessed<6);
+            while(phase3_numberOfDarkWaterIiiHasBeenProcessed<6) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+                System.Threading.Thread.MemoryBarrier();
+                
+            }
             
             if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
@@ -3110,168 +3116,164 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
-                if(phase3_numberOfDarkWaterIiiHasBeenProcessed!=6) {
-
-                    return;
-
-                }
-
-                int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-                bool goLeft=phase3_doubleGroup_shouldGoLeft(myIndex);
-                bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(myIndex);
+                if(phase3_numberOfDarkWaterIiiHasBeenProcessed==6) {
+                    
+                    int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+                    bool goLeft=phase3_doubleGroup_shouldGoLeft(myIndex);
+                    bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(myIndex);
             
-                for(int i=0;i<8;++i) {
+                    for(int i=0;i<8;++i) {
 
-                    if(phase3_typeOfDarkWaterIii[i]==currentType) {
+                        if(phase3_typeOfDarkWaterIii[i]==currentType) {
                                         
-                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                            currentProperty=accessory.Data.GetDefaultDrawProperties();
                                         
-                        currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
-                        currentProperty.Scale=new(6);
-                        currentProperty.Owner=accessory.Data.PartyList[i];
-                        currentProperty.DestoryAt=5000;
+                            currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
+                            currentProperty.Scale=new(6);
+                            currentProperty.Owner=accessory.Data.PartyList[i];
+                            currentProperty.DestoryAt=5000;
 
-                        if(phase3_roundOfDarkWaterIii==1||phase3_roundOfDarkWaterIii==3) {
+                            if(phase3_roundOfDarkWaterIii==1||phase3_roundOfDarkWaterIii==3) {
                             
-                            if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
+                                if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
 
-                                currentProperty.Color=accessory.Data.DefaultSafeColor;
-
-                            }
-
-                            else {
-
-                                currentProperty.Color=accessory.Data.DefaultDangerColor;
-
-                            }
-                            
-                        }
-
-                        if(phase3_roundOfDarkWaterIii==2) {
-
-                            bool endUpWithTheLeftGroup=true;
-                            int doubleGroupIndexOfMyMedium=0;
-
-                            if(0<=myIndex&&myIndex<=3) {
-
-                                endUpWithTheLeftGroup=true;
-
-                            }
-
-                            if(4<=myIndex&&myIndex<=7) {
-
-                                endUpWithTheLeftGroup=false;
-
-                            }
-
-                            if(!stayInTheGroup) {
-
-                                endUpWithTheLeftGroup=(!endUpWithTheLeftGroup);
-
-                            }
-
-                            if(endUpWithTheLeftGroup) {
-
-                                for(doubleGroupIndexOfMyMedium=0;
-                                    phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]]!=Phase3_Types_Of_Dark_Water_III.MEDIUM
-                                    &&
-                                    doubleGroupIndexOfMyMedium<8;
-                                    ++doubleGroupIndexOfMyMedium);
-
-                            }
-
-                            else {
-                                
-                                for(doubleGroupIndexOfMyMedium=7;
-                                    phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]]!=Phase3_Types_Of_Dark_Water_III.MEDIUM
-                                    &&
-                                    doubleGroupIndexOfMyMedium>=0;
-                                    --doubleGroupIndexOfMyMedium);
-                                
-                            }
-
-                            if(doubleGroupIndexOfMyMedium<0||doubleGroupIndexOfMyMedium>7) {
-                                
-                                currentProperty.Color=accessory.Data.DefaultDangerColor;
-                                
-                            }
-
-                            else {
-                                
-                                if(phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]==i) {
-                                
                                     currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                                }
+
+                                else {
+
+                                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                                }
+                            
+                            }
+
+                            if(phase3_roundOfDarkWaterIii==2) {
+
+                                bool endUpWithTheLeftGroup=true;
+                                int doubleGroupIndexOfMyMedium=0;
+
+                                if(0<=myIndex&&myIndex<=3) {
+
+                                    endUpWithTheLeftGroup=true;
+
+                                }
+
+                                if(4<=myIndex&&myIndex<=7) {
+
+                                    endUpWithTheLeftGroup=false;
+
+                                }
+
+                                if(!stayInTheGroup) {
+
+                                    endUpWithTheLeftGroup=(!endUpWithTheLeftGroup);
+
+                                }
+
+                                if(endUpWithTheLeftGroup) {
+
+                                    for(doubleGroupIndexOfMyMedium=0;
+                                        phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]]!=Phase3_Types_Of_Dark_Water_III.MEDIUM 
+                                        && 
+                                        doubleGroupIndexOfMyMedium<8;
+                                        ++doubleGroupIndexOfMyMedium);
+
+                                }
+
+                                else {
+                                
+                                    for(doubleGroupIndexOfMyMedium=7;
+                                        phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]]!=Phase3_Types_Of_Dark_Water_III.MEDIUM
+                                        &&
+                                        doubleGroupIndexOfMyMedium>=0;
+                                        --doubleGroupIndexOfMyMedium);
+                                
+                                }
+
+                                if(doubleGroupIndexOfMyMedium<0||doubleGroupIndexOfMyMedium>7) {
+                                
+                                    currentProperty.Color=accessory.Data.DefaultDangerColor;
                                 
                                 }
 
                                 else {
                                 
-                                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+                                    if(phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]==i) {
+                                
+                                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                                
+                                    }
+
+                                    else {
+                                
+                                        currentProperty.Color=accessory.Data.DefaultDangerColor;
+                                
+                                    }
                                 
                                 }
-                                
-                            }
 
+                            }
+                                        
+                            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
                         }
-                                        
-                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
-                                        
-                    }
                                     
+                    }
+
+                    return;
+
                 }
 
             }
 
-            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Other_Strats_Are_Work_In_Progress_其他攻略正在施工中) {
-                
-                for(int i=0;i<8;++i) {
+            for(int i=0;i<8;++i) {
 
-                    if(phase3_typeOfDarkWaterIii[i]==currentType) {
+                if(phase3_typeOfDarkWaterIii[i]==currentType) {
                                         
-                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
                                         
-                        currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
-                        currentProperty.Scale=new(6);
-                        currentProperty.Owner=accessory.Data.PartyList[i];
-                        currentProperty.Color=accessory.Data.DefaultDangerColor;
-                        currentProperty.DestoryAt=5000;
+                    currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
+                    currentProperty.Scale=new(6);
+                    currentProperty.Owner=accessory.Data.PartyList[i];
+                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+                    currentProperty.DestoryAt=5000;
                                         
-                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                    accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
                                         
-                    }
+                }
                                     
+            }
+                
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("分摊",2000);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Stack",2000);
+                    
                 }
                 
-                if(Enable_Text_Prompts) {
-
-                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-                    
-                        accessory.Method.TextInfo("分摊",2000);
-                    
-                    }
-
-                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-                    
-                        accessory.Method.TextInfo("Stack",2000);
-                    
-                    }
-                
-                }
+            }
             
-                if(Enable_TTS_Prompts) {
+            if(Enable_TTS_Prompts) {
 
-                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
                     
-                        accessory.Method.TTS("分摊");
+                    accessory.Method.TTS("分摊");
                     
-                    }
+                }
 
-                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
                     
-                        accessory.Method.TTS("Stack");
+                    accessory.Method.TTS("Stack");
                     
-                    }
-                
                 }
                 
             }
@@ -4442,13 +4444,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             bool inTheNorth=true;
             
-            if(phase3_finalPositionOfTheBoss.Z<100) {
+            if(phase3_finalPositionOfTheBoss.Z<=100) {
 
                 inTheNorth=false;
 
             }
 
-            else {
+            if(phase3_finalPositionOfTheBoss.Z>=100) {
 
                 inTheNorth=true;
 
