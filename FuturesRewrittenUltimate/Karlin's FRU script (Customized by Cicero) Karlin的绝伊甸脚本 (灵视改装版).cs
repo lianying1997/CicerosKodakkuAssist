@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.50",
+        version:"0.0.0.51",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -171,7 +171,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ];
         volatile int phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
         volatile int phase3_roundOfDarkWaterIii=0;
-        volatile bool phase3_semaphoreOfDarkWaterIii=true;
+        volatile int phase3_rangeSemaphoreOfDarkWaterIii=0;
+        volatile int phase3_guidanceSemaphoreOfDarkWaterIii=0;
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
         volatile bool phase3_hasConfirmedInitialSafePositions=false;
@@ -336,7 +337,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             ];
             phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
             phase3_roundOfDarkWaterIii=0;
-            phase3_semaphoreOfDarkWaterIii=true;
+            phase3_rangeSemaphoreOfDarkWaterIii=0;
+            phase3_guidanceSemaphoreOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
@@ -2837,7 +2839,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             ];
             phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
             phase3_roundOfDarkWaterIii=0;
-            phase3_semaphoreOfDarkWaterIii=true;
+            phase3_rangeSemaphoreOfDarkWaterIii=0;
+            phase3_guidanceSemaphoreOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
@@ -3046,7 +3049,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             ++phase3_roundOfDarkWaterIii;
 
-            phase3_semaphoreOfDarkWaterIii=false;
+            phase3_rangeSemaphoreOfDarkWaterIii=1;
+            phase3_guidanceSemaphoreOfDarkWaterIii=1;
 
         }
 
@@ -3057,7 +3061,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         public void Phase3_Range_Of_Dark_Water_III_黑暗狂水范围(Event @event, ScriptAccessory accessory) {
 
-            while(phase3_semaphoreOfDarkWaterIii);
+            while(System.Threading.Interlocked.CompareExchange(ref phase3_rangeSemaphoreOfDarkWaterIii,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+                System.Threading.Thread.MemoryBarrier();
+                
+            }
 
             Phase3_Types_Of_Dark_Water_III currentType=Phase3_Types_Of_Dark_Water_III.NONE;
 
@@ -3275,7 +3285,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         public void Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路(Event @event, ScriptAccessory accessory) {
 
-            while(phase3_semaphoreOfDarkWaterIii);
+            while(System.Threading.Interlocked.CompareExchange(ref phase3_guidanceSemaphoreOfDarkWaterIii,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+                System.Threading.Thread.MemoryBarrier();
+                
+            }
 
             if(phase3_numberOfDarkWaterIiiHasBeenProcessed!=6) {
 
@@ -3550,24 +3566,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name:"Phase3 Acquire The Semaphore Of Dark Water III 获取黑暗狂水(分摊)的信号灯",
-            eventType:EventTypeEnum.ActionEffect,
-            eventCondition:["ActionId:40271"],
-            suppress:2000,
-            userControl:false)]
-
-        public void Phase3_Acquire_The_Semaphore_Of_Dark_Water_III_获取黑暗狂水的信号灯(Event @event, ScriptAccessory accessory) {
-            
-            if(parse!=3.2) {
-
-                return;
-
-            }
-
-            phase3_semaphoreOfDarkWaterIii=true;
-
-        }
-        
         [ScriptMethod(name:"Phase3 Range Of Spirit Taker 碎灵一击(分散)范围",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40288"])]
@@ -3814,12 +3812,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 return;
                     
             }
-                
-            else {
-                    
-                phase3_hasConfirmedInitialSafePositions=true;
-                    
-            }
             
             Vector3 firstApocalypseOnTheEdge=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             int clockwise=(@event["Id2"].Equals("64"))?(-1):(1);
@@ -3848,6 +3840,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                    directionOfPosition1==6
                    ||
                    directionOfPosition1==5) {
+                    
+                    phase3_hasConfirmedInitialSafePositions=true;
 
                     phase3_initialSafePositionOfTheLeftGroup=position1;
                     phase3_initialSafePositionOfTheRightGroup=position2;
@@ -3861,6 +3855,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                    directionOfPosition1==3
                    ||
                    directionOfPosition1==4) {
+                    
+                    phase3_hasConfirmedInitialSafePositions=true;
 
                     phase3_initialSafePositionOfTheLeftGroup=position2;
                     phase3_initialSafePositionOfTheRightGroup=position1;
@@ -3878,6 +3874,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                    directionOfPosition1==5
                    ||
                    directionOfPosition1==4) {
+                    
+                    phase3_hasConfirmedInitialSafePositions=true;
 
                     phase3_initialSafePositionOfTheLeftGroup=position1;
                     phase3_initialSafePositionOfTheRightGroup=position2;
@@ -3891,6 +3889,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                    directionOfPosition1==2
                    ||
                    directionOfPosition1==3) {
+                    
+                    phase3_hasConfirmedInitialSafePositions=true;
 
                     phase3_initialSafePositionOfTheLeftGroup=position2;
                     phase3_initialSafePositionOfTheRightGroup=position1;
@@ -5881,12 +5881,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(!phase4_guidanceOfResiduesHasBeenGenerated) {
-
-                return;
-
-            }
-
             if(!ParseObjectId(@event["TargetId"], out var targetId)) {
 
                 return;
@@ -6694,7 +6688,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            while(!phase5_hasAcquiredTheFirstTower);
+            while(!phase5_hasAcquiredTheFirstTower) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+                System.Threading.Thread.MemoryBarrier();
+                
+            }
 
             Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
 
