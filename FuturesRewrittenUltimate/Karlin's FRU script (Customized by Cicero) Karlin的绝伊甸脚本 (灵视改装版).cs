@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.49",
+        version:"0.0.0.50",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -40,18 +40,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Please configure the user settings of the script according to your user settings of the vanilla script before running it!
         And of course, please don't run the customized script and the vanilla script simultaneously.
         
-        Regarding Phase 5, the script assumes that there would be only two provocations during the entire Phase 5, both would happen during Wings Dark And Light (towers and tank busters).
-        The first provocation would be from OT and the second would be from MT, no other tank swapping. The script also assumes that the tank with the highest enmity at the beginning of Phase 5 would be MT.
-        If the provocative timeline mentioned above is not followed, the guidance for tanks may no longer be reliable. The guidance for others would not be affected.
-        
         这是Karlin的另一个未来(绝伊甸)脚本的改装版本。
         脚本是基于0.0.0.10版本的,灵视对脚本进行了大幅度改装。
         在使用前请记得按照原版脚本重新配置一下这个脚本的用户设置!
         当然也请不要同时开着改装脚本和原版脚本。
-        
-        关于P5,指路是基于整个P5全程只有两次挑衅的轴,且都发生在光与暗之翼(塔+死刑)期间。
-        第一次是ST挑衅,第二次是MT挑衅,除此之外没有其他涉及仇恨的行为,且开场时MT必须是一仇。
-        如果不按照这个轴挑衅,T的指路可能会电椅。其他人的指路不受影响。
         
         ***** New Features *****
         ***** 新功能 *****
@@ -2952,83 +2944,87 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             while(phase3_numberOfDarkWaterIiiHasBeenProcessed<6);
             
-            bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
-            bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
-            string prompt="";
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
+                
+                bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                string prompt="";
 
-            if(goLeft) {
+                if(goLeft) {
 
-                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    prompt+="左组第一三次分摊，";
+                        prompt+="去左组分摊第一第三次，";
 
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="Go left for the first and third, ";
+
+                    }
+                
                 }
+
+                else {
                 
-                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    prompt+="Go left for the first and third, ";
+                        prompt+="去右组分摊第一第三次，";
 
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="Go right for the first and third, ";
+
+                    }
+                
                 }
-                
-            }
-
-            else {
-                
-                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-
-                    prompt+="右组第一三次分摊，";
-
-                }
-                
-                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-
-                    prompt+="Go right for the first and third, ";
-
-                }
-                
-            }
             
-            if(stayInTheGroup) {
+                if(stayInTheGroup) {
 
-                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    prompt+="第二次留在本组。";
+                        prompt+="第二次留在本组";
 
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="stay in the current group for the second";
+
+                    }
+                
                 }
+
+                else {
                 
-                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                    prompt+="stay in the current group for the second";
+                        prompt+="第二次换去对组";
 
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="move to the opposite group for the second";
+
+                    }
+                
                 }
-                
-            }
-
-            else {
-                
-                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
-
-                    prompt+="第二次换去对组。";
-
-                }
-                
-                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
-
-                    prompt+="move to the opposite group for the second";
-
-                }
-                
-            }
             
-            if(Enable_Text_Prompts) {
+                if(Enable_Text_Prompts) {
                 
-                accessory.Method.TextInfo(prompt,4000);
+                    accessory.Method.TextInfo(prompt,4000);
                 
-            }
+                }
             
-            if(Enable_TTS_Prompts) {
+                if(Enable_TTS_Prompts) {
                 
-                accessory.Method.TTS(prompt);
+                    accessory.Method.TTS(prompt);
+                
+                }
                 
             }
             
