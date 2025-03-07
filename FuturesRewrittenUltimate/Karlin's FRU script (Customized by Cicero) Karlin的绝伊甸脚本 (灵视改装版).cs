@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.48",
+        version:"0.0.0.49",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -179,6 +179,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ];
         volatile int phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
         volatile int phase3_roundOfDarkWaterIii=0;
+        volatile bool phase3_semaphoreOfDarkWaterIii=true;
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
         volatile bool phase3_hasConfirmedInitialSafePositions=false;
@@ -343,6 +344,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             ];
             phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
             phase3_roundOfDarkWaterIii=0;
+            phase3_semaphoreOfDarkWaterIii=true;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
@@ -2843,6 +2845,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             ];
             phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
             phase3_roundOfDarkWaterIii=0;
+            phase3_semaphoreOfDarkWaterIii=true;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
@@ -3031,6 +3034,244 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
 
+        [ScriptMethod(name:"Phase3 Release The Semaphore Of Dark Water III 释放黑暗狂水(分摊)的信号灯",
+            eventType:EventTypeEnum.StatusRemove,
+            eventCondition:["StatusID:2458"],
+            suppress:2000,
+            userControl:false)]
+
+        public void Phase3_Release_The_Semaphore_Of_Dark_Water_III_释放黑暗狂水的信号灯(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            ++phase3_roundOfDarkWaterIii;
+
+            phase3_semaphoreOfDarkWaterIii=false;
+
+        }
+
+        [ScriptMethod(name:"Phase3 Range Of Dark Water III 黑暗狂水(分摊)范围",
+            eventType:EventTypeEnum.StatusRemove,
+            eventCondition:["StatusID:2458"],
+            suppress:2000)]
+
+        public void Phase3_Range_Of_Dark_Water_III_黑暗狂水范围(Event @event, ScriptAccessory accessory) {
+
+            while(phase3_semaphoreOfDarkWaterIii);
+
+            Phase3_Types_Of_Dark_Water_III currentType=Phase3_Types_Of_Dark_Water_III.NONE;
+
+            switch(phase3_roundOfDarkWaterIii) {
+
+                case 1: {
+
+                    currentType=Phase3_Types_Of_Dark_Water_III.SHORT;
+
+                    break;
+
+                }
+                
+                case 2: {
+
+                    currentType=Phase3_Types_Of_Dark_Water_III.MEDIUM;
+
+                    break;
+
+                }
+                
+                case 3: {
+
+                    currentType=Phase3_Types_Of_Dark_Water_III.LONG;
+
+                    break;
+
+                }
+
+                default: {
+                    // Just a placeholder and should never be reached.
+
+                    return;
+
+                }
+                
+            }
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
+                
+                if(phase3_numberOfDarkWaterIiiHasBeenProcessed!=6) {
+
+                    return;
+
+                }
+
+                int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+                bool goLeft=phase3_doubleGroup_shouldGoLeft(myIndex);
+                bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(myIndex);
+            
+                for(int i=0;i<8;++i) {
+
+                    if(phase3_typeOfDarkWaterIii[i]==currentType) {
+                                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                        currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
+                        currentProperty.Scale=new(6);
+                        currentProperty.Owner=accessory.Data.PartyList[i];
+                        currentProperty.DestoryAt=5000;
+
+                        if(phase3_roundOfDarkWaterIii==1||phase3_roundOfDarkWaterIii==3) {
+                            
+                            if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
+
+                                currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                            }
+
+                            else {
+
+                                currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                            }
+                            
+                        }
+
+                        if(phase3_roundOfDarkWaterIii==2) {
+
+                            bool endUpWithTheLeftGroup=true;
+                            int doubleGroupIndexOfMyMedium=0;
+
+                            if(0<=myIndex&&myIndex<=3) {
+
+                                endUpWithTheLeftGroup=true;
+
+                            }
+
+                            if(4<=myIndex&&myIndex<=7) {
+
+                                endUpWithTheLeftGroup=false;
+
+                            }
+
+                            if(!stayInTheGroup) {
+
+                                endUpWithTheLeftGroup=(!endUpWithTheLeftGroup);
+
+                            }
+
+                            if(endUpWithTheLeftGroup) {
+
+                                for(doubleGroupIndexOfMyMedium=0;
+                                    phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]]!=Phase3_Types_Of_Dark_Water_III.MEDIUM
+                                    &&
+                                    doubleGroupIndexOfMyMedium<8;
+                                    ++doubleGroupIndexOfMyMedium);
+
+                            }
+
+                            else {
+                                
+                                for(doubleGroupIndexOfMyMedium=7;
+                                    phase3_typeOfDarkWaterIii[phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]]!=Phase3_Types_Of_Dark_Water_III.MEDIUM
+                                    &&
+                                    doubleGroupIndexOfMyMedium>=0;
+                                    --doubleGroupIndexOfMyMedium);
+                                
+                            }
+
+                            if(doubleGroupIndexOfMyMedium<0||doubleGroupIndexOfMyMedium>7) {
+                                
+                                currentProperty.Color=accessory.Data.DefaultDangerColor;
+                                
+                            }
+
+                            else {
+                                
+                                if(phase3_doubleGroup_priority_asAConstant[doubleGroupIndexOfMyMedium]==i) {
+                                
+                                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+                                
+                                }
+
+                                else {
+                                
+                                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+                                
+                                }
+                                
+                            }
+
+                        }
+                                        
+                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
+                    }
+                                    
+                }
+
+            }
+
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Other_Strats_Are_Work_In_Progress_其他攻略正在施工中) {
+                
+                for(int i=0;i<8;++i) {
+
+                    if(phase3_typeOfDarkWaterIii[i]==currentType) {
+                                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                        currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
+                        currentProperty.Scale=new(6);
+                        currentProperty.Owner=accessory.Data.PartyList[i];
+                        currentProperty.Color=accessory.Data.DefaultDangerColor;
+                        currentProperty.DestoryAt=5000;
+                                        
+                        accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
+                    }
+                                    
+                }
+                
+                if(Enable_Text_Prompts) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                        accessory.Method.TextInfo("分摊",2000);
+                    
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                        accessory.Method.TextInfo("Stack",2000);
+                    
+                    }
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                        accessory.Method.TTS("分摊");
+                    
+                    }
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                        accessory.Method.TTS("Stack");
+                    
+                    }
+                
+                }
+                
+            }
+
+        }
+
         [ScriptMethod(name:"Phase3 Guidance Of Dark Water III 黑暗狂水(分摊)指路",
             eventType:EventTypeEnum.StatusRemove,
             eventCondition:["StatusID:2458"],
@@ -3038,19 +3279,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         public void Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路(Event @event, ScriptAccessory accessory) {
 
-            if(parse!=3.2) {
-
-                return;
-
-            }
+            while(phase3_semaphoreOfDarkWaterIii);
 
             if(phase3_numberOfDarkWaterIiiHasBeenProcessed!=6) {
 
                 return;
 
             }
-
-            ++phase3_roundOfDarkWaterIii;
             
             bool targetPositionConfirmed=false;
             string promptText="";
@@ -3178,37 +3413,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
 
                     case 3: {
-                        // The idea was suggested by @lunarflower223 on Discord. Appreciate!
-
-                        for(int i=0;i<8;++i) {
-
-                            if(phase3_typeOfDarkWaterIii[i]==Phase3_Types_Of_Dark_Water_III.LONG) {
-                                        
-                                currentProperty=accessory.Data.GetDefaultDrawProperties();
-                                        
-                                currentProperty.Name="Phase3_Guidance_Of_Dark_Water_III_黑暗狂水指路";
-                                currentProperty.Scale=new(6);
-                                currentProperty.Owner=accessory.Data.PartyList[i];
-                                currentProperty.DestoryAt=5000;
-
-                                if(phase3_doubleGroup_shouldGoLeft(i)==goLeft) {
-
-                                    currentProperty.Color=accessory.Data.DefaultSafeColor;
-
-                                }
-
-                                else {
-
-                                    currentProperty.Color=accessory.Data.DefaultDangerColor;
-
-                                }
-                                        
-                                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
-                                        
-                            }
-                                    
-                        }
-                            
+                        
                         if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
                                 
                             promptText=(goLeft)?("左侧分摊"):("右侧分摊");
@@ -3346,6 +3551,24 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             return currentIndex;
             // Just a placeholder and should never be reached.
+
+        }
+        
+        [ScriptMethod(name:"Phase3 Acquire The Semaphore Of Dark Water III 获取黑暗狂水(分摊)的信号灯",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40271"],
+            suppress:2000,
+            userControl:false)]
+
+        public void Phase3_Acquire_The_Semaphore_Of_Dark_Water_III_获取黑暗狂水的信号灯(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            phase3_semaphoreOfDarkWaterIii=true;
 
         }
         
