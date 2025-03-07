@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.47",
+        version:"0.0.0.48",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -100,6 +100,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
         [UserSetting("P3二运 初始安全位置分配方式")]
         public Phase3_Allocations_Of_Initial_Safe_Positions Phase3_Allocation_Of_Initial_Safe_Positions { get; set; }
+        [UserSetting("P3二运 粗略指路与倒数第二次启示(地火)的颜色")]
+        public ScriptColor Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse { get; set; } = new() { V4=new(0,1f,1f,1f) };
         [UserSetting("P3二运 引导暗夜舞蹈(最远死刑)的T")]
         public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; } = Tanks.OT_ST;
         [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
@@ -175,12 +177,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE
         ];
+        volatile int phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
         volatile int phase3_roundOfDarkWaterIii=0;
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
         volatile bool phase3_hasConfirmedInitialSafePositions=false;
         Vector3 phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
         Vector3 phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+        Vector3 phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         
         ulong P4FragmentId;
         List<int> P4Tether = [-1, -1, -1, -1, -1, -1, -1, -1];
@@ -337,10 +341,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
+            phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
             phase3_roundOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
             phase4_residueIdsFromEastToWest=[0,0,0,0];
             phase4_guidanceOfResiduesHasBeenGenerated=false;
@@ -2835,10 +2841,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
+            phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
             phase3_roundOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         }
         
         [ScriptMethod(name:"Phase3 Determine Types Of Dark Water III 确定黑暗狂水(分摊)类型",
@@ -2910,6 +2918,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
+            ++phase3_numberOfDarkWaterIiiHasBeenProcessed;
+
             if(Enable_Developer_Mode) {
 
                 accessory.Method.SendChat($"""
@@ -2920,6 +2930,103 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                            
                                            """);
 
+            }
+            
+        }
+        
+        [ScriptMethod(name:"Phase3 Prompt Before Dark Water III 暗黑狂水(分摊)前提示",
+            eventType:EventTypeEnum.StatusAdd,
+            eventCondition:["StatusID:2461"],
+            suppress:2000)]
+
+        public void Phase3_Prompt_Before_Dark_Water_III_暗黑狂水前提示(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            while(phase3_numberOfDarkWaterIiiHasBeenProcessed<6);
+            
+            bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+            bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+            string prompt="";
+
+            if(goLeft) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt+="左组第一三次分摊，";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt+="Go left for the first and third, ";
+
+                }
+                
+            }
+
+            else {
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt+="右组第一三次分摊，";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt+="Go right for the first and third, ";
+
+                }
+                
+            }
+            
+            if(stayInTheGroup) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt+="第二次留在本组。";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt+="stay in the current group for the second";
+
+                }
+                
+            }
+
+            else {
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt+="第二次换去对组。";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt+="move to the opposite group for the second";
+
+                }
+                
+            }
+            
+            if(Enable_Text_Prompts) {
+                
+                accessory.Method.TextInfo(prompt,4000);
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+                
+                accessory.Method.TTS(prompt);
+                
             }
             
         }
@@ -2937,6 +3044,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
+            if(phase3_numberOfDarkWaterIiiHasBeenProcessed!=6) {
+
+                return;
+
+            }
+
             ++phase3_roundOfDarkWaterIii;
             
             bool targetPositionConfirmed=false;
@@ -2948,7 +3061,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Owner=accessory.Data.Me;
             currentProperty.Color=accessory.Data.DefaultSafeColor;
-            currentProperty.DestoryAt=4750;
+            currentProperty.DestoryAt=5000;
 
             if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
@@ -3256,8 +3369,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty.Scale=new(5);
                 currentProperty.Owner=accessory.Data.PartyList[i];
                 currentProperty.Color=accessory.Data.DefaultDangerColor;
-                currentProperty.Delay=1000;
-                currentProperty.DestoryAt=2750;
+                currentProperty.Delay=1250;
+                currentProperty.DestoryAt=2500;
                 
                 accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
                 
@@ -3663,7 +3776,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = "P3_二运_地火_第三点_11";
             dp.Scale = new(9);
             dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise);
-            dp.Color = (accessory.Data.DefaultDangerColor + accessory.Data.DefaultSafeColor) / 2;
+            dp.Color = Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse.V4;
             dp.Delay = 3000;
             dp.DestoryAt = 8000 - preTime;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -3679,7 +3792,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = "P3_二运_地火_第三点_21";
             dp.Scale = new(9);
             dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise + float.Pi);
-            dp.Color = (accessory.Data.DefaultDangerColor + accessory.Data.DefaultSafeColor) / 2;
+            dp.Color = Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse.V4;
             dp.Delay = 3000;
             dp.DestoryAt = 8000 - preTime;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -3708,6 +3821,61 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Delay = 15000 - preTime;
             dp.DestoryAt = 6000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+        }
+        
+        [ScriptMethod(name:"Phase3 Rough Guidance Of Initial Safe Positions 初始安全位置粗略指路",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40289"])]
+        
+        public void Phase3_Rough_Guidance_Of_Initial_Safe_Positions_初始安全位置粗略指路(Event @event,ScriptAccessory accessory) {
+
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            bool targetPositionConfirmed=false;
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase3_Rough_Guidance_Of_Initial_Safe_Positions_初始安全位置粗略指路";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.Color=Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse.V4;
+            currentProperty.Delay=500;
+            currentProperty.DestoryAt=6500;
+
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
+
+                if(0<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+                   &&
+                   accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=3) {
+
+                    currentProperty.TargetPosition=phase3_initialSafePositionOfTheLeftGroup;
+                    
+                    targetPositionConfirmed=true;
+                    
+                }
+                
+                if(4<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+                   &&
+                   accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=7) {
+
+                    currentProperty.TargetPosition=phase3_initialSafePositionOfTheRightGroup;
+                    
+                    targetPositionConfirmed=true;
+                    
+                }
+
+            }
+
+            if(targetPositionConfirmed) {
+
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
 
         }
         
@@ -4018,6 +4186,100 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
         
+        [ScriptMethod(name:"Phase3 Determine The Final Position Of The Boss 确定Boss的最终位置",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40300"],
+            userControl:false)]
+
+        public void Phase3_Determine_The_Final_Position_Of_The_Boss_确定Boss的最终位置(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+            
+            phase3_finalPositionOfTheBoss=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            
+        }
+        
+        [ScriptMethod(name:"Phase3 Initial Position Of The Boss In Phase4 P4时Boss的初始位置",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40300"])]
+
+        public void Phase3_Initial_Position_Of_The_Boss_In_Phase4_P4时Boss的初始位置(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            if(phase3_finalPositionOfTheBoss.Equals(new Vector3(100,0,100))) {
+
+                return;
+
+            }
+
+            bool inTheNorth=true;
+            
+            if(phase3_finalPositionOfTheBoss.Z<100) {
+
+                inTheNorth=false;
+
+            }
+
+            else {
+
+                inTheNorth=true;
+
+            }
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+            currentProperty.Name="Phase3_Initial_Position_Of_The_Boss_In_Phase4_P4时Boss的初始位置";
+            currentProperty.Scale=new(7);
+            currentProperty.Position=(inTheNorth)?(new Vector3(100,0,90)):(new Vector3(100,0,110));
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.DestoryAt=9250;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+            
+            System.Threading.Thread.Sleep(2000);
+            
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo(((inTheNorth)?("Boss即将出现在正北"):("Boss即将出现在正南")),7250);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo(((inTheNorth)?("The Boss will appear in the north"):("The Boss will appear in the south")),7250);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS(((inTheNorth)?("Boss即将出现在正北"):("Boss即将出现在正南")));
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS(((inTheNorth)?("The Boss will appear in the north"):("The Boss will appear in the south")));
+                    
+                }
+                
+            }
+            
+        }
 
         private int MyLampIndex(int myPartyIndex)
         {
