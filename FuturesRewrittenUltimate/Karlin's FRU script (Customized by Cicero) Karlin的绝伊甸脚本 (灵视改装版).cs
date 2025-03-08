@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.52",
+        version:"0.0.0.53",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -151,6 +151,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         List<int> P2LightRampantBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P2LightRampantTetherDone = new();
 
+        volatile string phase3_bossId="";
         List<int> P3FireBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         List<int> P3WaterBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         List<int> P3ReturnBuff = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -178,6 +179,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         volatile bool phase3_hasConfirmedInitialSafePositions=false;
         Vector3 phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
         Vector3 phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+        Vector3 phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
         Vector3 phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         
         ulong P4FragmentId;
@@ -323,6 +325,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             P2DDIceDir.Clear();
 
+            phase3_bossId="";
             P3FloorFireDone = false;
             P3Stack = [0, 0, 0, 0, 0, 0, 0, 0];
             phase3_typeOfDarkWaterIii=[
@@ -342,6 +345,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
             phase4_residueIdsFromEastToWest=[0,0,0,0];
@@ -2330,6 +2334,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P3_时间压缩_分P(Event @event, ScriptAccessory accessory)
         {
             parse = 3.1d;
+            phase3_bossId=@event["SourceId"];
             P3FireBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             P3WaterBuff= [0, 0, 0, 0, 0, 0, 0, 0];
             P3ReturnBuff = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -2821,6 +2826,93 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         }
 
+        [ScriptMethod(name:"Phase3 Initial Orientation Before The Second Half 二运前的初始面向",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40290"],
+            userControl:false)]
+        
+        public void Phase3_Initial_Orientation_Before_The_Second_Half_二运前的初始面向(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.1) {
+
+                return;
+
+            }
+            
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+
+                return;
+                
+            }
+
+            if(!accessory.Data.EnmityList.TryGetValue(sourceId, out var enmityListOfBoss)) {
+
+                return;
+
+            }
+            
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           accessory.Data.Me={accessory.Data.Me}
+                                           enmityListOfTheBoss[0]={enmityListOfBoss[0]}
+
+                                           """);
+
+            }
+            
+            if(accessory.Data.Me!=enmityListOfBoss[0]) {
+
+                return;
+
+            }
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase3_Initial_Orientation_Before_The_Second_Half_二运前的初始面向";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.TargetPosition=new Vector3(100,0,94);
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.DestoryAt=12500;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+            
+            if(Enable_Text_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TextInfo("让Boss面向正北",12500);
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TextInfo("Make the Boss orient to the north",12500);
+                    
+                }
+                
+            }
+            
+            if(Enable_TTS_Prompts) {
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                    
+                    accessory.Method.TTS("让Boss面向正北");
+                    
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                    
+                    accessory.Method.TTS("Make the Boss orient to the north");
+                    
+                }
+                
+            }
+            
+        }
 
         [ScriptMethod(name: "P3_延迟咏唱回响_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40269)$"], userControl: false)]
         public void P3_延迟咏唱回响_分P(Event @event, ScriptAccessory accessory)
@@ -2844,6 +2936,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_hasConfirmedInitialSafePositions=false;
             phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
             phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         }
         
@@ -2958,6 +3051,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 bool goLeft=phase3_doubleGroup_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
                 bool stayInTheGroup=phase3_doubleGroup_shouldStayInTheGroup(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
                 string prompt="";
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase3_Prompt_Before_Dark_Water_III_暗黑狂水前提示";
+                currentProperty.Scale=new(2);
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=5000;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
                 if(goLeft) {
 
@@ -3427,6 +3531,53 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
 
                     case 3: {
+                        
+                        if(ParseObjectId(phase3_bossId, out var bossId)) {
+
+                            var bossObject=accessory.Data.Objects.SearchById(bossId);
+
+                            if(bossObject!=null) {
+                                
+                                float currentRotation=bossObject.Rotation;
+                                currentRotation=-(currentRotation-float.Pi);
+
+                                Vector3 groupPosition=new Vector3(100,0,100);
+            
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               currentRotation={currentRotation}
+
+                                                               """);
+
+                                }
+
+                                if(goLeft) {
+
+                                    groupPosition=new Vector3(bossObject.Position.X-6.89f,
+                                                              bossObject.Position.Y,
+                                                              bossObject.Position.Z+6.89f);
+
+                                }
+
+                                else {
+                                    
+                                    groupPosition=new Vector3(bossObject.Position.X+6.89f,
+                                                              bossObject.Position.Y,
+                                                              bossObject.Position.Z+6.89f);
+                                    
+                                }
+
+                                groupPosition=RotatePoint(groupPosition,bossObject.Position,currentRotation);
+                                
+                                currentProperty.TargetPosition=groupPosition;
+                                
+                                targetPositionConfirmed=true;
+
+                            }
+
+                        }
                         
                         if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
                                 
@@ -4312,7 +4463,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             // ----- Calculations of the position where the tank should bait -----
             // This part was directly inherited from Karlin's script.
             // The algorithm seems to be too mysterious to me, and it definitely works nice.
-            // So as a result, I kept this part as is.
+            // So as a result, except the position was tuned a bit towards the edge, I just keep the part as is.
 
             var dir8=P3FloorFire%10%4;
             Vector3 posN=new(100,0,86);
@@ -4325,6 +4476,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var pos1=RotatePoint(posN,new(100,0,100),float.Pi/4*rot);
             var pos2=RotatePoint(posN,new(100,0,100),float.Pi/4*rot+float.Pi);
             var dealpos=((pos1-tankWhoBaitsDarkestDance.Position).Length()<(pos2-tankWhoBaitsDarkestDance.Position).Length())?(pos1):(pos2);
+
+            dealpos=new Vector3((dealpos.X-100)/3*4+100,
+                                dealpos.Y,
+                                (dealpos.Z-100)/3*4+100);
             
             // ----- -----
             
