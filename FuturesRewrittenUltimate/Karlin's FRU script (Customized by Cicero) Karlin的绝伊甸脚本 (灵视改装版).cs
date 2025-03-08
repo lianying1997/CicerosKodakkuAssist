@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.53",
+        version:"0.0.0.54",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -176,9 +176,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         volatile int phase3_guidanceSemaphoreOfDarkWaterIii=0;
         List<int> phase3_doubleGroup_priority_asAConstant=[2,3,0,1,4,5,6,7];
         // The priority would be H1 H2 MT OT M1 M2 R1 R2 or H1 H2 MT ST D1 D2 D3 D4 temporarily if the Double Group strat is adopted.
+        List<int> phase3_locomotive_priority_asAConstant=[0,1,2,3,7,6,5,4];
+        // The priority would be MT OT H1 H2 R2 R1 M2 M1 or MT ST H1 H2 D4 D3 D2 D1 temporarily if the Locomotive strat is adopted.
         volatile bool phase3_hasConfirmedInitialSafePositions=false;
-        Vector3 phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
-        Vector3 phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+        Vector3 phase3_doubleGroup_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+        Vector3 phase3_doubleGroup_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+        Vector3 phase3_locomotive_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+        Vector3 phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+        Vector3 phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+        Vector3 phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
         Vector3 phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
         Vector3 phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         
@@ -262,6 +268,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase3_Strats_Of_The_Second_Half {
             
             Double_Group_双分组法,
+            High_Priority_As_Locomotives_车头低换法,
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
@@ -343,8 +350,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_rangeSemaphoreOfDarkWaterIii=0;
             phase3_guidanceSemaphoreOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
-            phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
-            phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_doubleGroup_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_doubleGroup_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_locomotive_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
@@ -2934,8 +2945,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_rangeSemaphoreOfDarkWaterIii=0;
             phase3_guidanceSemaphoreOfDarkWaterIii=0;
             phase3_hasConfirmedInitialSafePositions=false;
-            phase3_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
-            phase3_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_doubleGroup_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_doubleGroup_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_locomotive_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         }
@@ -3122,6 +3137,101 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
 
                         prompt+="move to the opposite group for the second";
+
+                    }
+                
+                }
+            
+                if(Enable_Text_Prompts) {
+                
+                    accessory.Method.TextInfo(prompt,4000);
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+                
+                    accessory.Method.TTS(prompt);
+                
+                }
+                
+            }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法) {
+
+                int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+                bool goLeft=phase3_locomotive_shouldGoLeft(myIndex);
+                string prompt="";
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase3_Prompt_Before_Dark_Water_III_暗黑狂水前提示";
+                currentProperty.Scale=new(2);
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=5000;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                if(goLeft) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt+="去左组分摊，";
+
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="Go left to stack, ";
+
+                    }
+                
+                }
+
+                else {
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt+="去右组分摊，";
+
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="Go right to stack, ";
+
+                    }
+                
+                }
+            
+                if(myIndex!=0&&myIndex!=4) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt+=(goLeft)?("跟随MT"):("跟随D1");
+
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+=(goLeft)?("follow MT"):("follow M1");
+
+                    }
+                
+                }
+
+                else {
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt+="你是车头";
+
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="you are the locomotive";
 
                     }
                 
@@ -3331,6 +3441,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
 
             }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法) {
+                
+                if(phase3_numberOfDarkWaterIiiHasBeenProcessed==6) {
+                    
+                    bool goLeft=phase3_locomotive_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+            
+                    for(int i=0;i<8;++i) {
+
+                        if(phase3_typeOfDarkWaterIii[i]==currentType) {
+                                        
+                            currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                            currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
+                            currentProperty.Scale=new(6);
+                            currentProperty.Owner=accessory.Data.PartyList[i];
+                            currentProperty.DestoryAt=5000;
+
+                            if(phase3_locomotive_shouldGoLeft(i)==goLeft) {
+
+                                currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                            }
+
+                            else {
+
+                                currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                            }
+                                        
+                            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
+                        }
+                                    
+                    }
+
+                    return;
+
+                }
+
+            }
 
             for(int i=0;i<8;++i) {
 
@@ -3459,12 +3610,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
                     case 2: {
                         
-                        Vector3 positionToStackOfTheLeftGroup=new Vector3((phase3_initialSafePositionOfTheLeftGroup.X-100)/3+100,
-                                                                          phase3_initialSafePositionOfTheLeftGroup.Y,
-                                                                          (phase3_initialSafePositionOfTheLeftGroup.Z-100)/3+100);
-                        Vector3 positionToStackOfTheRightGroup=new Vector3((phase3_initialSafePositionOfTheRightGroup.X-100)/3+100,
-                                                                           phase3_initialSafePositionOfTheRightGroup.Y,
-                                                                           (phase3_initialSafePositionOfTheRightGroup.Z-100)/3+100);
+                        Vector3 positionToStackOfTheLeftGroup=new Vector3((phase3_doubleGroup_initialSafePositionOfTheLeftGroup.X-100)/3+100,
+                                                                          phase3_doubleGroup_initialSafePositionOfTheLeftGroup.Y,
+                                                                          (phase3_doubleGroup_initialSafePositionOfTheLeftGroup.Z-100)/3+100);
+                        Vector3 positionToStackOfTheRightGroup=new Vector3((phase3_doubleGroup_initialSafePositionOfTheRightGroup.X-100)/3+100,
+                                                                           phase3_doubleGroup_initialSafePositionOfTheRightGroup.Y,
+                                                                           (phase3_doubleGroup_initialSafePositionOfTheRightGroup.Z-100)/3+100);
 
                         if(stayInTheGroup) {
 
@@ -3523,6 +3674,143 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
 
                             promptText=(stayInTheGroup)?("Stack in the current group"):("Stack in the opposite group");
+
+                        }
+
+                        break;
+
+                    }
+
+                    case 3: {
+                        
+                        if(ParseObjectId(phase3_bossId, out var bossId)) {
+
+                            var bossObject=accessory.Data.Objects.SearchById(bossId);
+
+                            if(bossObject!=null) {
+                                
+                                float currentRotation=bossObject.Rotation;
+                                currentRotation=-(currentRotation-float.Pi);
+
+                                Vector3 groupPosition=new Vector3(100,0,100);
+            
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               currentRotation={currentRotation}
+
+                                                               """);
+
+                                }
+
+                                if(goLeft) {
+
+                                    groupPosition=new Vector3(bossObject.Position.X-6.89f,
+                                                              bossObject.Position.Y,
+                                                              bossObject.Position.Z+6.89f);
+
+                                }
+
+                                else {
+                                    
+                                    groupPosition=new Vector3(bossObject.Position.X+6.89f,
+                                                              bossObject.Position.Y,
+                                                              bossObject.Position.Z+6.89f);
+                                    
+                                }
+
+                                groupPosition=RotatePoint(groupPosition,bossObject.Position,currentRotation);
+                                
+                                currentProperty.TargetPosition=groupPosition;
+                                
+                                targetPositionConfirmed=true;
+
+                            }
+
+                        }
+                        
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                                
+                            promptText=(goLeft)?("左侧分摊"):("右侧分摊");
+                                
+                        }
+                            
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                                
+                            promptText=(goLeft)?("Stack on the left"):("Stack on the right");
+                                
+                        }
+
+                        break;
+
+                    }
+
+                    default: {
+                        // Just a placeholder and should never be reached.
+
+                        break;
+
+                    }
+                    
+                }
+                
+            }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法) {
+                
+                bool goLeft=phase3_locomotive_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                if(Enable_Developer_Mode) {
+
+                    accessory.Method.SendChat($"""
+                                               /e 
+                                               goLeft={goLeft}
+                                               phase3_roundOfDarkWaterIii={phase3_roundOfDarkWaterIii}
+                                               
+                                               """);
+
+                }
+
+                switch(phase3_roundOfDarkWaterIii) {
+
+                    case 1: {
+                        
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                    
+                        targetPositionConfirmed=true;
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            promptText=(goLeft)?("左侧分摊"):("右侧分摊");
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            promptText=(goLeft)?("Stack on the left"):("Stack on the right");
+
+                        }
+
+                        break;
+
+                    }
+                    
+                    case 2: {
+                        
+                        currentProperty.TargetPosition=(goLeft)?(phase3_locomotive_leftPositionToStackOfTheSecondRound):(phase3_locomotive_rightPositionToStackOfTheSecondRound);
+                    
+                        targetPositionConfirmed=true;
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            promptText="场中当前侧分摊";
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            promptText="Stack on this side of the center";
 
                         }
 
@@ -3707,6 +3995,65 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             for(int i=0;i<8;++i) {
 
                 if(currentIndex==phase3_doubleGroup_priority_asAConstant[i]) {
+
+                    return i;
+
+                }
+                
+            }
+
+            return currentIndex;
+            // Just a placeholder and should never be reached.
+
+        }
+        
+        private bool phase3_locomotive_shouldGoLeft(int currentIndex) {
+
+            if(currentIndex<0||currentIndex>7) {
+
+                return true;
+
+            }
+            
+            int locomotiveIndex=phase3_locomotive_getLocomotiveIndex(currentIndex);
+            Phase3_Types_Of_Dark_Water_III currentType=phase3_typeOfDarkWaterIii[currentIndex];
+            bool goLeft=true;
+
+            for(int i=0;i<8;++i) {
+
+                if(phase3_typeOfDarkWaterIii[phase3_locomotive_priority_asAConstant[i]]==currentType&&i!=locomotiveIndex) {
+
+                    if(i>locomotiveIndex) {
+
+                        goLeft=true;
+                        // Should go left.
+
+                        break;
+
+                    }
+
+                    if(i<locomotiveIndex) {
+
+                        goLeft=false;
+                        // Should go right.
+
+                        break;
+
+                    }
+                        
+                }
+                    
+            }
+
+            return goLeft;
+
+        }
+        
+        private int phase3_locomotive_getLocomotiveIndex(int currentIndex) {
+
+            for(int i=0;i<8;++i) {
+
+                if(currentIndex==phase3_locomotive_priority_asAConstant[i]) {
 
                     return i;
 
@@ -3966,88 +4313,199 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
             }
             
+            phase3_locomotive_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            
             Vector3 firstApocalypseOnTheEdge=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             int clockwise=(@event["Id2"].Equals("64"))?(-1):(1);
-            Vector3 position1=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/4*3*clockwise);
-            Vector3 position2=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/4*3*clockwise+float.Pi);
-            int directionOfPosition1=PositionTo8Dir(position1,new Vector3(100,0,100));
+            Vector3 doubleGroup_position1=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/4*3*clockwise);
+            Vector3 doubleGroup_position2=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/4*3*clockwise+float.Pi);
+            Vector3 locomotive_position1=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/2*clockwise);
+            Vector3 locomotive_position2=RotatePoint(firstApocalypseOnTheEdge,new Vector3(100,0,100),float.Pi/2*clockwise+float.Pi);
+            int doubleGroup_directionOfPosition1=PositionTo8Dir(doubleGroup_position1,new Vector3(100,0,100));
+            int locomotive_directionOfPosition1=PositionTo8Dir(locomotive_position1,new Vector3(100,0,100));
             
             if(Enable_Developer_Mode) {
 
                 accessory.Method.SendChat($"""
                                            /e 
-                                           position1={position1}
-                                           position2={position2}
-                                           directionOfPosition1={directionOfPosition1}
+                                           doubleGroup_position1={doubleGroup_position1}
+                                           doubleGroup_position1={doubleGroup_position2}
+                                           locomotive_position1={locomotive_position1}
+                                           locomotive_position2={locomotive_position2}
+                                           doubleGroup_directionOfPosition1={doubleGroup_directionOfPosition1}
+                                           locomotive_directionOfPosition1={locomotive_directionOfPosition1}
                                            
                                            """);
 
             }
 
-            if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.North_To_Southwest_For_The_Left_Group_左组从正北到西南) {
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
-                if(directionOfPosition1==0
-                   ||
-                   directionOfPosition1==7
-                   ||
-                   directionOfPosition1==6
-                   ||
-                   directionOfPosition1==5) {
-                    
-                    phase3_hasConfirmedInitialSafePositions=true;
-
-                    phase3_initialSafePositionOfTheLeftGroup=position1;
-                    phase3_initialSafePositionOfTheRightGroup=position2;
-
-                }
+                if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.North_To_Southwest_For_The_Left_Group_左组从正北到西南) {
                 
-                if(directionOfPosition1==1
-                   ||
-                   directionOfPosition1==2
-                   ||
-                   directionOfPosition1==3
-                   ||
-                   directionOfPosition1==4) {
+                    if(doubleGroup_directionOfPosition1==0
+                       ||
+                       doubleGroup_directionOfPosition1==7
+                       ||
+                       doubleGroup_directionOfPosition1==6
+                       ||
+                       doubleGroup_directionOfPosition1==5) {
+                        
+                        phase3_doubleGroup_initialSafePositionOfTheLeftGroup=doubleGroup_position1;
+                        phase3_doubleGroup_initialSafePositionOfTheRightGroup=doubleGroup_position2;
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    } 
                     
-                    phase3_hasConfirmedInitialSafePositions=true;
-
-                    phase3_initialSafePositionOfTheLeftGroup=position2;
-                    phase3_initialSafePositionOfTheRightGroup=position1;
-
+                    if(doubleGroup_directionOfPosition1==1
+                       ||
+                       doubleGroup_directionOfPosition1==2
+                       ||
+                       doubleGroup_directionOfPosition1==3
+                       ||
+                       doubleGroup_directionOfPosition1==4) {
+                        
+                        phase3_doubleGroup_initialSafePositionOfTheLeftGroup=doubleGroup_position2;
+                        phase3_doubleGroup_initialSafePositionOfTheRightGroup=doubleGroup_position1;
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    }
+                    
+                } 
+                
+                if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.Northwest_To_South_For_The_Left_Group_左组从西北到正南) {
+                    
+                    if(doubleGroup_directionOfPosition1==7
+                       ||
+                       doubleGroup_directionOfPosition1==6
+                       ||
+                       doubleGroup_directionOfPosition1==5
+                       ||
+                       doubleGroup_directionOfPosition1==4) {
+                        
+                        phase3_doubleGroup_initialSafePositionOfTheLeftGroup=doubleGroup_position1;
+                        phase3_doubleGroup_initialSafePositionOfTheRightGroup=doubleGroup_position2;
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    }
+                    
+                    if(doubleGroup_directionOfPosition1==0
+                       ||
+                       doubleGroup_directionOfPosition1==1
+                       ||
+                       doubleGroup_directionOfPosition1==2
+                       ||
+                       doubleGroup_directionOfPosition1==3) {
+                        
+                        phase3_doubleGroup_initialSafePositionOfTheLeftGroup=doubleGroup_position2;
+                        phase3_doubleGroup_initialSafePositionOfTheRightGroup=doubleGroup_position1;
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    } 
+                    
                 }
                 
             }
             
-            if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.Northwest_To_South_For_The_Left_Group_左组从西北到正南) {
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法) {
                 
-                if(directionOfPosition1==7
-                   ||
-                   directionOfPosition1==6
-                   ||
-                   directionOfPosition1==5
-                   ||
-                   directionOfPosition1==4) {
-                    
-                    phase3_hasConfirmedInitialSafePositions=true;
-
-                    phase3_initialSafePositionOfTheLeftGroup=position1;
-                    phase3_initialSafePositionOfTheRightGroup=position2;
-
-                }
+                if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.North_To_Southwest_For_The_Left_Group_左组从正北到西南) {
                 
-                if(directionOfPosition1==0
-                   ||
-                   directionOfPosition1==1
-                   ||
-                   directionOfPosition1==2
-                   ||
-                   directionOfPosition1==3) {
+                    if(locomotive_directionOfPosition1==0
+                       ||
+                       locomotive_directionOfPosition1==7
+                       ||
+                       locomotive_directionOfPosition1==6
+                       ||
+                       locomotive_directionOfPosition1==5) {
+                        
+                        phase3_locomotive_initialSafePositionOfTheLeftGroup=locomotive_position1;
+                        phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position1.X-100)/3+100,
+                                                                                          doubleGroup_position1.Y,
+                                                                                          (doubleGroup_position1.Z-100)/3+100);
+                        phase3_locomotive_initialSafePositionOfTheRightGroup=locomotive_position2;
+                        phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position2.X-100)/3+100,
+                                                                                           doubleGroup_position2.Y,
+                                                                                           (doubleGroup_position2.Z-100)/3+100);
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    } 
                     
-                    phase3_hasConfirmedInitialSafePositions=true;
-
-                    phase3_initialSafePositionOfTheLeftGroup=position2;
-                    phase3_initialSafePositionOfTheRightGroup=position1;
-
+                    if(locomotive_directionOfPosition1==1
+                       ||
+                       locomotive_directionOfPosition1==2
+                       ||
+                       locomotive_directionOfPosition1==3
+                       ||
+                       locomotive_directionOfPosition1==4) {
+                        
+                        phase3_locomotive_initialSafePositionOfTheLeftGroup=locomotive_position2;
+                        phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position2.X-100)/3+100,
+                                                                                          doubleGroup_position2.Y,
+                                                                                          (doubleGroup_position2.Z-100)/3+100);
+                        phase3_locomotive_initialSafePositionOfTheRightGroup=locomotive_position1;
+                        phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position1.X-100)/3+100,
+                                                                                           doubleGroup_position1.Y,
+                                                                                           (doubleGroup_position1.Z-100)/3+100);
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    }
+                    
+                } 
+                
+                if(Phase3_Allocation_Of_Initial_Safe_Positions==Phase3_Allocations_Of_Initial_Safe_Positions.Northwest_To_South_For_The_Left_Group_左组从西北到正南) {
+                    
+                    if(locomotive_directionOfPosition1==7
+                       ||
+                       locomotive_directionOfPosition1==6
+                       ||
+                       locomotive_directionOfPosition1==5
+                       ||
+                       locomotive_directionOfPosition1==4) {
+                        
+                        phase3_locomotive_initialSafePositionOfTheLeftGroup=locomotive_position1;
+                        phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position1.X-100)/3+100,
+                                                                                          doubleGroup_position1.Y,
+                                                                                          (doubleGroup_position1.Z-100)/3+100);
+                        phase3_locomotive_initialSafePositionOfTheRightGroup=locomotive_position2;
+                        phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position2.X-100)/3+100,
+                                                                                           doubleGroup_position2.Y,
+                                                                                           (doubleGroup_position2.Z-100)/3+100);
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    }
+                    
+                    if(locomotive_directionOfPosition1==0
+                       ||
+                       locomotive_directionOfPosition1==1
+                       ||
+                       locomotive_directionOfPosition1==2
+                       ||
+                       locomotive_directionOfPosition1==3) {
+                        
+                        phase3_locomotive_initialSafePositionOfTheLeftGroup=locomotive_position2;
+                        phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position2.X-100)/3+100,
+                                                                                          doubleGroup_position2.Y,
+                                                                                          (doubleGroup_position2.Z-100)/3+100);
+                        phase3_locomotive_initialSafePositionOfTheRightGroup=locomotive_position1;
+                        phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3((doubleGroup_position1.X-100)/3+100,
+                                                                                           doubleGroup_position1.Y,
+                                                                                           (doubleGroup_position1.Z-100)/3+100);
+                        
+                        phase3_hasConfirmedInitialSafePositions=true;
+                        
+                    } 
+                    
                 }
                 
             }
@@ -4225,7 +4683,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                    &&
                    accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=3) {
 
-                    currentProperty.TargetPosition=phase3_initialSafePositionOfTheLeftGroup;
+                    currentProperty.TargetPosition=phase3_doubleGroup_initialSafePositionOfTheLeftGroup;
                     
                     targetPositionConfirmed=true;
                     
@@ -4235,7 +4693,29 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                    &&
                    accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=7) {
 
-                    currentProperty.TargetPosition=phase3_initialSafePositionOfTheRightGroup;
+                    currentProperty.TargetPosition=phase3_doubleGroup_initialSafePositionOfTheRightGroup;
+                    
+                    targetPositionConfirmed=true;
+                    
+                }
+
+            }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法) {
+
+                bool goLeft=phase3_locomotive_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                if(goLeft) {
+
+                    currentProperty.TargetPosition=phase3_locomotive_initialSafePositionOfTheLeftGroup;
+                    
+                    targetPositionConfirmed=true;
+                    
+                }
+
+                else {
+
+                    currentProperty.TargetPosition=phase3_locomotive_initialSafePositionOfTheRightGroup;
                     
                     targetPositionConfirmed=true;
                     
