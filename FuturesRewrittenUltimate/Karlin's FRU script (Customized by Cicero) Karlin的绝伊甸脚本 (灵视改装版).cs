@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.57",
+        version:"0.0.0.58",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -7111,11 +7111,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             eventCondition:["StatusID:3264"],
             userControl:false)]
         
-        // The ObjectChanged event with the property "Operate" as "Remove" would only be triggered a full three seconds after the player takes a residue.
-        // If the draw removal relies on the event, it would be too late and may cause confusion.
-        // Here is an optimized method for players with the Wyrmfang debuff (the blue debuff), which is to monitor the StatusRemove events of the Wyrmfang debuff and acquire the closest residue.
-        // Obviously, the method will not be able to help if a player with the Wyrmclaw debuff (the red debuff) takes a residue. However that's already a wipe, so whatever.
-        // Thanks to Cyf5119 for providing a Dalamud way to detect if the entity is dead, so that the method would skip the StatusRemove events caused by death.
+        // The background and implementation are almost the same as the removal of Hitboxes and Explosion Ranges before.
+        // Please refer to the comments following that method for details.
 
         public void Phase4_Remove_Highlights_Of_Residues_In_Advance_提前移除白圈高亮(Event @event, ScriptAccessory accessory) {
             
