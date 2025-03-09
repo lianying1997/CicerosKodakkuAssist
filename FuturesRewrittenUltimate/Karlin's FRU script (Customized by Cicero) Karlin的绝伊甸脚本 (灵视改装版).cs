@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.55",
+        version:"0.0.0.56",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -203,6 +203,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         int P4BlueTether = 0;
         List<Vector3> P4WhiteCirclePos = [];
         List<Vector3> P4WaterPos = [];
+        volatile string phase4_id1OfTheDrachenWanderers="";
+        volatile string phase4_id2OfTheDrachenWanderers="";
+        readonly Object phase4_ReadwriteLockOfDrachenWandererIds_AsAConstant=new Object();
+        volatile int phase4_timesTheWyrmclawDebuffWasRemoved=0;
         volatile List<ulong> phase4_residueIdsFromEastToWest=[0,0,0,0];
         // The leftmost (0), the about left (1), the about right (2), the rightmost (3) while facing south.
         volatile bool phase4_guidanceOfResiduesHasBeenGenerated=false;
@@ -381,6 +385,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
+            phase4_id1OfTheDrachenWanderers="";
+            phase4_id2OfTheDrachenWanderers="";
+            phase4_timesTheWyrmclawDebuffWasRemoved=0;
             phase4_residueIdsFromEastToWest=[0,0,0,0];
             phase4_guidanceOfResiduesHasBeenGenerated=false;
 
@@ -4641,7 +4648,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                                                                                position1OfTheLast.Y,
                                                                                                (position1OfTheLast.Z-100)/3+100);
 
-                            phase3_hasConfirmedInitialSafePositions = true;
+                            phase3_hasConfirmedInitialSafePositions=true;
 
                         }
 
@@ -5056,7 +5063,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Scale=new(8);
             currentProperty.Owner=sourceId;
             currentProperty.CentreResolvePattern=PositionResolvePatternEnum.PlayerFarestOrder;
-            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(5f);
+            currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(3f);
             currentProperty.Delay=2200;
             currentProperty.DestoryAt=4000;
 
@@ -5260,14 +5267,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if(Phase3_Tank_Who_Baits_Darkest_Dance==Tanks.MT) {
 
                     currentProperty.Owner=accessory.Data.PartyList[0];
-                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1.5f);
+                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1f);
 
                 }
 
                 else {
 
                     currentProperty.Owner=accessory.Data.PartyList[1];
-                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1.5f);
+                    currentProperty.Color=Phase3_Colour_Of_Darkest_Dance.V4.WithW(1f);
 
                 }
 
@@ -6098,6 +6105,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             P4OtherBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             P4WhiteCirclePos = [];
             P4WaterPos = [];
+            phase4_id1OfTheDrachenWanderers="";
+            phase4_id2OfTheDrachenWanderers="";
+            phase4_timesTheWyrmclawDebuffWasRemoved=0;
             phase4_residueIdsFromEastToWest=[0,0,0,0];
             phase4_guidanceOfResiduesHasBeenGenerated=false;
         }
@@ -6315,7 +6325,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Vector3 dealpos1 = isHigh ? new(088.5f, 0, 115.5f) : new(111.5f, 0, 115.5f);
                 Vector3 dealpos2 = isHigh ? new(090.2f, 0, 117.0f) : new(109.8f, 0, 117.0f);
                 Vector3 dealpos3 = isHigh ? new(092.5f, 0, 118.0f) : new(107.5f, 0, 118.0f);
-                Vector3 dealpos4 = isHigh ? new(092.0f, 0, 110.0f) : new(108.0f, 0, 110.0f);
+                Vector3 dealpos4 = isHigh ? new(092.53f, 0, 110.40f) : new(107.47f, 0, 110.40f);
+                // The previous coordinates were: isHigh ? new(092.0f, 0, 110.0f) : new(108.0f, 0, 110.0f);
+                
+                // ----- 0s -> 7.5s -----
 
                 var dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_躲ac";
@@ -6326,7 +6339,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Color = accessory.Data.DefaultSafeColor;
                 dp.DestoryAt = 7500;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_躲ac->击退";
                 dp.Scale = new(2);
@@ -6336,6 +6348,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Color = accessory.Data.DefaultSafeColor;
                 dp.DestoryAt = 7500;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                
+                // ----- -----
+                
+                // ----- 7.5s -> 10.5s -----
+                
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_击退";
                 dp.Scale = new(2);
@@ -6346,7 +6363,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Delay = 7500;
                 dp.DestoryAt = 3000;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_击退->躲斜点";
                 dp.Scale = new(2);
@@ -6356,6 +6372,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Color = accessory.Data.DefaultSafeColor;
                 dp.DestoryAt = 10500;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                
+                // ----- -----
+                
+                // ----- 10.5s -> 13s -----
+                
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_躲斜点";
                 dp.Scale = new(2);
@@ -6366,7 +6387,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Delay = 10500;
                 dp.DestoryAt = 2500;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_躲斜点->撞头";
                 dp.Scale = new(2);
@@ -6374,20 +6394,29 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Position = dealpos3;
                 dp.TargetPosition = dealpos4;
                 dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 16000;
-                // The value has been adjusted by Cicero. It was 13000 before.
+                dp.DestoryAt = 13000;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                
+                // ----- -----
+                
+                // ----- 13s -> 16s -----
+                
                 dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = "P4_时间结晶_Buff处理位置_撞头";
                 dp.Scale = new(2);
                 dp.ScaleMode |= ScaleMode.YByDistance;
                 dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos2;
+                dp.TargetPosition = dealpos4;
                 dp.Color = accessory.Data.DefaultSafeColor;
-                dp.Delay = 16000;
-                // The value has been adjusted by Cicero. It was 13000 before.
-                dp.DestoryAt = 2000;
+                dp.Delay = 13000;
+                dp.DestoryAt = 3000;
                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                
+                // ----- -----
+                
+                // There were some issues in the guidance here which is for the players with long Wyrmclaw debuff.
+                // Cicero has adjusted the process a little bit, and the issues has been fixed now.
+                
             }
             //蓝
             if (P4ClawBuff[myIndex] == 3)
@@ -6517,6 +6546,41 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
         }
         
+        [ScriptMethod(name:"Phase4 Acquire IDs Of Drachen Wanderers 获取圣龙气息(龙头)ID",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:17836"],
+            userControl:false)]
+
+        public void Phase4_Acquire_IDs_Of_Drachen_Wanderers_获取圣龙气息ID(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            lock(phase4_ReadwriteLockOfDrachenWandererIds_AsAConstant) {
+
+                if(phase4_id1OfTheDrachenWanderers.Equals("")) {
+
+                    phase4_id1OfTheDrachenWanderers=@event["SourceId"];
+
+                }
+
+                else {
+                    
+                    if(phase4_id2OfTheDrachenWanderers.Equals("")) {
+
+                        phase4_id2OfTheDrachenWanderers=@event["SourceId"];
+
+                    }
+                    
+                }
+                
+            }
+
+        }
+        
         [ScriptMethod(name:"Phase4 Hitbox Of Drachen Wanderers 圣龙气息(龙头)碰撞箱",
             eventType:EventTypeEnum.AddCombatant,
             eventCondition:["DataId:17836"])]
@@ -6601,6 +6665,106 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             accessory.Method.RemoveDraw($"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}");
             accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}");
+
+        }
+        
+        [ScriptMethod(name:"Phase4 Remove Hitboxes And Explosion Ranges Of Drachen Wanderers In Advance 提前移除圣龙气息(龙头)碰撞箱与爆炸范围",
+            eventType:EventTypeEnum.StatusRemove,
+            eventCondition:["StatusID:3263"],
+            userControl:false)]
+        
+        // The ObjectChanged event with the field "Operate" as "Remove" would be triggered almost three seconds after the Drachen Wanderer is gone.
+        // If the drawing removal relies on the event, it would be too late and may cause confusion.
+        // Here is an optimized method for players with the Wyrmclaw debuff (the red debuff), which is to monitor the StatusRemove events of the Wyrmclaw debuff and acquire the closest Drachen Wanderer.
+        // Obviously, the method would not help if a player with the Wyrmfang debuff (the red debuff) hits a Drachen Wanderer. However, that's already a wipe, so whatever.
+        // Thanks to Cyf5119 for providing a Dalamud way to detect if the player is dead, so that the method would skip the StatusRemove events caused by death.
+
+        public void Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_In_Advance_提前移除圣龙气息碰撞箱与爆炸范围(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+
+                return;
+
+            }
+            
+            var targetObject=accessory.Data.Objects.SearchById(targetId);
+
+            if(targetObject==null) {
+
+                return;
+
+            }
+
+            if(((IBattleChara?)targetObject)==null) {
+
+                return;
+
+            }
+
+            if(((IBattleChara?)targetObject).IsDead) {
+                // Ignore the situations that the debuff was removed due to a death.
+
+                return;
+
+            }
+            
+            ++phase4_timesTheWyrmclawDebuffWasRemoved;
+
+            if(phase4_timesTheWyrmclawDebuffWasRemoved<3||phase4_timesTheWyrmclawDebuffWasRemoved>4) {
+
+                return;
+
+            }
+            
+            if(!ParseObjectId(phase4_id1OfTheDrachenWanderers, out var drachenWandererId1)) {
+
+                return;
+
+            }
+            
+            if(!ParseObjectId(phase4_id2OfTheDrachenWanderers, out var drachenWandererId2)) {
+
+                return;
+
+            }
+            
+            var drachenWandererObject1=accessory.Data.Objects.SearchById(drachenWandererId1);
+
+            if(drachenWandererObject1==null) {
+
+                return;
+
+            }
+            
+            var drachenWandererObject2=accessory.Data.Objects.SearchById(drachenWandererId2);
+            
+            if(drachenWandererObject2==null) {
+
+                return;
+
+            }
+
+            if(Vector3.Distance(targetObject.Position, drachenWandererObject1.Position)
+               <=
+               Vector3.Distance(targetObject.Position, drachenWandererObject2.Position)) {
+                
+                accessory.Method.RemoveDraw($"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{drachenWandererId1}");
+                accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{drachenWandererId1}");
+
+            }
+
+            else {
+                
+                accessory.Method.RemoveDraw($"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{drachenWandererId2}");
+                accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{drachenWandererId2}");
+                
+            }
 
         }
         
