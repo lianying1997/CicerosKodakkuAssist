@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.56",
+        version:"0.0.0.57",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -67,6 +67,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 极化打击(挡枪)指路。
         """;
         
+        [UserSetting("-----全局设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Global_Settings_____ { get; set; } = true;
         [UserSetting("启用文本提示")]
         public bool Enable_Text_Prompts { get; set; } = true;
         [UserSetting("启用TTS提示")]
@@ -74,6 +76,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("提示的语言")]
         public Languages_Of_Prompts Language_Of_Prompts { get; set; }
 
+        [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Phase1_Settings_____ { get; set; } = true;
         [UserSetting("P1_转轮召分组依据")]
         public P1BrightFireEnum P1BrightFireGroup { get; set; }
         [UserSetting("P1_四连线头顶标记")]
@@ -81,11 +85,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P1_四连线头顶标记")]
         public bool p1Thther4Marker { get; set; } = false;
 
+        [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Phase2_Settings_____ { get; set; } = true;
         [UserSetting("P2_光爆拉线方式")]
         public P2LightRampantTetherEmum P2LightRampantTetherDeal { get; set; }
         [UserSetting("P2_光爆八方站位方式")]
         public P2LightRampant8DirEmum P2LightRampant8DirSet { get; set; }
 
+        [UserSetting("-----P3设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Phase3_Settings_____ { get; set; } = true;
         [UserSetting("P3_分灯方式")]
         public P3LampEmum P3LampDeal { get; set; }
         [UserSetting("P3二运 攻略")]
@@ -103,10 +111,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
         public ScriptColor Phase3_Colour_Of_Darkest_Dance { get; set; } = new() { V4=new(1f,0f,0f,1f) };
 
+        [UserSetting("-----P4设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Phase4_Settings_____ { get; set; } = true;
         [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
         public uint P4LampDisplayDur { get; set; } =3000;
-        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱长度")]
-        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 3.5f;
+        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
+        public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4=new(0,1f,1f,1f) };
+        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度")]
+        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
+        [UserSetting("P4二运 光之潮汐(地火)的颜色")]
+        public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4=new(1f,1f,0f,1f) };
         [UserSetting("P4二运 暗炎喷发(分散)的白圈")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
         [UserSetting("P4二运 黑暗神圣(后分摊)的白圈")]
@@ -118,6 +132,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P4二运 白圈指路的颜色")]
         public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
+        [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Phase5_Settings_____ { get; set; } = true;
         [UserSetting("P5_地火颜色")]
         public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
         [UserSetting("P5 Boss中轴线的颜色")]
@@ -131,6 +147,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P5 极化打击(挡枪)顺序")]
         public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; }
         
+        [UserSetting("-----开发者设置----- (No actual meaning for this setting/此设置无实际意义)")]
+        public bool _____Developer_Settings_____ { get; set; } = true;
         [UserSetting("启用开发者模式")]
         public bool Enable_Developer_Mode { get; set; } = false;
 
@@ -399,7 +417,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #region P1
         
-        [ScriptMethod(name:"----- Phase 1 -----",
+        [ScriptMethod(name:"----- Phase 1 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType:EventTypeEnum.NpcYell,
             eventCondition:["Give me your tired",
                             "给我你们疲倦的人"])]
@@ -1354,7 +1372,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #region P2
         
-        [ScriptMethod(name:"----- Phase 2 -----",
+        [ScriptMethod(name:"----- Phase 2 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType:EventTypeEnum.NpcYell,
             eventCondition:["Your poor",
                             "给我你们贫穷的人"])]
@@ -2339,7 +2357,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        [ScriptMethod(name:"----- Phase 2.5 -----",
+        [ScriptMethod(name:"----- Phase 2.5 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType:EventTypeEnum.NpcYell,
             eventCondition:["Your huddled masses yearning to breathe free",
                             "蜷缩着祈盼自由呼吸的人"])]
@@ -2363,7 +2381,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #region P3
         
-        [ScriptMethod(name:"----- Phase 3 -----",
+        [ScriptMethod(name:"----- Phase 3 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType:EventTypeEnum.NpcYell,
             eventCondition:["The wretched refuse of your teeming shore",
                             "被你们的繁荣拒之门外受苦的人"])]
@@ -5502,7 +5520,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #region P4
         
-        [ScriptMethod(name:"----- Phase 4 -----",
+        [ScriptMethod(name:"----- Phase 4 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType:EventTypeEnum.NpcYell,
             eventCondition:["Send these, the homeless, tempest-tost to me",
                             "送来那些无家可归，被风吹雨淋的人"])]
@@ -6604,9 +6622,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Name=$"Phase4_Hitbox_Of_Drachen_Wanderers_圣龙气息碰撞箱_{sourceId}";
             currentProperty.Scale=new(2f,Phase4_Length_Of_Drachen_Wanderer_Hitboxes>=0?
                                                 Phase4_Length_Of_Drachen_Wanderer_Hitboxes:
-                                                3.5f);
-            currentProperty.Color=Phase4_Colour_Of_Residue_Guidance.V4.WithW(25f);
-            currentProperty.Offset=new(0f,0f,1f);
+                                                1.5f);
+            currentProperty.Color=Phase4_Colour_Of_Drachen_Wanderer_Hitboxes.V4.WithW(25f);
+            currentProperty.Offset=new(0f,0f,-1f);
             currentProperty.Owner=sourceId;
             currentProperty.DestoryAt=34000;
             
@@ -6765,6 +6783,36 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 accessory.Method.RemoveDraw($"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{drachenWandererId2}");
                 
             }
+
+        }
+        
+        [ScriptMethod(name:"Phase4 Tidal Light 光之潮汐(地火)",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:regex:^(40252|40253)$"])]
+
+        public void Phase4_Tidal_Light_光之潮汐(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+
+                return;
+
+            }
+            
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+            
+                return;
+            
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+        
+            currentProperty.Owner=sourceId;
+            currentProperty.Offset=new Vector3(0,0,-10);
+            currentProperty.Scale=new(40,10);
+            currentProperty.DestoryAt=2100;
+            currentProperty.Color=Phase4_Colour_Of_Tidal_Light.V4.WithW(3f);
+        
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
 
         }
         
@@ -7347,7 +7395,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #region P5
         
-        [ScriptMethod(name:"----- Phase 5 -----",
+        [ScriptMethod(name:"----- Phase 5 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType:EventTypeEnum.NpcYell,
             eventCondition:["I lift my lamp beside the golden door!",
                             "我在金门旁为他们将灯举起!"])]
