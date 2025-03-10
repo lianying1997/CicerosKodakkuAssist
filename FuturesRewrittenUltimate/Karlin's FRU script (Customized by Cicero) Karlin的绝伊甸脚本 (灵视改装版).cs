@@ -25,7 +25,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.63",
+        version:"0.0.0.64",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -98,13 +98,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----TTS设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____TTS_Settings_____ { get; set; } = true;
-        [UserSetting("The language is consistent with that of prompts above. Please select one from the following two and never enable both simultaneously.")]
+        [UserSetting("The language is consistent with that of prompts above. Please select one from the following two and never enable both simultaneously. (No actual meaning for this setting)")]
         public bool TTS_Introduction { get; set; } = true;
-        [UserSetting("TTS的语言和上面的文本提示相同。请从下面两个选项中选一个启用,不要两个都选上。")]
+        [UserSetting("TTS的语言和上面的文本提示相同。请从下面两个选项中选一个启用,不要两个都选上。(此设置无实际意义)")]
         public bool TTS简介 { get; set; } = true;
         [UserSetting("启用原版TTS")]
         public bool Enable_Vanilla_TTS { get; set; } = true;
-        [UserSetting("启用Daily Routines TTS (Make sure you're running the Dalamud plugin Daily Routines if enabled!/如果启用此选项,确保你启用了卫月插件Daily Routines!)")]
+        [UserSetting("启用Daily Routines TTS (Make sure you're running the Dalamud plugin Daily Routines!/确保你启用了卫月插件Daily Routines!)")]
         public bool Enable_Daily_Routines_TTS { get; set; } = false;
 
         [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
@@ -119,8 +119,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; }
         [UserSetting("P1 标记被连线的玩家 (Make sure only one in the party enable this!/小队内只能有一人启用此选项!)")]
         public bool Phase1_Mark_Players_Were_Tethered { get; set; } = false;
-        [UserSetting("P1 确定左右的基准")]
-        public Phase1_Benchmarks_During_Fall_Of_Faith Phase1_Benchmark_During_Fall_Of_Faith { get; set; }
+        [UserSetting("P1 信仰崩塌(四连抓)的面向基准")]
+        public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; }
         [UserSetting("P1 踩塔攻略")]
         public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; }
 
@@ -138,7 +138,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P3二运 攻略")]
         public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
         [UserSetting("P3二运 双分组法的分支")]
-        public Phase3_Branches_Of_The_Double_Group_Strat Phase3_Branch_Of_The_Double_Group_Strat { get; set; }
+        public Phase3_Branches_Of_The_Double_Group_Strat Phase3_Branch_Of_The_Double_Group_Strat { get; set; } = Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准;
         [UserSetting("P3二运 车头低换法的分支")]
         public Phase3_Branches_Of_The_Locomotive_Strat Phase3_Branch_Of_The_Locomotive_Strat { get; set; }
         [UserSetting("P3二运 场地划分方式")]
@@ -312,9 +312,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         public enum Phase1_Groups_Of_Turn_Of_The_Heavens {
             
-            MT_OT_H1_H2_Go_North_MT_ST_H1_H2去北,
-            MT_H1_M1_R1_Go_North_MT_H1_D1_D3去北,
-            MT_OT_R1_R2_Go_North_MT_ST_D3_D4去北
+            MTOTH1H2_Go_North_MTSTH1H2去北,
+            MTH1M1R1_Go_North_MTH1D1D3去北,
+            MTOTR1R2_Go_North_MTSTD3D4去北
             
         }
 
@@ -329,18 +329,18 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
 
-        public enum Phase1_Benchmarks_During_Fall_Of_Faith {
+        public enum Phase1_Orientation_Benchmarks_During_Fall_Of_Faith {
             
-            Face_True_North_面向正北,
-            Face_The_Boss_面向Boss
+            High_Priority_Left_Facing_Due_North_面向正北左侧高优先级,
+            High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级
             
         }
 
         public enum Phase1_Strats_Of_Towers {
             
-            Purely_Based_On_The_Priority_纯粹根据优先级,
-            Fixed_H1_H2_R2_Priority_For_The_Rest_固定H1_H2_D4剩余人优先级,
-            Fixed_H1_H2_R2_The_Rest_Fill_Vacancies_固定H1_H2_D4剩余人补位
+            Fully_Based_On_The_Priority_完全根据优先级,
+            Fixed_H1H2R2_Priority_For_The_Rest_固定H1H2D4剩余人优先级,
+            Fixed_H1H2R2_The_Rest_Fill_Vacancies_固定H1H2D4剩余人补位
             
         }
         
@@ -1232,7 +1232,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             int lowPriorityStack=P1转轮召抓人.LastIndexOf(1);
             List<int> membersOfTheNorthGroup=[];
             
-            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_H1_H2_Go_North_MT_ST_H1_H2去北) {
+            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTSTH1H2去北) {
 
                 hasSelectedAStrat=true;
                 
@@ -1278,7 +1278,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
-            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_H1_M1_R1_Go_North_MT_H1_D1_D3去北) {
+            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MTH1M1R1_Go_North_MTH1D1D3去北) {
 
                 hasSelectedAStrat=true;
                 
@@ -1324,7 +1324,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
-            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_R1_R2_Go_North_MT_ST_D3_D4去北) {
+            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTR1R2_Go_North_MTSTD3D4去北) {
 
                 hasSelectedAStrat=true;
                 
@@ -1462,7 +1462,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var o1= P1转轮召抓人.IndexOf(1);
             var o2 = P1转轮召抓人.LastIndexOf(1);
             List<int> upGroup = [];
-            if (Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_H1_H2_Go_North_MT_ST_H1_H2去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTSTH1H2去北)
             {
                 upGroup.Add(o1);
                 if (o1 != 1 && o2 != 1) upGroup.Add(1);
@@ -1471,7 +1471,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && o1 != 4 && o2 != 4) upGroup.Add(4);
             }
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MT_H1_M1_R1_Go_North_MT_H1_D1_D3去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTH1M1R1_Go_North_MTH1D1D3去北)
             {
                 upGroup.Add(o1);
                 if (o1 != 2 && o2 != 2) upGroup.Add(2);
@@ -1480,7 +1480,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && o1 != 1 && o2 != 1) upGroup.Add(1);
             }
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_R1_R2_Go_North_MT_ST_D3_D4去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTR1R2_Go_North_MTSTD3D4去北)
             {
                 /*
                 List<int> upIndex = [0, 1, 6, 7];
@@ -1789,7 +1789,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     Vector3 dealpos1=default;
                     Vector3 dealpos2=default;
 
-                    if(Phase1_Benchmark_During_Fall_Of_Faith==Phase1_Benchmarks_During_Fall_Of_Faith.Face_True_North_面向正北) {
+                    if(Phase1_Orientation_Benchmark_During_Fall_Of_Faith==Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_Due_North_面向正北左侧高优先级) {
                         
                         i1p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100-dis,0,100-far);
                         i1p2=tehterIsFire[2]?new(100,0,100-far-dis):new(100-dis,0,100-far);
@@ -1802,7 +1802,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                     }
                     
-                    if(Phase1_Benchmark_During_Fall_Of_Faith==Phase1_Benchmarks_During_Fall_Of_Faith.Face_The_Boss_面向Boss) {
+                    if(Phase1_Orientation_Benchmark_During_Fall_Of_Faith==Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级) {
                         // The addition of this benchmark credits to @alexandria_prime. Appreciate!
                         
                         i1p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100+dis,0,100-far);
@@ -2027,7 +2027,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         Vector3 standbyPosition=new Vector3(100,0,100);
                         Vector3 towerPosition=new Vector3(100,0,100);
                         
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Purely_Based_On_The_Priority_纯粹根据优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fully_Based_On_The_Priority_完全根据优先级) {
                             
                             if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
                             if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0]+ P1塔[1]) standbyPosition = new(eastTower ? 115.98f : 84.02f, 0, 100f);
@@ -2039,7 +2039,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_Priority_For_The_Rest_固定H1_H2_D4剩余人优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Priority_For_The_Rest_固定H1H2D4剩余人优先级) {
 
                             bool fixedPartyMember=false;
 
@@ -2121,7 +2121,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_The_Rest_Fill_Vacancies_固定H1_H2_D4剩余人补位) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_The_Rest_Fill_Vacancies_固定H1H2D4剩余人补位) {
                             // The algorithm implementation of this strat was inspired by @abigseal's script.
                             // Therefore, the following code should credit to him. Appreciate!
                             
@@ -2349,7 +2349,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         Vector3 standbyPosition=new Vector3(100,0,100);
                         Vector3 towerPosition=new Vector3(100,0,100);
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Purely_Based_On_The_Priority_纯粹根据优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fully_Based_On_The_Priority_完全根据优先级) {
                             
                             if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 102f : 98f, 0, 90.81f);
                             if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0] + P1塔[1]) standbyPosition = new(eastTower ? 102f : 98f, 0, 100f);
@@ -2361,7 +2361,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_Priority_For_The_Rest_固定H1_H2_D4剩余人优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Priority_For_The_Rest_固定H1H2D4剩余人优先级) {
 
                             bool fixedPartyMember=false;
 
@@ -2443,7 +2443,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_The_Rest_Fill_Vacancies_固定H1_H2_D4剩余人补位) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_The_Rest_Fill_Vacancies_固定H1H2D4剩余人补位) {
                             // Same as before, the following credits to @abigseal. Appreciate!
                             
                             bool fixedPartyMember=false;
