@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.58",
+        version:"0.0.0.59",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -78,12 +78,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase1_Settings_____ { get; set; } = true;
-        [UserSetting("P1_转轮召分组依据")]
-        public P1BrightFireEnum P1BrightFireGroup { get; set; }
-        [UserSetting("P1_四连线头顶标记")]
-        public P1TetherEnum p1Thther4Type { get; set; }
-        [UserSetting("P1_四连线头顶标记")]
-        public bool p1Thther4Marker { get; set; } = false;
+        [UserSetting("P1 乐园绝技(雾龙)待机站位")]
+        public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; }
+        [UserSetting("P1 燃烧击(火雷直线)特性的颜色")]
+        public ScriptColor Phase1_Colour_Of_Burnt_Strike_Characteristics { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("P1 光轮召唤分组")]
+        public Phase1_Groups_Of_Turn_Of_The_Heavens Phase1_Group_Of_Turn_Of_The_Heavens { get; set; }
+        [UserSetting("P1 信仰崩塌(四连抓)攻略")]
+        public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; }
+        [UserSetting("P1 标记被连线的玩家 (Make sure only one in the party enable this!/小队内只能有一人启用此选项!)")]
+        public bool Phase1_Mark_Players_Were_Tethered { get; set; } = false;
+        [UserSetting("P1 确定左右的基准")]
+        public Phase1_Benchmarks_To_Determine_Left_And_Right Phase1_Benchmark_To_Determine_Left_And_Right { get; set; }
+        [UserSetting("P1 踩塔攻略")]
+        public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; }
 
         [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase2_Settings_____ { get; set; } = true;
@@ -264,17 +272,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
 
-        public enum P1TetherEnum
-        {
-            OneLine,
-            Mgl_TwoLine
+        public enum Phase1_Standby_Positions_Of_Utopian_Sky {
+            
+            Swap_OT_And_M2_交换ST与D4,
+            Both_Tanks_Go_To_The_Center_双T去中间
+            
         }
-        public enum P1BrightFireEnum
-        {
-            TH_Up,
-            MtGroup_Up,
-            MtStD3D4_Up
+        
+        public enum Phase1_Groups_Of_Turn_Of_The_Heavens {
+            
+            MT_OT_H1_H2_Go_North_MT_ST_H1_H2去北,
+            MT_H1_M1_R1_Go_North_MT_H1_D1_D3去北,
+            MT_OT_R1_R2_Go_North_MT_ST_D3_D4去北
+            
         }
+
+        public enum Phase1_Strats_Of_Fall_Of_Faith {
+            
+            Single_Line_In_THD_Order_按THD顺序单排,
+            Single_Line_In_HTD_Order_按HTD顺序单排,
+            Single_Line_In_H1TDH2_Order_按H1TDH2顺序单排,
+            Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234,
+            Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234,
+            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
+            
+        }
+
+        public enum Phase1_Benchmarks_To_Determine_Left_And_Right {
+            
+            Face_True_North_面向正北,
+            Face_The_Boss_面向Boss
+            
+        }
+
+        public enum Phase1_Strats_Of_Towers {
+            
+            Purely_Based_On_The_Priority_纯粹根据优先级,
+            Fixed_H1_H2_R2_Priority_For_The_Rest_固定H1_H2_D4剩余人优先级,
+            Fixed_H1_H2_R2_The_Rest_Fill_Vacancies_固定H1_H2_D4剩余人补位
+            
+        }
+        
         public enum P2LightRampant8DirEmum
         {
             Normal,
@@ -360,7 +398,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void Init(ScriptAccessory accessory)
         {
             accessory.Method.RemoveDraw(".*");
-            if (p1Thther4Marker)
+            if (Phase1_Mark_Players_Were_Tethered)
                 accessory.Method.MarkClear();
             parse = 1d;
             isInPhase5=false;
@@ -491,6 +529,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             if (parse != 1d) return;
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
+            string prompt="";
 
             if (@event["ActionId"]== "40148" || @event["ActionId"] == "40330")
             {
@@ -505,13 +544,28 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 4000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分散";
+
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Spread";
+
+                }
+                
             }
             else
             {
                 int[] group = [6, 7, 4, 5, 2, 3, 0, 1];
                 var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-                for (int i = 0; i < 4; i++)
-                {
+                for(int i=4;i<=7;++i) {
+                    // The drawing owners here were adjusted a bit by Cicero.
+                    // Here's an interesting fact - the action Sinsmoke (stack) will always target DPS.
+                    
                     var ismygroup = myindex == i || group[i] == myindex;
 
                     var dp = accessory.Data.GetDefaultDrawProperties();
@@ -523,8 +577,38 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 4000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分摊";
+
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Stack";
+
+                }
+                
             }
             
+            System.Threading.Thread.Sleep(5000);
+
+            if(!prompt.Equals("")) {
+                
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,1500);
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+                    
+                    accessory.Method.TTS(prompt);
+                
+                }
+                
+            }
 
         }
         [ScriptMethod(name: "P1_八方雷火_引导位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^((4014[48])|40329|40330)$"])]
@@ -566,15 +650,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 1d) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             if(!int.TryParse(@event["DurationMilliseconds"], out var dur)) return;
-            var displayTime = 4000;
+            string prompt="";
 
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P1_T死刑Buff爆炸1";
             dp.Scale = new(10);
             dp.Owner = tid;
             dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = dur- displayTime;
-            dp.DestoryAt = displayTime;
+            dp.Delay = dur- 5000;
+            dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
 
             dp = accessory.Data.GetDefaultDrawProperties();
@@ -584,9 +668,63 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.CentreResolvePattern=PositionResolvePatternEnum.PlayerNearestOrder;
             dp.CentreOrderIndex = 1;
             dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = dur - displayTime;
-            dp.DestoryAt = displayTime;
+            dp.Delay = dur - 5000;
+            dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==0
+               ||
+               accessory.Data.PartyList.IndexOf(accessory.Data.Me)==1) {
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="稍微靠近另一个T";
+
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Get slightly closer to another tank";
+
+                }
+                
+            }
+            
+            if(2<=accessory.Data.PartyList.IndexOf(accessory.Data.Me)
+               &&
+               accessory.Data.PartyList.IndexOf(accessory.Data.Me)<=7) {
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="远离双T";
+
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Stay away from both tanks";
+
+                }
+                
+            }
+            
+            System.Threading.Thread.Sleep(dur-5000);
+            
+            if(!prompt.Equals("")) {
+                
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,1500);
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+                    
+                    accessory.Method.TTS(prompt);
+                
+                }
+                
+            }
 
         }
         [ScriptMethod(name: "P1_雾龙_位置记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40158)$"], userControl: false)]
@@ -624,6 +762,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P1_雾龙_分散分摊(Event @event, ScriptAccessory accessory)
         {
             if (parse != 1d) return;
+            string prompt="";
 
             if (@event["ActionId"] == "40155")
             {
@@ -638,6 +777,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分散";
+
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Spread";
+
+                }
+                
             }
             else
             {
@@ -663,47 +815,161 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 dp.Delay = 10000;
                 dp.DestoryAt = 5000;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分摊";
+
+                }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Stack";
+
+                }
+                
+            }
+            
+            System.Threading.Thread.Sleep(10000);
+            
+            if(!prompt.Equals("")) {
+                
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,1500);
+                
+                }
+            
+                if(Enable_TTS_Prompts) {
+                    
+                    accessory.Method.TTS(prompt);
+                
+                }
+                
             }
 
         }
-        [ScriptMethod(name: "P1_雾龙_预站位位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4015[45])$"])]
-        public void P1_雾龙_预站位位置(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 1d) return;
-            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            var rot8 = myindex switch
-            {
-                0 => 0,
-                1 => 1,
-                2 => 6,
-                3 => 4,
-                4 => 5,
-                5 => 3,
-                6 => 7,
-                7 => 2,
-                _ => 0,
-            };
-            var mPosEnd = RotatePoint(new(100, 0, 82), new(100, 0, 100), float.Pi / 4 * rot8);
-            if (myindex==0)
-            {
-                mPosEnd = RotatePoint(mPosEnd, new(100, 0, 100), float.Pi / 36);
+        
+        [ScriptMethod(name:"Phase1 Standby Position Of Utopian Sky 乐园绝技(雾龙)待机位置",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(4015[45])$"])]
+        
+        public void Phase1_Standby_Position_Of_Utopian_Sky_乐园绝技待机位置(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+
+                return;
+                
             }
-            if (myindex == 6)
-            {
-                mPosEnd = RotatePoint(mPosEnd, new(100, 0, 100), float.Pi / -36);
+            
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+
+            if(Phase1_Standby_Position_Of_Utopian_Sky==Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4) {
+
+                int rotationMultiplier=myIndex switch {
+                    0 => 0,
+                    1 => 1,
+                    2 => 6,
+                    3 => 4,
+                    4 => 5,
+                    5 => 3,
+                    6 => 7,
+                    7 => 2
+                };
+                
+                var myPosition=RotatePoint(new(100,0,81),new(100,0,100),float.Pi/4*rotationMultiplier);
+                
+                if(myIndex==0) {
+                    
+                    myPosition=RotatePoint(myPosition,new(100,0,100),float.Pi/72);
+                    
+                }
+
+                if(myIndex==1) {
+                    
+                    myPosition=RotatePoint(myPosition,new(100,0,100),-(float.Pi/72));
+                    
+                }
+
+                if(myIndex==6) {
+                    
+                    myPosition=RotatePoint(myPosition,new(100,0,100),-(float.Pi/36));
+                    
+                }
+                
+                if(myIndex==7) {
+                    
+                    myPosition=RotatePoint(myPosition,new(100,0,100),float.Pi/36);
+                    
+                }
+
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase1_Standby_Position_Of_Utopian_Sky_乐园绝技待机位置";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=myPosition;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=9000;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
             }
 
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P1_雾龙_预站位位置";
-            dp.Scale = new(2);
-            dp.Owner = accessory.Data.Me;
-            dp.TargetPosition = mPosEnd;
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.DestoryAt = 9000;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            if(Phase1_Standby_Position_Of_Utopian_Sky==Phase1_Standby_Positions_Of_Utopian_Sky.Both_Tanks_Go_To_The_Center_双T去中间) {
+
+                var myPosition=new Vector3(100,0,100);
+                
+                if(myIndex==0) {
+
+                    myPosition=new Vector3(100f,0f,94.5f);
+
+                }
+
+                if(myIndex==1) {
+                    
+                    myPosition=new Vector3(100f,0f,105.5f);
+                    
+                }
+
+                if(2<=myIndex&&myIndex<=7) {
+
+                    int rotationMultiplier=myIndex switch {
+                        2 => 6,
+                        3 => 2,
+                        4 => 5,
+                        5 => 3,
+                        6 => 7,
+                        7 => 1
+                    };
+
+                    myPosition=RotatePoint(new(100,0,81),new(100,0,100),float.Pi/4*rotationMultiplier);
+                    
+                }
+
+                if(myPosition.Equals(new Vector3(100,0,100))) {
+
+                    return;
+
+                }
+
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                currentProperty.Name="Phase1_Standby_Position_Of_Utopian_Sky_乐园绝技待机位置";
+                currentProperty.Scale=new(2);
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=myPosition;
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=9000;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                
+            }
 
         }
+        
         [ScriptMethod(name: "P1_雾龙_处理位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40158)$"])]
         public void P1_雾龙_处理位置(Event @event, ScriptAccessory accessory)
         {
@@ -713,7 +979,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             {
                 P1雾龙计数 ++; 
                 if(P1雾龙计数 != 3) return;
-                Task.Delay(100).ContinueWith(t =>
+                Task.Delay(250).ContinueWith(t =>
                 {
                     if (!P1雾龙雷)
                     {
@@ -796,40 +1062,118 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 1d) return;
             P1转轮召雷 = (@event["ActionId"] == "40151");
         }
-        [ScriptMethod(name: "P1_转轮召_雷直线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40164)$"])]
-        public void P1_转轮召_雷直线(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 1d) return;
-            if (!ParseObjectId(@event["SourceId"], out var sid)) return;
+        
+        [ScriptMethod(name:"Phase1 Thunder Burnt Strike 雷燃烧击",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40164)$"])]
+        
+        public void Phase1_Thunder_Burnt_Strike_雷燃烧击(Event @event, ScriptAccessory accessory) {
 
-            var delay = 4000;
+            if(parse!=1d) {
+                
+                return;
+                
+            }
 
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P1_转轮召_雷直线";
-            dp.Scale = new(20, 40);
-            dp.Owner = sid;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay=delay;
-            dp.DestoryAt = 9700-delay;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
+
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase1_Second_Strike_Of_Thunder_Burnt_Strike_雷燃烧击第二击";
+            currentProperty.Scale=new(20,40);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
+            currentProperty.Delay=4000;
+            currentProperty.DestoryAt=5750;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase1_First_Strike_Of_Thunder_Burnt_Strike_雷燃烧击第一击";
+            currentProperty.Scale=new(10,40);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(3f);
+            currentProperty.Delay=4000;
+            currentProperty.DestoryAt=3750;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
 
         }
-        [ScriptMethod(name: "P1_转轮召_火直线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40161)$"])]
-        public void P1_转轮召_火直线(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 1d) return;
-            if (!ParseObjectId(@event["SourceId"], out var sid)) return;
+        
+        [ScriptMethod(name:"Phase1 Fire Burnt Strike 火燃烧击",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40161)$"])]
+        
+        public void Phase1_Fire_Burnt_Strike_火燃烧击(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+            
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
 
-            var delay = 4000;
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase1_First_Strike_Of_Fire_Burnt_Strike_火燃烧击第一击";
+            currentProperty.Scale=new(10,40);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(3f);
+            currentProperty.Delay=4000;
+            currentProperty.DestoryAt=3750;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase1_Central_Axis_Of_Fire_Burnt_Strike_火燃烧击中轴线";
+            currentProperty.Scale=new(0.5f,40f);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(25f);
+            currentProperty.Delay=4000;
+            currentProperty.DestoryAt=5750;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
 
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P1_转轮召_火直线";
-            dp.Scale = new(10, 40);
-            dp.Owner = sid;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = delay;
-            dp.DestoryAt = 7700 - delay;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+            for(int i=1;i<=3;++i) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
+                currentProperty.Scale=new(2f,7f);
+                currentProperty.Owner=sourceId;
+                currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
+                currentProperty.Offset=new Vector3(0,0,-(i*10));
+                currentProperty.Rotation=float.Pi/2;
+                currentProperty.Delay=4000;
+                currentProperty.DestoryAt=5750;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Arrow,currentProperty);
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
+                currentProperty.Scale=new(2f,7f);
+                currentProperty.Owner=sourceId;
+                currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
+                currentProperty.Offset=new Vector3(0,0,-(i*10));
+                currentProperty.Rotation=-(float.Pi/2);
+                currentProperty.Delay=4000;
+                currentProperty.DestoryAt=5750;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Arrow,currentProperty);
+                
+            }
 
         }
 
@@ -843,6 +1187,249 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 P1转轮召抓人[accessory.Data.PartyList.IndexOf(((uint)tid))] = 1;
             }
         }
+        
+        [ScriptMethod(name:"Phase1 Stack Range Of Turn Of The Heavens 光轮召唤分摊范围",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40152)$"])]
+        
+        public void Phase1_Stack_Range_Of_Turn_Of_The_Heavens_光轮召唤分摊范围(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+            
+            var currentPosition=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+
+            if(MathF.Abs(currentPosition.Z-100)>1) {
+                
+                return;
+                
+            }
+            
+            bool hasSelectedAStrat=false;
+            int highPriorityStack=P1转轮召抓人.IndexOf(1);
+            int lowPriorityStack=P1转轮召抓人.LastIndexOf(1);
+            List<int> membersOfTheNorthGroup=[];
+            
+            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_H1_H2_Go_North_MT_ST_H1_H2去北) {
+
+                hasSelectedAStrat=true;
+                
+                membersOfTheNorthGroup.Add(highPriorityStack);
+
+                if(1!=highPriorityStack&&1!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(1);
+                    
+                }
+
+                if(2!=highPriorityStack&&2!=lowPriorityStack) {
+
+                    membersOfTheNorthGroup.Add(2);
+                    
+                }
+
+                if(3!=highPriorityStack&&3!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(3);
+                    
+                }
+
+                if(membersOfTheNorthGroup.Count<4
+                   &&
+                   0!=highPriorityStack
+                    &&
+                   0!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(0);
+                    
+                }
+
+                if(membersOfTheNorthGroup.Count<4
+                   &&
+                   4!=highPriorityStack
+                   &&
+                   4!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(4);
+                    
+                }
+                
+            }
+            
+            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_H1_M1_R1_Go_North_MT_H1_D1_D3去北) {
+
+                hasSelectedAStrat=true;
+                
+                membersOfTheNorthGroup.Add(highPriorityStack);
+
+                if(2!=highPriorityStack&&2!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(2);
+                    
+                }
+
+                if(4!=highPriorityStack&&4!=lowPriorityStack) {
+
+                    membersOfTheNorthGroup.Add(4);
+                    
+                }
+
+                if(6!=highPriorityStack&&6!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(6);
+                    
+                }
+
+                if(membersOfTheNorthGroup.Count<4
+                   &&
+                   0!=highPriorityStack
+                   &&
+                   0!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(0);
+                    
+                }
+
+                if(membersOfTheNorthGroup.Count<4
+                   &&
+                   1!=highPriorityStack
+                   &&
+                   1!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(1);
+                    
+                }
+                
+            }
+            
+            if(Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_R1_R2_Go_North_MT_ST_D3_D4去北) {
+
+                hasSelectedAStrat=true;
+                
+                membersOfTheNorthGroup.Add(highPriorityStack);
+
+                if(1!=highPriorityStack&&1!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(1);
+                    
+                }
+
+                if(6!=highPriorityStack&&6!=lowPriorityStack) {
+
+                    membersOfTheNorthGroup.Add(6);
+                    
+                }
+
+                if(7!=highPriorityStack&&7!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(7);
+                    
+                }
+
+                if(membersOfTheNorthGroup.Count<4
+                   &&
+                   0!=highPriorityStack
+                   &&
+                   0!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(0);
+                    
+                }
+
+                if(membersOfTheNorthGroup.Count<4
+                   &&
+                   4!=highPriorityStack
+                   &&
+                   4!=lowPriorityStack) {
+                    
+                    membersOfTheNorthGroup.Add(4);
+                    
+                }
+                
+            }
+
+            if(!hasSelectedAStrat
+               ||
+               membersOfTheNorthGroup.Count!=4) {
+                
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                currentProperty.Name="Phase1_Stack_Range_Of_Turn_Of_The_Heavens_光轮召唤分摊范围";
+                currentProperty.Scale=new(6);
+                currentProperty.Owner=accessory.Data.PartyList[highPriorityStack];
+                currentProperty.Color=accessory.Data.DefaultDangerColor;
+                currentProperty.Delay=6000;
+                currentProperty.DestoryAt=5000;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                currentProperty.Name="Phase1_Stack_Range_Of_Turn_Of_The_Heavens_光轮召唤分摊范围";
+                currentProperty.Scale=new(6);
+                currentProperty.Owner=accessory.Data.PartyList[lowPriorityStack];
+                currentProperty.Color=accessory.Data.DefaultDangerColor;
+                currentProperty.Delay=6000;
+                currentProperty.DestoryAt=5000;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                
+            }
+
+            else {
+
+                bool inTheNorthGroup=membersOfTheNorthGroup.Contains(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                currentProperty.Name="Phase1_Stack_Range_Of_Turn_Of_The_Heavens_光轮召唤分摊范围";
+                currentProperty.Scale=new(6);
+                currentProperty.Owner=accessory.Data.PartyList[highPriorityStack];
+                currentProperty.Delay=6000;
+                currentProperty.DestoryAt=5000;
+
+                if(inTheNorthGroup) {
+
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                }
+
+                else {
+                    
+                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                }
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                currentProperty.Name="Phase1_Stack_Range_Of_Turn_Of_The_Heavens_光轮召唤分摊范围";
+                currentProperty.Scale=new(6);
+                currentProperty.Owner=accessory.Data.PartyList[lowPriorityStack];
+                currentProperty.Delay=6000;
+                currentProperty.DestoryAt=5000;
+
+                if(inTheNorthGroup) {
+
+                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                }
+
+                else {
+                    
+                    currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                }
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                
+            }
+            
+        }
+        
         [ScriptMethod(name: "P1_转轮召_击退处理位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40152)$"])]
         public void P1_转轮召_击退处理位置(Event @event, ScriptAccessory accessory)
         {
@@ -856,7 +1443,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var o1= P1转轮召抓人.IndexOf(1);
             var o2 = P1转轮召抓人.LastIndexOf(1);
             List<int> upGroup = [];
-            if (P1BrightFireGroup==P1BrightFireEnum.TH_Up)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens==Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_H1_H2_Go_North_MT_ST_H1_H2去北)
             {
                 upGroup.Add(o1);
                 if (o1 != 1 && o2 != 1) upGroup.Add(1);
@@ -865,7 +1452,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && o1 != 4 && o2 != 4) upGroup.Add(4);
             }
-            if (P1BrightFireGroup == P1BrightFireEnum.MtGroup_Up)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MT_H1_M1_R1_Go_North_MT_H1_D1_D3去北)
             {
                 upGroup.Add(o1);
                 if (o1 != 2 && o2 != 2) upGroup.Add(2);
@@ -874,8 +1461,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && o1 != 1 && o2 != 1) upGroup.Add(1);
             }
-            if (P1BrightFireGroup == P1BrightFireEnum.MtStD3D4_Up)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MT_OT_R1_R2_Go_North_MT_ST_D3_D4去北)
             {
+                /*
                 List<int> upIndex = [0, 1, 6, 7];
                 if (upIndex.Contains(o1) && !upIndex.Contains(o2)) upGroup.Add(o1);
                 if (upIndex.Contains(o2) && !upIndex.Contains(o1)) upGroup.Add(o2);
@@ -897,6 +1485,18 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (up0 != 7 && down0 != 7) upGroup.Add(7);
                 if (upGroup.Count < 4 && up0 != 0 && down0 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && up0 != 4 && down0 != 4) upGroup.Add(4);
+                */
+                
+                // After carefully examining the above algorithm, Cicero may consider that it's wrong.
+                // Even if it's correct, it may contain a bunch of redundant steps.
+                // Therefore, Cicero just simply decided to comment it out and rework a new algorithm similar to that of other groups.
+                
+                upGroup.Add(o1);
+                if (o1 != 1 && o2 != 1) upGroup.Add(1);
+                if (o1 != 6 && o2 != 6) upGroup.Add(6);
+                if (o1 != 7 && o2 != 7) upGroup.Add(7);
+                if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
+                if (upGroup.Count < 4 && o1 != 4 && o2 != 4) upGroup.Add(4);
             }
 
             var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
@@ -936,14 +1536,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        [ScriptMethod(name: "P1_四连线_清除连线记录器", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40170)$"])]
+        [ScriptMethod(name: "P1_四连线_清除连线记录器", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40170)$"],userControl:false)]
         public void P1_四连线_清除连线记录器(Event @event, ScriptAccessory accessory)
         {
             
             if (parse != 1d) return;
             P1四连线.Clear();
             P1四连线开始 =true;
-            if (p1Thther4Marker)
+            if (Phase1_Mark_Players_Were_Tethered)
                 accessory.Method.MarkClear();
         }
         [ScriptMethod(name: "P1_四连线_连线记录器", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^(00F9|011F)$"],userControl:false)]
@@ -959,9 +1559,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P1_四连线_头顶标记(Event @event, ScriptAccessory accessory)
         {
             if (parse != 1d) return;
-            if (!p1Thther4Marker) return;
+            if (!Phase1_Mark_Players_Were_Tethered) return;
             if (!P1四连线开始) return;
-            Task.Delay(50).ContinueWith(t =>
+            Task.Delay(250).ContinueWith(t =>
             {
                 var index = P1四连线.Last() % 10;
                 accessory.Method.Mark(accessory.Data.PartyList[index], (KodakkuAssist.Module.GameOperate.MarkType)P1四连线.Count);
@@ -973,9 +1573,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             if (!P1四连线开始) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var dis = 3f;//距离点名人
-            var far = 4.5f;//距离boss
-            Task.Delay(50).ContinueWith(t =>
+            var dis = 2.5f;//距离点名人
+            var far = 5f;//距离boss
+            Task.Delay(250).ContinueWith(t =>
             {
                 var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
                 Vector3 t1p1 = new(100, 0, 100 - far);
@@ -1084,7 +1684,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     var tehterObjIndex = P1四连线.Select(o => o % 10).ToList();
                     var tehterIsFire = P1四连线.Select(o => o < 20).ToList();
                     List<int> idleObjIndex = [];
-                    if (p1Thther4Type==P1TetherEnum.OneLine)
+                    if (Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_THD_Order_按THD顺序单排)
                     {
                         for (int i = 0; i < accessory.Data.PartyList.Count; i++)
                         {
@@ -1092,33 +1692,116 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             { idleObjIndex.Add(i); }
                         }
                     }
-                    if(p1Thther4Type==P1TetherEnum.Mgl_TwoLine)
+                    
+                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排) {
+                        // The addition of this strat credits to @alexandria_prime. Appreciate!
+                        
+                        List<int> htdOrder=new List<int>{2,3,0,1,4,5,6,7};
+                        
+                        for(int i=0;i<htdOrder.Count;++i) {
+
+                            if(!tehterObjIndex.Contains(htdOrder[i])) {
+                                
+                                idleObjIndex.Add(htdOrder[i]);
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_H1TDH2_Order_按H1TDH2顺序单排) {
+                        // The addition of this strat credits to @alexandria_prime. Appreciate!
+                        
+                        List<int> h1tdh2Order=new List<int>{2,0,1,4,5,6,7,3};
+                        
+                        for(int i=0;i<h1tdh2Order.Count;++i) {
+
+                            if(!tehterObjIndex.Contains(h1tdh2Order[i])) {
+                                
+                                idleObjIndex.Add(h1tdh2Order[i]);
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234)
                     {
-                        List<int> group1 = [0, 1, 2, 3];
+                        List<int> group1 = [1, 0, 3, 2];
                         List<int> group2 = [4, 5, 6, 7];
                         group1.RemoveAll(x => tehterObjIndex.Contains(x));
                         while (group1.Count>2)
                         {
                             var m = group1.First();
                             group1.Remove(m);
-                            group2.Add(m);
+                            group2.Insert(0,m);
+                        }
+                        idleObjIndex.AddRange(group1);
+                        idleObjIndex.AddRange(group2);
+                    }
+                    
+                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234)
+                    {
+                        List<int> group1 = [3, 2, 1, 0];
+                        List<int> group2 = [4, 5, 6, 7];
+                        group1.RemoveAll(x => tehterObjIndex.Contains(x));
+                        while (group1.Count>2)
+                        {
+                            var m = group1.First();
+                            group1.Remove(m);
+                            group2.Insert(0,m);
                         }
                         idleObjIndex.AddRange(group1);
                         idleObjIndex.AddRange(group2);
                     }
                     
                     if (!idleObjIndex.Contains(myindex)) return;
+                    
+                    Vector3 i1p1=new Vector3(100,0,100);
+                    Vector3 i1p2=new Vector3(100,0,100);
+                    Vector3 i2p1=new Vector3(100,0,100);
+                    Vector3 i2p2=new Vector3(100,0,100);
+                    Vector3 i3p1=new Vector3(100,0,100);
+                    Vector3 i3p2=new Vector3(100,0,100);
+                    Vector3 i4p1=new Vector3(100,0,100);
+                    Vector3 i4p2=new Vector3(100,0,100);
+                    Vector3 dealpos1=default;
+                    Vector3 dealpos2=default;
 
-                    Vector3 i1p1 = tehterIsFire[0] ? new(100, 0, 100 - far - dis) : new(100 - dis, 0, 100 - far);
-                    Vector3 i1p2 = tehterIsFire[2] ? new(100, 0, 100 - far - dis) : new(100 - dis, 0, 100 - far);
-                    Vector3 i2p1 = tehterIsFire[0] ? new(100, 0, 100 - far - dis) : new(100 + dis, 0, 100 - far);
-                    Vector3 i2p2 = tehterIsFire[2] ? new(100, 0, 100 - far - dis) : new(100 + dis, 0, 100 - far);
-                    Vector3 i3p1 = tehterIsFire[1] ? new(100, 0, 100 + far + dis) : new(100 - dis, 0, 100 + far);
-                    Vector3 i3p2 = tehterIsFire[3] ? new(100, 0, 100 + far + dis) : new(100 - dis, 0, 100 + far);
-                    Vector3 i4p1 = tehterIsFire[1] ? new(100, 0, 100 + far + dis) : new(100 + dis, 0, 100 + far);
-                    Vector3 i4p2 = tehterIsFire[3] ? new(100, 0, 100 + far + dis) : new(100 + dis, 0, 100 + far);
-                    Vector3 dealpos1 = default;
-                    Vector3 dealpos2 = default;
+                    if(Phase1_Benchmark_To_Determine_Left_And_Right==Phase1_Benchmarks_To_Determine_Left_And_Right.Face_True_North_面向正北) {
+                        
+                        i1p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100-dis,0,100-far);
+                        i1p2=tehterIsFire[2]?new(100,0,100-far-dis):new(100-dis,0,100-far);
+                        i2p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100+dis,0,100-far);
+                        i2p2=tehterIsFire[2]?new(100,0,100-far-dis):new(100+dis,0,100-far);
+                        i3p1=tehterIsFire[1]?new(100,0,100+far+dis):new(100-dis,0,100+far);
+                        i3p2=tehterIsFire[3]?new(100,0,100+far+dis):new(100-dis,0,100+far);
+                        i4p1=tehterIsFire[1]?new(100,0,100+far+dis):new(100+dis,0,100+far);
+                        i4p2=tehterIsFire[3]?new(100,0,100+far+dis):new(100+dis,0,100+far);
+                        
+                    }
+                    
+                    if(Phase1_Benchmark_To_Determine_Left_And_Right==Phase1_Benchmarks_To_Determine_Left_And_Right.Face_The_Boss_面向Boss) {
+                        // The addition of this benchmark credits to @alexandria_prime. Appreciate!
+                        
+                        i1p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100+dis,0,100-far);
+                        i1p2=tehterIsFire[2]?new(100,0,100-far-dis):new(100+dis,0,100-far);
+                        i2p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100-dis,0,100-far);
+                        i2p2=tehterIsFire[2]?new(100,0,100-far-dis):new(100-dis,0,100-far);
+                        i3p1=tehterIsFire[1]?new(100,0,100+far+dis):new(100-dis,0,100+far);
+                        i3p2=tehterIsFire[3]?new(100,0,100+far+dis):new(100-dis,0,100+far);
+                        i4p1=tehterIsFire[1]?new(100,0,100+far+dis):new(100+dis,0,100+far);
+                        i4p2=tehterIsFire[3]?new(100,0,100+far+dis):new(100+dis,0,100+far);
+                        
+                    }
+
+                    if(i1p1.Equals(new Vector3(100,0,100))) {
+
+                        return;
+
+                    }
 
                     dealpos1 = idleObjIndex.IndexOf(myindex) switch
                     {
@@ -1193,60 +1876,122 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
             }
         }
-        [ScriptMethod(name: "P1_塔_雷火直线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40134|40129)$"])]
-        public void P1_塔_雷火直线(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 1d) return;
-            if (!ParseObjectId(@event["SourceId"], out var sid)) return;
-            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            if (@event["ActionId"] == "40134")
-            {
-                //雷
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P1_塔_雷直线";
-                dp.Scale = new(20, 40);
-                dp.Owner = sid;
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.DestoryAt = 8200;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+        
+        [ScriptMethod(name:"Phase1_Burnt_Strike_With_Towers_And_Tank_Busters_带有塔和死刑的燃烧击(最后机制)",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40134|40129)$"])]
+        
+        public void Phase1_Burnt_Strike_With_Towers_And_Tank_Busters_带有塔和死刑的燃烧击(Event @event, ScriptAccessory accessory) {
 
-                dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P1_塔_雷直线内";
-                dp.Scale = new(10, 40);
-                dp.Owner = sid;
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.DestoryAt = 6500;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
-
-            }
-            else
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P1_塔_火直线";
-                dp.Scale = new(10, 40);
-                dp.Owner = sid;
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.DestoryAt = 6500;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+            if(parse!=1d) {
+                
+                return;
+                
             }
 
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
+            
+            if(@event["ActionId"].Equals("40134")) {
+                // Thunder Burnt Strike.
+                
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                currentProperty.Name="Phase1_Second_Strike_Of_Thunder_Burnt_Strike_雷燃烧击第二击";
+                currentProperty.Scale=new(20,40);
+                currentProperty.Owner=sourceId;
+                currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
+                currentProperty.DestoryAt=8200;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
+            
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase1_First_Strike_Of_Thunder_Burnt_Strike_雷燃烧击第一击";
+                currentProperty.Scale=new(10,40);
+                currentProperty.Owner=sourceId;
+                currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(3f);
+                currentProperty.DestoryAt=6500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
+
+            }
+            
+            if(@event["ActionId"].Equals("40129")) {
+                // Fire Burnt Strike.
+                
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase1_First_Strike_Of_Fire_Burnt_Strike_火燃烧击第一击";
+                currentProperty.Scale=new(10,40);
+                currentProperty.Owner=sourceId;
+                currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(3f);
+                currentProperty.DestoryAt=6500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
+            
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase1_Central_Axis_Of_Fire_Burnt_Strike_火燃烧击中轴线";
+                currentProperty.Scale=new(0.5f,40f);
+                currentProperty.Owner=sourceId;
+                currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(25f);
+                currentProperty.DestoryAt=8200;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
+
+                for(int i=-1;i<=1;++i) {
+                
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                    currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
+                    currentProperty.Scale=new(2f,7f);
+                    currentProperty.Owner=sourceId;
+                    currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
+                    currentProperty.Offset=new Vector3(0,0,-(i*10));
+                    currentProperty.Rotation=float.Pi/2;
+                    currentProperty.DestoryAt=8200;
+            
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Arrow,currentProperty);
+                
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                    currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
+                    currentProperty.Scale=new(2f,7f);
+                    currentProperty.Owner=sourceId;
+                    currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
+                    currentProperty.Offset=new Vector3(0,0,-(i*10));
+                    currentProperty.Rotation=-(float.Pi/2);
+                    currentProperty.DestoryAt=8200;
+            
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Arrow,currentProperty);
+                
+                }
+                
+            }
 
         }
+        
         [ScriptMethod(name: "P1_塔_塔处理位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40134|40129)$"])]
         public void P1_塔_塔处理位置(Event @event, ScriptAccessory accessory)
         {
             if (parse != 1d) return;
-            Task.Delay(100).ContinueWith(t =>
+            Task.Delay(250).ContinueWith(t =>
             {
-                var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+                var myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
                 if (@event["ActionId"] == "40134")
                 {
                     var eastTower = P1塔[3] == 1;
                     //雷
-                    if (myindex==0|| myindex==1)
+                    if (myIndex==0|| myIndex==1)
                     {
                         var dx = eastTower ? -10.5f : 10.5f;
-                        var dy = myindex == 1 ? -5.5f : 5.5f;
+                        var dy = myIndex == 0 ? -5.5f : 5.5f;
+                        // The expression was myindex == 1 ? -5.5f : 5.5f before. Obviously it reverses the situation of MT and OT.
+                        // The bug fix here credits to @alexandria_prime. Appreciate!
                         var dp = accessory.Data.GetDefaultDrawProperties();
                         dp.Name = "P1_雷塔_塔处理位置_T";
                         dp.Scale = new(2);
@@ -1259,22 +2004,263 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                     else
                     {
-                        var myIndex2 = myindex - 1;
-                        Vector3 dealpos = default;
-                        if (myIndex2 > 0 && myIndex2 <= P1塔[0]) dealpos = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
-                        if (myIndex2 > P1塔[0] && myIndex2 <= P1塔[0]+ P1塔[1]) dealpos = new(eastTower ? 115.98f : 84.02f, 0, 100f);
-                        if (myIndex2 > P1塔[0] + P1塔[1] && myIndex2 <= P1塔[0] + P1塔[1]+ P1塔[2]) dealpos = new(eastTower ? 113.08f : 86.92f, 0, 109.18f);
+                        int myTowerIndex=myIndex-1;
+                        Vector3 standbyPosition=new Vector3(100,0,100);
+                        Vector3 towerPosition=new Vector3(100,0,100);
+                        
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Purely_Based_On_The_Priority_纯粹根据优先级) {
+                            
+                            if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
+                            if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0]+ P1塔[1]) standbyPosition = new(eastTower ? 115.98f : 84.02f, 0, 100f);
+                            if (myTowerIndex > P1塔[0] + P1塔[1] && myTowerIndex <= P1塔[0] + P1塔[1]+ P1塔[2]) standbyPosition = new(eastTower ? 113.08f : 86.92f, 0, 109.18f);
 
-                        Vector3 towerpos = default;
-                        if (myIndex2 > 0 && myIndex2 <= P1塔[0]) towerpos = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
-                        if (myIndex2 > P1塔[0] && myIndex2 <= P1塔[0] + P1塔[1]) towerpos = new(eastTower ? 115.98f : 84.02f, 0, 100f);
-                        if (myIndex2 > P1塔[0] + P1塔[1] && myIndex2 <= P1塔[0] + P1塔[1] + P1塔[2]) towerpos = new(eastTower ? 113.08f : 86.92f, 0, 109.18f);
+                            if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) towerPosition = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
+                            if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0] + P1塔[1]) towerPosition = new(eastTower ? 115.98f : 84.02f, 0, 100f);
+                            if (myTowerIndex > P1塔[0] + P1塔[1] && myTowerIndex <= P1塔[0] + P1塔[1] + P1塔[2]) towerPosition = new(eastTower ? 113.08f : 86.92f, 0, 109.18f);
+                            
+                        }
+
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_Priority_For_The_Rest_固定H1_H2_D4剩余人优先级) {
+
+                            bool fixedPartyMember=false;
+
+                            if(myIndex==2) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+
+                            }
+                            
+                            if(myIndex==3) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+
+                            }
+
+                            if(myIndex==7) {
+                                
+                                fixedPartyMember=true;
+                                
+                                standbyPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                
+                            }
+
+                            if(!fixedPartyMember) {
+                                
+                                int newTower0=P1塔[0]-1;
+                                int newTower1=P1塔[1]-1;
+                                int newTower2=P1塔[2]-1;
+                                int myNewTowerIndex=myIndex-3;
+                                
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               newTower0={newTower0}
+                                                               newTower1={newTower1}
+                                                               newTower2={newTower2}
+                                                               myNewTowerIndex={myNewTowerIndex}
+                                                               
+                                                               """);
+
+                                }
+
+                                if(newTower0>0
+                                    &&
+                                    0<myNewTowerIndex&&myNewTowerIndex<=newTower0) {
+                                    
+                                    standbyPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                    towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                    
+                                }
+                                
+                                if(newTower1>0
+                                   &&
+                                   newTower0<myNewTowerIndex&&myNewTowerIndex<=newTower0+newTower1) {
+                                    
+                                    standbyPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                    towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                    
+                                }
+                                
+                                if(newTower2>0
+                                   &&
+                                   newTower0+newTower1<myNewTowerIndex&&myNewTowerIndex<=newTower0+newTower1+newTower2) {
+                                    
+                                    standbyPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                    towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                    
+                                }
+                                
+                            }
+
+                        }
+
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_The_Rest_Fill_Vacancies_固定H1_H2_D4剩余人补位) {
+                            
+                            bool fixedPartyMember=false;
+
+                            if(myIndex==2) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+
+                            }
+                            
+                            if(myIndex==3) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+
+                            }
+
+                            if(myIndex==7) {
+                                
+                                fixedPartyMember=true;
+                                
+                                standbyPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                
+                            }
+
+                            if(!fixedPartyMember) {
+                                
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               P1塔[0]={P1塔[0]}
+                                                               P1塔[1]={P1塔[1]}
+                                                               P1塔[2]={P1塔[2]}
+                                                               myTowerIndex={myTowerIndex}
+
+                                                               """);
+
+                                }
+
+                                if(myIndex==4) {
+
+                                    if(P1塔[0]>=2) {
+                                        
+                                        standbyPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                        towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                        
+                                    }
+
+                                    else {
+
+                                        if(P1塔[1]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                            towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                            
+                                        }
+                                        
+                                        if(P1塔[2]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                                if(myIndex==5) {
+
+                                    if(P1塔[1]>=2) {
+                                        
+                                        standbyPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                        towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                        
+                                    }
+
+                                    else {
+                                        
+                                        if(P1塔[0]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                            
+                                        }
+                                        
+                                        if(P1塔[2]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                                if(myIndex==6) {
+
+                                    if(P1塔[2]>=2) {
+                                        
+                                        standbyPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                        towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                        
+                                    }
+
+                                    else {
+                                        
+                                        if(P1塔[0]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                            
+                                        }
+                                        
+                                        if(P1塔[1]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                            towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                        if(Enable_Developer_Mode) {
+
+                            accessory.Method.SendChat($"""
+                                                       /e 
+                                                       standbyPosition={standbyPosition}
+                                                       towerPosition={towerPosition}
+
+                                                       """);
+
+                        }
+
+                        if(standbyPosition.Equals(new Vector3(100,0,100))||towerPosition.Equals(new Vector3(100,0,100))) {
+
+                            return;
+
+                        }
 
                         var dp = accessory.Data.GetDefaultDrawProperties();
                         dp.Name = "P1_雷塔_塔处理位置_ND";
                         dp.Scale = new(2);
                         dp.Owner = accessory.Data.Me;
-                        dp.TargetPosition = dealpos;
+                        dp.TargetPosition = standbyPosition;
                         dp.ScaleMode |= ScaleMode.YByDistance;
                         dp.Color = accessory.Data.DefaultSafeColor;
                         dp.DestoryAt = 10500;
@@ -1283,7 +2269,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         dp = accessory.Data.GetDefaultDrawProperties();
                         dp.Name = "P1_雷塔_塔_ND";
                         dp.Scale = new(4);
-                        dp.Position = towerpos;
+                        dp.Position = towerPosition;
                         dp.Color = accessory.Data.DefaultSafeColor;
                         dp.DestoryAt = 10500;
                         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Circle, dp);
@@ -1294,14 +2280,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 {
                     var eastTower = P1塔[3] == 1;
                     //火
-                    if (myindex == 0 || myindex == 1)
+                    if (myIndex == 0 || myIndex == 1)
                     {
                         var dx2 = eastTower ? -2f : 2f;
                         var dx1 = eastTower ? -5.5f : 5.5f;
-                        var dy = myindex == 1 ? -5.5f : 5.5f;
+                        var dy = myIndex == 0 ? -5.5f : 5.5f;
+                        // The expression was myindex == 1 ? -5.5f : 5.5f before. Same background as the previous one.
+                        // The bug fix here credits to @alexandria_prime. Appreciate!
 
                         var dp = accessory.Data.GetDefaultDrawProperties();
-                        dp.Name = "P1_雷塔_塔处理位置_T1";
+                        dp.Name = "P1_火塔_塔处理位置_T1";
+                        // The name of the drawing here was once incorrectly labeled as towers with thunder Burnt Strike.
+                        // Same situation for the other four names below.
+                        // The corrections credit to @alexandria_prime. Appreciate!
                         dp.Scale = new(2);
                         dp.Owner = accessory.Data.Me;
                         dp.TargetPosition = new(100 + dx1, 0, 100 + dy);
@@ -1311,7 +2302,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
                         dp = accessory.Data.GetDefaultDrawProperties();
-                        dp.Name = "P1_雷塔_塔处理位置_T2";
+                        dp.Name = "P1_火塔_塔处理位置_T2";
                         dp.Scale = new(2);
                         dp.Position = new(100 + dx1, 0, 100 + dy);
                         dp.TargetPosition = new(100 + dx2, 0, 100 + dy);
@@ -1321,7 +2312,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
                         dp = accessory.Data.GetDefaultDrawProperties();
-                        dp.Name = "P1_雷塔_塔处理位置_T3";
+                        dp.Name = "P1_火塔_塔处理位置_T3";
                         dp.Scale = new(2);
                         dp.Owner = accessory.Data.Me;
                         dp.TargetPosition = new(100 + dx2, 0, 100 + dy);
@@ -1333,31 +2324,272 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                     else
                     {
-                        var myIndex2 = myindex - 1;
-                        Vector3 dealpos = default;
-                        if (myIndex2 > 0 && myIndex2 <= P1塔[0]) dealpos = new(eastTower ? 102f : 98f, 0, 90.81f);
-                        if (myIndex2 > P1塔[0] && myIndex2 <= P1塔[0] + P1塔[1]) dealpos = new(eastTower ? 102f : 98f, 0, 100f);
-                        if (myIndex2 > P1塔[0] + P1塔[1] && myIndex2 <= P1塔[0] + P1塔[1] + P1塔[2]) dealpos = new(eastTower ? 102f : 98f, 0, 109.18f);
+                        var myTowerIndex=myIndex-1;
+                        Vector3 standbyPosition=new Vector3(100,0,100);
+                        Vector3 towerPosition=new Vector3(100,0,100);
 
-                        Vector3 towerpos = default;
-                        if (myIndex2 > 0 && myIndex2 <= P1塔[0]) towerpos = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
-                        if (myIndex2 > P1塔[0] && myIndex2 <= P1塔[0] + P1塔[1]) towerpos = new(eastTower ? 115.98f : 84.02f, 0, 100f);
-                        if (myIndex2 > P1塔[0] + P1塔[1] && myIndex2 <= P1塔[0] + P1塔[1] + P1塔[2]) towerpos = new(eastTower ? 113.08f : 86.92f, 0, 109.18f);
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Purely_Based_On_The_Priority_纯粹根据优先级) {
+                            
+                            if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 102f : 98f, 0, 90.81f);
+                            if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0] + P1塔[1]) standbyPosition = new(eastTower ? 102f : 98f, 0, 100f);
+                            if (myTowerIndex > P1塔[0] + P1塔[1] && myTowerIndex <= P1塔[0] + P1塔[1] + P1塔[2]) standbyPosition = new(eastTower ? 102f : 98f, 0, 109.18f);
+
+                            if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) towerPosition = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
+                            if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0] + P1塔[1]) towerPosition = new(eastTower ? 115.98f : 84.02f, 0, 100f);
+                            if (myTowerIndex > P1塔[0] + P1塔[1] && myTowerIndex <= P1塔[0] + P1塔[1] + P1塔[2]) towerPosition = new(eastTower ? 113.08f : 86.92f, 0, 109.18f);
+                            
+                        }
+
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_Priority_For_The_Rest_固定H1_H2_D4剩余人优先级) {
+
+                            bool fixedPartyMember=false;
+
+                            if(myIndex==2) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?102f:98f,0,90.81f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+
+                            }
+                            
+                            if(myIndex==3) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?102f:98f,0,100f);
+                                towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+
+                            }
+
+                            if(myIndex==7) {
+                                
+                                fixedPartyMember=true;
+                                
+                                standbyPosition=new(eastTower?102f:98f,0,109.18f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                
+                            }
+
+                            if(!fixedPartyMember) {
+                                
+                                int newTower0=P1塔[0]-1;
+                                int newTower1=P1塔[1]-1;
+                                int newTower2=P1塔[2]-1;
+                                int myNewTowerIndex=myIndex-3;
+                                
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               newTower0={newTower0}
+                                                               newTower1={newTower1}
+                                                               newTower2={newTower2}
+                                                               myNewTowerIndex={myNewTowerIndex}
+
+                                                               """);
+
+                                }
+
+                                if(newTower0>0
+                                    &&
+                                    0<myNewTowerIndex&&myNewTowerIndex<=newTower0) {
+                                    
+                                    standbyPosition=new(eastTower?102f:98f,0,90.81f);
+                                    towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                    
+                                }
+                                
+                                if(newTower1>0
+                                   &&
+                                   newTower0<myNewTowerIndex&&myNewTowerIndex<=newTower0+newTower1) {
+                                    
+                                    standbyPosition=new(eastTower?102f:98f,0,100f);
+                                    towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                    
+                                }
+                                
+                                if(newTower2>0
+                                   &&
+                                   newTower0+newTower1<myNewTowerIndex&&myNewTowerIndex<=newTower0+newTower1+newTower2) {
+                                    
+                                    standbyPosition=new(eastTower?102f:98f,0,109.18f);
+                                    towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                    
+                                }
+                                
+                            }
+
+                        }
+
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1_H2_R2_The_Rest_Fill_Vacancies_固定H1_H2_D4剩余人补位) {
+                            
+                            bool fixedPartyMember=false;
+
+                            if(myIndex==2) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?102f:98f,0,90.81f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+
+                            }
+                            
+                            if(myIndex==3) {
+                                
+                                fixedPartyMember=true;
+
+                                standbyPosition=new(eastTower?102f:98f,0,100f);
+                                towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+
+                            }
+
+                            if(myIndex==7) {
+                                
+                                fixedPartyMember=true;
+                                
+                                standbyPosition=new(eastTower?102f:98f,0,109.18f);
+                                towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                
+                            }
+
+                            if(!fixedPartyMember) {
+                                
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               P1塔[0]={P1塔[0]}
+                                                               P1塔[1]={P1塔[1]}
+                                                               P1塔[2]={P1塔[2]}
+                                                               myTowerIndex={myTowerIndex}
+
+                                                               """);
+
+                                }
+
+                                if(myIndex==4) {
+
+                                    if(P1塔[0]>=2) {
+                                        
+                                        standbyPosition=new(eastTower?102f:98f,0,90.81f);
+                                        towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                        
+                                    }
+
+                                    else {
+
+                                        if(P1塔[1]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?102f:98f,0,100f);
+                                            towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                            
+                                        }
+                                        
+                                        if(P1塔[2]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?102f:98f,0,109.18f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                                if(myIndex==5) {
+
+                                    if(P1塔[1]>=2) {
+                                        
+                                        standbyPosition=new(eastTower?102f:98f,0,100f);
+                                        towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                        
+                                    }
+
+                                    else {
+                                        
+                                        if(P1塔[0]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?102f:98f,0,90.81f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                            
+                                        }
+                                        
+                                        if(P1塔[2]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?102f:98f,0,109.18f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                                if(myIndex==6) {
+
+                                    if(P1塔[2]>=2) {
+                                        
+                                        standbyPosition=new(eastTower?102f:98f,0,109.18f);
+                                        towerPosition=new(eastTower?113.08f:86.92f,0,109.18f);
+                                        
+                                    }
+
+                                    else {
+                                        
+                                        if(P1塔[0]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?102f:98f,0,90.81f);
+                                            towerPosition=new(eastTower?113.08f:86.92f,0,90.81f);
+                                            
+                                        }
+                                        
+                                        if(P1塔[1]>=3) {
+                                            
+                                            standbyPosition=new(eastTower?102f:98f,0,100f);
+                                            towerPosition=new(eastTower?115.98f:84.02f,0,100f);
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                        if(Enable_Developer_Mode) {
+
+                            accessory.Method.SendChat($"""
+                                                       /e 
+                                                       standbyPosition={standbyPosition}
+                                                       towerPosition={towerPosition}
+
+                                                       """);
+
+                        }
+
+                        if(standbyPosition.Equals(new Vector3(100,0,100))||towerPosition.Equals(new Vector3(100,0,100))) {
+
+                            return;
+
+                        }
 
                         var dp = accessory.Data.GetDefaultDrawProperties();
-                        dp.Name = "P1_雷塔_塔处理位置_ND";
+                        dp.Name = "P1_火塔_塔处理位置_ND";
                         dp.Scale = new(2);
                         dp.Owner = accessory.Data.Me;
-                        dp.TargetPosition = dealpos;
+                        dp.TargetPosition = standbyPosition;
                         dp.ScaleMode |= ScaleMode.YByDistance;
                         dp.Color = accessory.Data.DefaultSafeColor;
                         dp.DestoryAt = 9000;
                         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
                         dp = accessory.Data.GetDefaultDrawProperties();
-                        dp.Name = "P1_雷塔_塔_ND";
+                        dp.Name = "P1_火塔_塔_ND";
                         dp.Scale = new(4);
-                        dp.Position = towerpos;
+                        dp.Position = towerPosition;
                         dp.Color = accessory.Data.DefaultSafeColor;
                         dp.DestoryAt = 10500;
                         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Circle, dp);
@@ -2045,7 +3277,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (P2LightRampantTetherDone) return;
                 P2LightRampantTetherDone = true;
             }
-            Task.Delay(50).ContinueWith(t =>
+            Task.Delay(250).ContinueWith(t =>
             {
                 var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
                 if (P2LightRampantCircle.Contains(myindex)) return;
@@ -3105,8 +4337,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 System.Threading.Thread.Sleep(1);
                 
-                System.Threading.Thread.MemoryBarrier();
-                
             }
             
             if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
@@ -3373,8 +4603,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 System.Threading.Thread.Sleep(1);
                 
-                System.Threading.Thread.MemoryBarrier();
-                
             }
 
             Phase3_Types_Of_Dark_Water_III currentType=Phase3_Types_Of_Dark_Water_III.NONE;
@@ -3633,8 +4861,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             while(System.Threading.Interlocked.CompareExchange(ref phase3_guidanceSemaphoreOfDarkWaterIii,0,1)==0) {
                 
                 System.Threading.Thread.Sleep(1);
-                
-                System.Threading.Thread.MemoryBarrier();
                 
             }
 
@@ -5890,7 +7116,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
             if (sid != accessory.Data.Me) return;
             //accessory.Log.Debug("线");
-            Task.Delay(50).ContinueWith(t =>
+            Task.Delay(250).ContinueWith(t =>
             {
                 var tIndex = P4Tether[0] == -1 ? 1 : 0;
                 var nIndex = P4Tether[2] == -1 ? 3 : 2;
@@ -5968,7 +7194,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (P4TetherDone) return;
                 P4TetherDone = true;
             }
-            Task.Delay(50).ContinueWith(t =>
+            Task.Delay(250).ContinueWith(t =>
             {
                 List<int> idles = [];
                 for (int i = 0; i < 8; i++)
@@ -7820,8 +9046,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             while(!phase5_hasAcquiredTheFirstTower) {
                 
                 System.Threading.Thread.Sleep(1);
-                
-                System.Threading.Thread.MemoryBarrier();
                 
             }
 
