@@ -24,7 +24,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.59",
+        version:"0.0.0.60",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -48,20 +48,26 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** New Features *****
         ***** 新功能 *****
         
+        Phase 1:
+         - Refinements for the entire phase.
+         - Lots of new strats for Utopian Sky, Turn Of The Heaven, Fall Of Faith and the towers at the end.
         Phase 3:
-         - Guidance of the second half;
+         - Guidance of the second half (including the Double Group strat and the Locomotive strat);
         Phase 4:
          - Guidance related to Drachen Wanderer residues of the second half;
-         - Refinements for vanilla guidance of the second half;
+         - Fixes and refinements for vanilla guidance of the second half;
         Phase 5:
          - Guidance of Wings Dark And Light;
          - Guidance of Polarizing Strikes.
         
+        P1:
+         - 整个阶段的精修;
+         - 乐园绝技(雾龙), 光轮召唤, 信仰崩塌(四连抓)和最后踩塔都增加了大量新打法;
         P3:
-         - 二运指路;
+         - 二运指路(包括双分组法和车头法);
         P4:
          - 二运圣龙气息(龙头)白圈相关的指路;
-         - 二运原版指路精修;
+         - 二运原版指路修复和细化;
         P5:
          - 光与暗之翼(踩塔)指路;
          - 极化打击(挡枪)指路。
@@ -89,7 +95,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P1 标记被连线的玩家 (Make sure only one in the party enable this!/小队内只能有一人启用此选项!)")]
         public bool Phase1_Mark_Players_Were_Tethered { get; set; } = false;
         [UserSetting("P1 确定左右的基准")]
-        public Phase1_Benchmarks_To_Determine_Left_And_Right Phase1_Benchmark_To_Determine_Left_And_Right { get; set; }
+        public Phase1_Benchmarks_During_Fall_Of_Faith Phase1_Benchmark_During_Fall_Of_Faith { get; set; }
         [UserSetting("P1 踩塔攻略")]
         public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; }
 
@@ -298,7 +304,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
 
-        public enum Phase1_Benchmarks_To_Determine_Left_And_Right {
+        public enum Phase1_Benchmarks_During_Fall_Of_Faith {
             
             Face_True_North_面向正北,
             Face_The_Boss_面向Boss
@@ -1770,7 +1776,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     Vector3 dealpos1=default;
                     Vector3 dealpos2=default;
 
-                    if(Phase1_Benchmark_To_Determine_Left_And_Right==Phase1_Benchmarks_To_Determine_Left_And_Right.Face_True_North_面向正北) {
+                    if(Phase1_Benchmark_During_Fall_Of_Faith==Phase1_Benchmarks_During_Fall_Of_Faith.Face_True_North_面向正北) {
                         
                         i1p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100-dis,0,100-far);
                         i1p2=tehterIsFire[2]?new(100,0,100-far-dis):new(100-dis,0,100-far);
@@ -1783,7 +1789,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                     }
                     
-                    if(Phase1_Benchmark_To_Determine_Left_And_Right==Phase1_Benchmarks_To_Determine_Left_And_Right.Face_The_Boss_面向Boss) {
+                    if(Phase1_Benchmark_During_Fall_Of_Faith==Phase1_Benchmarks_During_Fall_Of_Faith.Face_The_Boss_面向Boss) {
                         // The addition of this benchmark credits to @alexandria_prime. Appreciate!
                         
                         i1p1=tehterIsFire[0]?new(100,0,100-far-dis):new(100+dis,0,100-far);
