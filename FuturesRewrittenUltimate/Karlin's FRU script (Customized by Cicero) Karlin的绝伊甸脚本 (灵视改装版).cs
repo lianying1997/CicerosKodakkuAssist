@@ -25,7 +25,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.62",
+        version:"0.0.0.63",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -53,11 +53,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Helpers (sorted lexicographically):
          - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1.
          - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1.
+         - @veever2464 provided supports of Daily Routines TTS for each TTS prompt.
         
         原作者兼奠基人: @karlin_z
         提供帮助的人(按字典序排序):
         - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。
         - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。
+        - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。
         
         ***** New Features *****
         ***** 新功能 *****
