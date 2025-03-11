@@ -17,6 +17,7 @@ using CicerosKodakkuAssist.FuturesRewrittenUltimate;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Utility.Numerics;
 using ECommons.MathHelpers;
+using KodakkuAssist.Module.GameOperate;
 using Newtonsoft.Json.Linq;
 
 namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
@@ -25,7 +26,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.64",
+        version:"0.0.0.65",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -46,27 +47,70 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         在使用前请记得按照原版脚本重新配置一下这个脚本的用户设置!
         当然也请不要同时开着改装脚本和原版脚本。
         
+        1. Two types of TTS prompts are provided, vanilla TTS and Daily Routines TTS.
+        Please make sure you only enable one of the two options. You couldn't run the both TTS simultaneously.
+        And of course you need to have the plugin Daily routines installed and enabled if you'd like to use Daily Routines TTS.
+        The language of TTS prompts would be consistent with that of text prompts.
+        2. Marks during Fall Of Faith in Phase 1 involves three different types: Target To Attack, Target To Bind, Target To Ignore.
+        Target To Ignore 1 and 2: The tethered players in the north. Numbers stand for the round of the play.
+        Target To Bind 1 and 2: The tethered players in the south. Numbers stand for the round of the play.
+        Target To Attack 1 and 2: The untethered players in the north. Number 1 stands for the player with higher priority.
+        Target To Attack 3 and 4: The untethered players in the north. Number 3 stands for the player with higher priority.
+        Please make sure that only one party member enables this option, and the party are not running any similar marking feature from other plugins or triggers.
+        (Assuming the priority is MT OT H1 H2 M1 M2 R1 R2, then:
+           Higher priority <- MT OT H1 H2 M1 M2 R1 R2 -> Lower priority)
+        3. Players need to be in position in advance before Light Rampant in Phase 2, otherwise the guidance may not no longer reliable.
+        The reliability of the guidance would not be affected if the teammates are not in position or are in the wrong position.
+        4. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
+        the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
+        Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
+        5. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
+        After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
+        
+        1. 提供两种类型的TTS播报,原版TTS和Daily Routines TTS。
+        请确保你只启用了二者其一,这两个不能同时开。
+        当然,如果选择了Daily Routines TTS,你需要已经安装并启用了Daily Routines插件。
+        TTS提示的语言与文本提示语言相同。
+        2. P1信仰崩塌(四连抓)期间的标记涉及到攻击,止步和禁止三种。
+        禁止1和2:前往北侧的被连线玩家。数字就是抓人的轮数。
+        锁链1和2:前往南侧的被连线玩家。数字就是抓人的轮数。
+        攻击1和2:前往北侧的闲人。数字1是优先级更高的。
+        攻击1和2:前往南侧的闲人。数字3是优先级更高的。
+        小队里只能有一个玩家启用此选项,并且同时也不能启用其他科技的标记。
+        (假设优先级为 MT ST H1 H2 D1 D2 D3 D4, 那么高优先级指的是:
+           高优先级 <- MT ST H1 H2 D1 D2 D3 D4 -> 低优先级)
+        3. P2光之失控(光暴)之前玩家需要预站位,否则指路可能会电椅。
+        如果队友没有预站位或者站位错误,指路不受影响。
+        4. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
+        那么相关绘制的移除可能有延迟并且会干扰玩家。
+        不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
+        5. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
+        然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
+        
         ***** Credits *****
         ***** 致谢 *****
         
         The original author also the founder: @karlin_z
         Helpers (sorted lexicographically):
-         - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1.
-         - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1.
-         - @veever2464 provided supports of Daily Routines TTS for each TTS prompt.
+         - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1. (Mar 9, 2025)
+         - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1. (Mar 5, 2025)
+         - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
         
         原作者兼奠基人: @karlin_z
         提供帮助的人(按字典序排序):
-        - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。
-        - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。
-        - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。
+        - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。 (2025.03.09)
+        - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。 (2025.03.05)
+        - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。 (2025.03.10)
         
         ***** New Features *****
         ***** 新功能 *****
         
         Phase 1:
-         - Refinements for the entire phase.
-         - Lots of new strats for Utopian Sky, Turn Of The Heaven, Fall Of Faith and the towers at the end.
+         - Refinements for the entire phase;
+         - New strats for Utopian Sky, Fall Of Faith and the towers at the end;
+         - Reworked player marking during Fall Of Faith;
         Phase 3:
          - Guidance of the second half (including the Double Group strat and the Locomotive strat);
         Phase 4:
@@ -78,7 +122,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         P1:
          - 整个阶段的精修;
-         - 乐园绝技(雾龙), 光轮召唤, 信仰崩塌(四连抓)和最后踩塔都增加了大量新打法;
+         - 乐园绝技(雾龙),信仰崩塌(四连抓)和最后踩塔都增加了新攻略;
+         - 重做信仰崩塌(四连抓)的玩家标记;
         P3:
          - 二运指路(包括双分组法和车头法);
         P4:
@@ -87,6 +132,69 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         P5:
          - 光与暗之翼(踩塔)指路;
          - 极化打击(挡枪)指路。
+        
+        ***** Known Issues *****
+        ***** 已知问题 *****
+        
+        Phase 2:
+         - Diamond Dust: The guidance during Sinbound Holy is not reliable. This part will be reworked very soon.
+         - Mirror,Mirror: The strat on CN (The melee group go to the closest red mirror, and go to the left one if the distances are the same) has not been added yet but it's on the way.
+           The current strat is that the melee group always go to the left red mirror. The benchmark for left and right is facing the two red mirrors from the center.
+         - Light Rampant: There is a rare chance that the players with 3 stacks of Lightsteep will be guided into the tower. This issue is now being investigated.
+        Phase 3:
+         - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
+           The timeline here would be refined in the future.
+        Phase 4:
+         - Darklit Dragonsong: The strat on CN (Single Swap) has not been added yet but it's on the way.
+           The current strat is Double Swaps. Aside from that, there's also a rare chance that the guidance of stacks here is not reliable. It will be fixed while adding the new strart in future.
+         - Crystallize Time: The priority on CN (HTD) has not been added yet but it's on the way.
+           The current priority is THD. The priority here only involves Wyrmclaw (the red debuff).
+        Phase 5:
+         - Fulgent Blade: The guidance has been added yet. I've asked @milkvio for the permission of his implementation and got his approval. Therefore, I will add it very soon.
+        
+        After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
+        
+        P2:
+         - 钻石星辰: 罪缚神圣(四连分摊)的指路是电椅。很快就会重做这个机制。
+         - 镜中奇遇: 国服攻略(近战组去最近的红镜子,若相同则去左侧镜子)尚未适配,但很快就会做。
+           现在的攻略是近战组固定去左侧红镜子。这里的左和右指的是从场中面向两面红镜子时的左右。
+         - 光之失控(光暴): 有小概率电椅,持有三层过量光的人会被指路去踩塔。正在调查这个问题。
+        P3:
+         - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
+           会在未来精修此处的时间轴。
+        P4:
+         - 暗光龙诗(一运): 国服攻略(但换)尚未适配,但很快就会做。
+           现在的攻略是双换。这里的分摊指路也有小概率电椅,在未来添加攻略时会顺带修复。
+         - 时间结晶(二运): 国服优先级(HTD)尚未适配,但很快就会做。
+           现在的优先级是THD。这里的优先级仅与圣龙爪(红)debuff有关。
+        P4:
+         - 璀璨之刃(地火): 尚未添加指路,但我已经向 @milkvio 申请使用他的地火指路并且得到本人同意了。很快就会补上这部分。
+         
+        当所有已知问题都被解决后,就不会再有大更新了。那个时候的版本就是最终版。
+        
+        ***** To Resellers *****
+        ***** 致倒卖者 *****
+        
+        我衷心地祝愿:
+        你的人生像尼禄;
+        你的运气像戴克里先;
+        你的名誉像康茂德;
+        你的诚信像卡拉卡拉;
+        你的道德像埃拉伽巴路斯;
+        你的信用像加里恩努斯;
+        你的未来像塞维鲁·亚历山大;
+        而你的结局像罗慕路斯·奥古斯都。
+        
+        I sincerely wish:
+        Your life will be like Nero;
+        Your luck will be like Diocletian;
+        Your reputation will be like Commodus;
+        Your integrity will be like Caracalla;
+        Your morality will be like Elagabalus;
+        Your credibility will be like Gallienus;
+        Your future will be like Severus Alexander;
+        And your end will be like Romulus Augustulus.
+        
         """;
         
         [UserSetting("-----全局设置----- (No actual meaning for this setting/此设置无实际意义)")]
@@ -98,13 +206,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----TTS设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____TTS_Settings_____ { get; set; } = true;
-        [UserSetting("The language is consistent with that of prompts above. Please select one from the following two and never enable both simultaneously. (No actual meaning for this setting)")]
-        public bool TTS_Introduction { get; set; } = true;
-        [UserSetting("TTS的语言和上面的文本提示相同。请从下面两个选项中选一个启用,不要两个都选上。(此设置无实际意义)")]
-        public bool TTS简介 { get; set; } = true;
         [UserSetting("启用原版TTS")]
         public bool Enable_Vanilla_TTS { get; set; } = true;
-        [UserSetting("启用Daily Routines TTS (Make sure you're running the Dalamud plugin Daily Routines!/确保你启用了卫月插件Daily Routines!)")]
+        [UserSetting("启用Daily Routines TTS (It requires the plugin Daily Routines to be enabled already!/需要已经启用插件Daily Routines!)")]
         public bool Enable_Daily_Routines_TTS { get; set; } = false;
 
         [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
@@ -117,8 +221,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase1_Groups_Of_Turn_Of_The_Heavens Phase1_Group_Of_Turn_Of_The_Heavens { get; set; }
         [UserSetting("P1 信仰崩塌(四连抓)攻略")]
         public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; }
-        [UserSetting("P1 标记被连线的玩家 (Make sure only one in the party enable this!/小队内只能有一人启用此选项!)")]
-        public bool Phase1_Mark_Players_Were_Tethered { get; set; } = false;
+        [UserSetting("P1 信仰崩塌(四连抓)标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
+        public bool Phase1_Mark_Players_During_Fall_Of_Faith { get; set; } = false;
         [UserSetting("P1 信仰崩塌(四连抓)的面向基准")]
         public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; }
         [UserSetting("P1 踩塔攻略")]
@@ -200,8 +304,27 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         bool P1雾龙雷=false;
         bool P1转轮召雷 = false;
         List<int> P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
+        volatile int phase1_timesBurnishedGloryWasCast=0;
         List<int> P1四连线 = [];
         bool P1四连线开始 = false;
+        List<MarkType> phase1_markForTheTetheredPlayer_asAConstant=[
+            MarkType.Stop1,
+            MarkType.Bind1,
+            MarkType.Stop2,
+            MarkType.Bind2
+        ];
+        List<MarkType> phase1_markForTheUntetheredPlayer_asAConstant=[
+            MarkType.Attack1,
+            MarkType.Attack2,
+            MarkType.Attack3,
+            MarkType.Attack4
+        ];
+        volatile int phase1_numberOfTetheredPlayersHasBeenMarked=0;
+        volatile int phase1_semaphoreOfMarkingTetheredPlayers=0;
+        volatile int phase1_semaphoreOfShortPrompts=0;
+        volatile int phase1_semaphoreOfDrawing=0;
+        volatile int phase1_semaphoreOfMarkingUntetheredPlayers=0;
+        volatile int phase1_semaphoreOfTheFinalPrompt=0;
         List<int> P1塔 = [0, 0, 0, 0];
 
         bool P2DDDircle = false;
@@ -429,7 +552,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void Init(ScriptAccessory accessory)
         {
             accessory.Method.RemoveDraw(".*");
-            if (Phase1_Mark_Players_Were_Tethered)
+            if (Phase1_Mark_Players_During_Fall_Of_Faith)
                 accessory.Method.MarkClear();
             parse = 1d;
             isInPhase5=false;
@@ -437,8 +560,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             P1雾龙记录 = [0, 0, 0, 0];
             P1雾龙计数 = 0;
             P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
+            phase1_timesBurnishedGloryWasCast=0;
             P1四连线 = [];
             P1四连线开始 = false;
+            phase1_numberOfTetheredPlayersHasBeenMarked=0;
+            phase1_semaphoreOfMarkingTetheredPlayers=0;
+            phase1_semaphoreOfShortPrompts=0;
+            phase1_semaphoreOfDrawing=0;
+            phase1_semaphoreOfMarkingUntetheredPlayers=0;
+            phase1_semaphoreOfTheFinalPrompt=0;
             P1塔 = [0, 0, 0, 0];
 
             P2DDIceDir.Clear();
@@ -1555,38 +1685,579 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        [ScriptMethod(name: "P1_四连线_清除连线记录器", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40170)$"],userControl:false)]
-        public void P1_四连线_清除连线记录器(Event @event, ScriptAccessory accessory)
-        {
+        [ScriptMethod(name:"Phase1 Mark Control 标记控制",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:regex:^(40170)$"],
+            userControl:false)]
+        
+        public void Phase1_Mark_Control_标记控制(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
             
-            if (parse != 1d) return;
-            P1四连线.Clear();
-            P1四连线开始 =true;
-            if (Phase1_Mark_Players_Were_Tethered)
-                accessory.Method.MarkClear();
+            ++phase1_timesBurnishedGloryWasCast;
+
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           phase1_timesBurnishedGloryWasCast={phase1_timesBurnishedGloryWasCast}
+                                           
+                                           """);
+
+            }
+
+            switch(phase1_timesBurnishedGloryWasCast) {
+
+                case 1: {
+                    
+                    phase1_numberOfTetheredPlayersHasBeenMarked=0;
+                    
+                    P1四连线.Clear();
+                    
+                    if(Phase1_Mark_Players_During_Fall_Of_Faith) {
+                        
+                        accessory.Method.MarkClear();
+                        
+                    }
+                    
+                    phase1_semaphoreOfMarkingTetheredPlayers=0;
+                    phase1_semaphoreOfShortPrompts=0;
+                    phase1_semaphoreOfDrawing=0;
+                    phase1_semaphoreOfMarkingUntetheredPlayers=0;
+                    phase1_semaphoreOfTheFinalPrompt=0;
+
+                    P1四连线开始=true;
+                    
+                    break;
+
+                }
+                
+                case 2: {
+                    
+                    P1四连线开始=false;
+                    
+                    phase1_numberOfTetheredPlayersHasBeenMarked=0;
+                    
+                    P1四连线.Clear();
+                    
+                    if(Phase1_Mark_Players_During_Fall_Of_Faith) {
+                        
+                        accessory.Method.MarkClear();
+                        
+                    }
+                    
+                    phase1_semaphoreOfMarkingTetheredPlayers=0;
+                    phase1_semaphoreOfShortPrompts=0;
+                    phase1_semaphoreOfDrawing=0;
+                    phase1_semaphoreOfMarkingUntetheredPlayers=0;
+                    phase1_semaphoreOfTheFinalPrompt=0;
+
+                    break;
+
+                }
+
+                default: {
+                    
+                    phase1_numberOfTetheredPlayersHasBeenMarked=0;
+                    
+                    P1四连线.Clear();
+                    
+                    if(Phase1_Mark_Players_During_Fall_Of_Faith) {
+                        
+                        accessory.Method.MarkClear();
+                        
+                    }
+                    
+                    phase1_semaphoreOfMarkingTetheredPlayers=0;
+                    phase1_semaphoreOfShortPrompts=0;
+                    phase1_semaphoreOfDrawing=0;
+                    phase1_semaphoreOfMarkingUntetheredPlayers=0;
+                    phase1_semaphoreOfTheFinalPrompt=0;
+
+                    break;
+                    // Just a placeholder and should never be reached.
+
+                }
+                
+            }
+            
         }
+        
         [ScriptMethod(name: "P1_四连线_连线记录器", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^(00F9|011F)$"],userControl:false)]
         public void P1_四连线_连线记录器(Event @event, ScriptAccessory accessory)
         {
             if (parse != 1d) return;
+            if (!P1四连线开始) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             var index= accessory.Data.PartyList.IndexOf(((uint)tid));
             var id = @event["Id"] == "00F9" ? 10 : 20;
             P1四连线.Add(id + index);
+            phase1_semaphoreOfMarkingTetheredPlayers=1;
+            phase1_semaphoreOfShortPrompts=1;
+            phase1_semaphoreOfDrawing=1;
+            phase1_semaphoreOfMarkingUntetheredPlayers=1;
+            phase1_semaphoreOfTheFinalPrompt=1;
         }
-        [ScriptMethod(name: "P1_四连线_头顶标记", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^(00F9|011F)$"],userControl:false)]
-        public void P1_四连线_头顶标记(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 1d) return;
-            if (!Phase1_Mark_Players_Were_Tethered) return;
-            if (!P1四连线开始) return;
-            Task.Delay(250).ContinueWith(t =>
-            {
-                var index = P1四连线.Last() % 10;
-                accessory.Method.Mark(accessory.Data.PartyList[index], (KodakkuAssist.Module.GameOperate.MarkType)P1四连线.Count);
-                //accessory.Log.Debug($"{index} {(KodakkuAssist.Module.GameOperate.MarkType)P1四连线.Count}");
-            });
+        
+        [ScriptMethod(name:"Phase1 Mark Tethered Players 标记被连线的玩家",
+            eventType:EventTypeEnum.Tether,
+            eventCondition:["Id:regex:^(00F9|011F)$"],
+            userControl:false)]
+        
+        public void Phase1_Mark_Tethered_Players_标记被连线的玩家(Event @event, ScriptAccessory accessory) {
+
+            if(!Phase1_Mark_Players_During_Fall_Of_Faith) {
+                
+                return;
+                
+            }
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!P1四连线开始) {
+                
+                return;
+                
+            }
+            
+            if(phase1_numberOfTetheredPlayersHasBeenMarked<0||phase1_numberOfTetheredPlayersHasBeenMarked>3) {
+
+                return;
+
+            }
+            
+            while(System.Threading.Interlocked.CompareExchange(ref phase1_semaphoreOfMarkingTetheredPlayers,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+            }
+
+            int targetIndex=(P1四连线.Last()%10);
+            MarkType targetMark=phase1_markForTheTetheredPlayer_asAConstant[phase1_numberOfTetheredPlayersHasBeenMarked];
+                
+            accessory.Method.Mark(accessory.Data.PartyList[targetIndex],targetMark);
+            
+            ++phase1_numberOfTetheredPlayersHasBeenMarked;
+
+            if(Enable_Developer_Mode) {
+                
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           targetIndex={targetIndex}
+                                           targetMark={targetMark}
+                                           
+                                           """);
+                
+            }
+            
         }
+        
+        [ScriptMethod(name:"Phase1 Prompt The Type Of The Current Tether 提示当前连线的类型",
+            eventType:EventTypeEnum.Tether,
+            eventCondition:["Id:regex:^(00F9|011F)$"])]
+        
+        public void Phase1_Prompt_The_Type_Of_The_Current_Tether_提示当前连线的类型(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!P1四连线开始) {
+                
+                return;
+                
+            }
+            
+            while(System.Threading.Interlocked.CompareExchange(ref phase1_semaphoreOfShortPrompts,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+            }
+
+            if(1<=P1四连线.Count&&P1四连线.Count<=3) {
+
+                bool isFireTether=(P1四连线.Last()<20);
+                string prompt="";
+
+                if(isFireTether) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="火";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="Fire";
+
+                    }
+                    
+                }
+
+                else {
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="雷";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="Thunder";
+
+                    }
+                    
+                }
+                
+                if(!prompt.Equals("")) {
+
+                    if(Enable_Text_Prompts) {
+                    
+                        accessory.Method.TextInfo(prompt,1000);
+                    
+                    }
+
+                    if(Enable_Vanilla_TTS||Enable_Daily_Routines_TTS) {
+                    
+                        accessory.TTS(prompt,Enable_Vanilla_TTS,Enable_Daily_Routines_TTS);
+                    
+                    }
+                
+                }
+
+            }
+            
+        }
+        
+        [ScriptMethod(name:"Phase1 Range Of The Current Tether 当前连线的范围",
+            eventType:EventTypeEnum.Tether,
+            eventCondition:["Id:regex:^(00F9|011F)$"])]
+        
+        public void Phase1_Range_Of_The_Current_Tether_当前连线的范围(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!P1四连线开始) {
+                
+                return;
+                
+            }
+            
+            while(System.Threading.Interlocked.CompareExchange(ref phase1_semaphoreOfDrawing,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+            }
+            
+            bool isFireTether=(P1四连线.Last()<20);
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            if(isFireTether) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                currentProperty.Name="Phase1_Range_Of_The_Fire_Tether_火连线的范围";
+                currentProperty.Scale=new(60);
+                currentProperty.Radian=float.Pi/3*2;
+                currentProperty.Owner=accessory.Data.PartyList[(P1四连线.Last()%10)];
+                currentProperty.TargetResolvePattern=PositionResolvePatternEnum.PlayerNearestOrder;
+                currentProperty.TargetOrderIndex=1;
+                currentProperty.Color=accessory.Data.DefaultDangerColor;
+                currentProperty.Delay=9000;
+                currentProperty.DestoryAt=4300;
+                    
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+                
+            }
+            
+            else {
+                
+                for(uint i=1;i<=3;++i) {
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase1_Range_Of_The_Thunder_Tether_雷连线的范围";
+                    currentProperty.Scale=new(60);
+                    currentProperty.Radian=float.Pi/2;
+                    currentProperty.Owner=accessory.Data.PartyList[(P1四连线.Last()%10)];
+                    currentProperty.TargetResolvePattern=PositionResolvePatternEnum.PlayerNearestOrder;
+                    currentProperty.TargetOrderIndex=i;
+                    currentProperty.Color=accessory.Data.DefaultDangerColor;
+                    currentProperty.Delay=9000;
+                    currentProperty.DestoryAt=4300;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+                    
+                }
+                
+            }
+            
+        }
+        
+        [ScriptMethod(name:"Phase1 Mark Untethered Players 标记未被连线的玩家",
+            eventType:EventTypeEnum.Tether,
+            eventCondition:["Id:regex:^(00F9|011F)$"],
+            userControl:false)]
+        
+        public void Phase1_Mark_Untethered_Players_标记未被连线的玩家(Event @event, ScriptAccessory accessory) {
+            
+            if(!Phase1_Mark_Players_During_Fall_Of_Faith) {
+                
+                return;
+                
+            }
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!P1四连线开始) {
+                
+                return;
+                
+            }
+            
+            while(System.Threading.Interlocked.CompareExchange(ref phase1_semaphoreOfMarkingUntetheredPlayers,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+            }
+
+            if(P1四连线.Count!=4) {
+
+                return;
+
+            }
+            
+            var tetheredPlayers=P1四连线.Select(o=>o%10).ToList();
+            List<int> untetheredPlayers=[];
+            
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_THD_Order_按THD顺序单排) {
+                
+                for(int i=0;i<accessory.Data.PartyList.Count;++i) {
+
+                    if(!tetheredPlayers.Contains(i)) {
+                        
+                        untetheredPlayers.Add(i);
+                        
+                    }
+                    
+                }
+                
+            }
+                    
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排) {
+                        
+                List<int> temporaryPriority=new List<int>{2,3,0,1,4,5,6,7};
+                        
+                for(int i=0;i<temporaryPriority.Count;++i) {
+
+                    if(!tetheredPlayers.Contains(temporaryPriority[i])) {
+                                
+                        untetheredPlayers.Add(temporaryPriority[i]);
+                                
+                    }
+                            
+                }
+                        
+            }
+                    
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_H1TDH2_Order_按H1TDH2顺序单排) {
+                // The addition of this strat credits to @alexandria_prime. Appreciate!
+                        
+                List<int> temporaryPriority=new List<int>{2,0,1,4,5,6,7,3};
+                        
+                for(int i=0;i<temporaryPriority.Count;++i) {
+
+                    if(!tetheredPlayers.Contains(temporaryPriority[i])) {
+                                
+                        untetheredPlayers.Add(temporaryPriority[i]);
+                                
+                    }
+                            
+                }
+                        
+            }
+                    
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234) {
+                
+                List<int> leftGroup=[1,0,3,2];
+                List<int> rightGroup=[4,5,6,7];
+                
+                leftGroup.RemoveAll(x=>tetheredPlayers.Contains(x));
+                
+                while(leftGroup.Count>2) {
+                    
+                    int p=leftGroup.First();
+                    
+                    leftGroup.Remove(p);
+                    rightGroup.Insert(0,p);
+                    
+                }
+                
+                untetheredPlayers.AddRange(leftGroup);
+                untetheredPlayers.AddRange(rightGroup);
+                
+            }
+                    
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234) {
+                
+                List<int> leftGroup=[3,2,1,0];
+                List<int> rightGroup=[4,5,6,7];
+                
+                leftGroup.RemoveAll(x=>tetheredPlayers.Contains(x));
+                
+                while(leftGroup.Count>2) {
+                    
+                    int p=leftGroup.First();
+                    
+                    leftGroup.Remove(p);
+                    rightGroup.Insert(0,p);
+                    
+                }
+                
+                untetheredPlayers.AddRange(leftGroup);
+                untetheredPlayers.AddRange(rightGroup);
+                
+            }
+
+            if(untetheredPlayers.Count!=4) {
+
+                return;
+
+            }
+            
+            string debugOutput="";
+            
+            for(int i=0;i<untetheredPlayers.Count;++i) {
+                
+                accessory.Method.Mark(accessory.Data.PartyList[(untetheredPlayers[i])],phase1_markForTheUntetheredPlayer_asAConstant[i]);
+                
+                if(Enable_Developer_Mode) {
+
+                    debugOutput+=$"(untetheredPlayers[i])={(untetheredPlayers[i])}\n";
+                    debugOutput+=$"phase1_markForTheUntetheredPlayer_asAConstant[i]={phase1_markForTheUntetheredPlayer_asAConstant[i]}\n";
+                
+                }
+                
+            }
+            
+            if(Enable_Developer_Mode) {
+                
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           {debugOutput}
+
+                                           """);
+                
+            }
+                    
+        }
+        
+        [ScriptMethod(name:"Phase1 Prompt All The Types Of Tethers 提示所有连线的类型",
+            eventType:EventTypeEnum.Tether,
+            eventCondition:["Id:regex:^(00F9|011F)$"])]
+        
+        public void Phase1_Prompt_All_The_Types_Of_Tethers_提示所有连线的类型(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!P1四连线开始) {
+                
+                return;
+                
+            }
+            
+            while(System.Threading.Interlocked.CompareExchange(ref phase1_semaphoreOfTheFinalPrompt,0,1)==0) {
+                
+                System.Threading.Thread.Sleep(1);
+                
+            }
+
+            if(P1四连线.Count!=4) {
+
+                return;
+
+            }
+            
+            var isFireTether=P1四连线.Select(o=>o<20).ToList();
+            
+            if(isFireTether.Count!=4) {
+
+                return;
+
+            }
+
+            string prompt="";
+            
+            if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                
+                prompt+=(isFireTether[0])?"火":"雷";
+
+            }
+            
+            if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                
+                prompt+=(isFireTether[0])?"Fire":"Thunder";
+
+            }
+
+            for(int i=1;i<isFireTether.Count;++i) {
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                
+                    prompt+=(isFireTether[i])?",火":",雷";
+
+                }
+            
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                
+                    prompt+=(isFireTether[i])?", Fire":", Thunder";
+
+                }
+                
+            }
+
+            if(!prompt.Equals("")) {
+
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,13300);
+                    
+                }
+
+                if(Enable_Vanilla_TTS||Enable_Daily_Routines_TTS) {
+                    
+                    accessory.TTS(prompt,Enable_Vanilla_TTS,Enable_Daily_Routines_TTS);
+                    
+                }
+                
+            }
+                    
+        }
+        
         [ScriptMethod(name: "P1_四连线_处理位置", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^(00F9|011F)$"])]
         public void P1_四连线_处理位置(Event @event, ScriptAccessory accessory)
         {
@@ -7933,7 +8604,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         // The ObjectChanged event with the field "Operate" as "Remove" would be triggered almost three seconds after the Drachen Wanderer is gone.
         // If the drawing removal relies on the event, it would be too late and may cause confusion.
         // Here is an optimized method for players with the Wyrmclaw debuff (the red debuff), which is to monitor the StatusRemove events of the Wyrmclaw debuff and acquire the closest Drachen Wanderer.
-        // Obviously, the method would not help if a player with the Wyrmfang debuff (the red debuff) hits a Drachen Wanderer. However, that's already a wipe, so whatever.
+        // Obviously, the method would not help if a player with the Wyrmfang debuff (the blue debuff) hits a Drachen Wanderer. However, that's already a wipe, so whatever.
         // Thanks to Cyf5119 for providing a Dalamud way to detect if the player is dead, so that the method would skip the StatusRemove events caused by death.
 
         public void Phase4_Remove_Hitboxes_And_Explosion_Ranges_Of_Drachen_Wanderers_In_Advance_提前移除圣龙气息碰撞箱与爆炸范围(Event @event, ScriptAccessory accessory) {
