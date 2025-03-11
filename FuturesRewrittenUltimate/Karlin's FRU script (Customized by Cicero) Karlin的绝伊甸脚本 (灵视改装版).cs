@@ -26,12 +26,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.65",
+        version:"0.0.0.66",
         note:notesOfTheScript,
         author:"Karlin")]
     
     public class Futures_Rewritten_Ultimate
     {
+        /*
         const string notesOfTheScript=
         """
         ***** Please read the note here carefully before running the script! *****
@@ -196,6 +197,23 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         And your end will be like Romulus Augustulus.
         
         """;
+        */
+
+        const string notesOfTheScript=
+        """
+        ***** Please read the note here carefully before running the script! *****
+        ***** 请在使用此脚本前仔细阅读此处的说明! *****
+        
+        There is a character limit in the description area of scripts that I'm unable to put the whole description here. Therefore, I moved the script description to the pinned messages on Discord.
+        Navigate to the Discord of Kodakku Assist, find the post "Cicero's Kodakku Assist 个人在线脚本库" in the channel "示例与分享", and finally check "Pinned Messages" for the script description.
+        For PC, "Pinned Messages"is in the upper right corner of the chat bar. For mobile, click the arrow icon in the upper right corner, then there would be a tab "Pins".
+        It would take about 5 minutes to go through the English part of the description. Please make sure you have read it in full before running the script. Thank you!
+        
+        脚本描述区域有字数限制,没法放下整个描述,所以我把描述部分移到了Discord上的标注消息中。
+        去可达鸭的Discord,在"示例与分享"频道中找到帖子"Cicero's Kodakku Assist 个人在线脚本库",选择"已标注消息",就可以查看脚本描述了。
+        对于电脑端,"已标注消息"在聊天栏的右上角。对于手机端,点击右上角的箭头标志,然后可以找到一个名为"标注"的标签页。
+        阅读完中文部分大约需要花费5分钟的时间。请先完整地阅读脚本描述再使用本脚本，谢谢！
+        """;
         
         [UserSetting("-----全局设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Global_Settings_____ { get; set; } = true;
@@ -230,15 +248,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase2_Settings_____ { get; set; } = true;
-        [UserSetting("P2_光爆拉线方式")]
-        public P2LightRampantTetherEmum P2LightRampantTetherDeal { get; set; }
-        [UserSetting("P2_光爆八方站位方式")]
-        public P2LightRampant8DirEmum P2LightRampant8DirSet { get; set; }
+        [UserSetting("P2光之失控(光暴) 初始八方站位")]
+        public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; }
+        [UserSetting("P2光之失控(光暴) 攻略")]
+        public Phase2_Strats_Of_Light_Rampant Phase2_Strat_Of_Light_Rampant { get; set; }
 
         [UserSetting("-----P3设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase3_Settings_____ { get; set; } = true;
-        [UserSetting("P3_分灯方式")]
-        public P3LampEmum P3LampDeal { get; set; }
+        [UserSetting("P3一运 攻略")]
+        public Phase3_Strats_Of_The_First_Half Phase3_Strat_Of_The_First_Half { get; set; }
         [UserSetting("P3二运 攻略")]
         public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
         [UserSetting("P3二运 双分组法的分支")]
@@ -256,11 +274,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P4设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase4_Settings_____ { get; set; } = true;
-        [UserSetting("P4_二运常/慢灯AOE显示时间(ms)")]
-        public uint P4LampDisplayDur { get; set; } =3000;
+        [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
+        public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
         public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4=new(0,1f,1f,1f) };
-        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度")]
+        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
         public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
         [UserSetting("P4二运 光之潮汐(地火)的颜色")]
         public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4=new(1f,1f,0f,1f) };
@@ -277,8 +295,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase5_Settings_____ { get; set; } = true;
-        [UserSetting("P5_地火颜色")]
-        public ScriptColor P5PathColor { get; set; } = new() { V4=new(0,1,1,1)};
+        [UserSetting("P5 璀璨之刃(地火)颜色")]
+        public ScriptColor Phase5_Colour_Of_Fulgent_Blade { get; set; } = new() { V4=new(0,1,1,1)};
         [UserSetting("P5 Boss中轴线的颜色")]
         public ScriptColor Phase5_Colour_Of_The_Boss_Central_Axis { get; set; } = new() { V4=new(1f,0f,0f,1f) };
         [UserSetting("P5 璀璨之刃(地火)后Boss面向人群")]
@@ -429,7 +447,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase1_Standby_Positions_Of_Utopian_Sky {
             
             Swap_OT_And_M2_交换ST与D4,
-            Both_Tanks_Go_To_The_Center_双T去中间
+            Both_Tanks_Go_Center_双T去中间
             
         }
         
@@ -461,28 +479,35 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         public enum Phase1_Strats_Of_Towers {
             
-            Fully_Based_On_The_Priority_完全根据优先级,
-            Fixed_H1H2R2_Priority_For_The_Rest_固定H1H2D4剩余人优先级,
-            Fixed_H1H2R2_The_Rest_Fill_Vacancies_固定H1H2D4剩余人补位
+            Completely_Based_On_Priority_完全根据优先级,
+            Fixed_H1H2R2_Priority_For_Rest_固定H1H2D4剩余人优先级,
+            Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位
             
         }
         
-        public enum P2LightRampant8DirEmum
-        {
-            Normal,
-            TN_Up
+        public enum Phase2_Initial_Protean_Positions_Of_Light_Rampant {
+            
+            Normal_Protean_Tanks_North_And_South_常规八方T在南北,
+            Normal_Protean_Tanks_North_And_East_常规八方T在东北,
+            Supporters_North_MOTH12_蓝绿全部在北MSTH12,
+            Supporters_North_H12MOT_蓝绿全部在北H12MST
+            
         }
-        public enum P2LightRampantTetherEmum
-        {
-            CircleNum,
-            LTeam,
-            AC_Cross,
-            NewGrey9
+        
+        public enum Phase2_Strats_Of_Light_Rampant {
+            
+            Star_Of_David_Japanese_PF_六芒星日服野队法,
+            New_Grey9_新灰九法,
+            Lucrezia_L团法,
+            Deprecated_Circle_Counting_Old_Grey9_已废弃的数圈旧灰九法
+            
         }
 
-        public enum P3LampEmum
-        {
-            MGL
+        public enum Phase3_Strats_Of_The_First_Half {
+            
+            Moogle_莫古力,
+            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
+            
         }
 
         public enum Phase3_Strats_Of_The_Second_Half {
@@ -510,8 +535,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase3_Divisions_Of_The_Zone {
             
             North_To_Southwest_For_The_Left_Group_左组从正北到西南,
-            Northwest_To_South_For_The_Left_Group_左组从西北到正南,
-            Other_Allocations_Are_Work_In_Progress_其他分配方式正在施工中
+            Northwest_To_South_For_The_Left_Group_左组从西北到正南
             
         }
         
@@ -1066,7 +1090,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(Phase1_Standby_Position_Of_Utopian_Sky==Phase1_Standby_Positions_Of_Utopian_Sky.Both_Tanks_Go_To_The_Center_双T去中间) {
+            if(Phase1_Standby_Position_Of_Utopian_Sky==Phase1_Standby_Positions_Of_Utopian_Sky.Both_Tanks_Go_Center_双T去中间) {
 
                 var myPosition=new Vector3(100,0,100);
                 
@@ -2698,7 +2722,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         Vector3 standbyPosition=new Vector3(100,0,100);
                         Vector3 towerPosition=new Vector3(100,0,100);
                         
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fully_Based_On_The_Priority_完全根据优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级) {
                             
                             if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
                             if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0]+ P1塔[1]) standbyPosition = new(eastTower ? 115.98f : 84.02f, 0, 100f);
@@ -2710,7 +2734,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Priority_For_The_Rest_固定H1H2D4剩余人优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Priority_For_Rest_固定H1H2D4剩余人优先级) {
 
                             bool fixedPartyMember=false;
 
@@ -2792,7 +2816,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_The_Rest_Fill_Vacancies_固定H1H2D4剩余人补位) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位) {
                             // The algorithm implementation of this strat was inspired by @abigseal's script.
                             // Therefore, the following code should credit to him. Appreciate!
                             
@@ -3020,7 +3044,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         Vector3 standbyPosition=new Vector3(100,0,100);
                         Vector3 towerPosition=new Vector3(100,0,100);
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fully_Based_On_The_Priority_完全根据优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级) {
                             
                             if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 102f : 98f, 0, 90.81f);
                             if (myTowerIndex > P1塔[0] && myTowerIndex <= P1塔[0] + P1塔[1]) standbyPosition = new(eastTower ? 102f : 98f, 0, 100f);
@@ -3032,7 +3056,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Priority_For_The_Rest_固定H1H2D4剩余人优先级) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Priority_For_Rest_固定H1H2D4剩余人优先级) {
 
                             bool fixedPartyMember=false;
 
@@ -3114,7 +3138,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
 
-                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_The_Rest_Fill_Vacancies_固定H1H2D4剩余人补位) {
+                        if(Phase1_Strat_Of_Towers==Phase1_Strats_Of_Towers.Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位) {
                             // Same as before, the following credits to @abigseal. Appreciate!
                             
                             bool fixedPartyMember=false;
@@ -3976,7 +4000,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (P2LightRampantCircle.Contains(myindex)) return;
                 
                 List<int> tetherGroup = [];
-                if (P2LightRampant8DirSet == P2LightRampant8DirEmum.Normal)
+                if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_And_South_常规八方T在南北)
                 {
                     if (!P2LightRampantCircle.Contains(2)) tetherGroup.Add(2);
                     if (!P2LightRampantCircle.Contains(6)) tetherGroup.Add(6);
@@ -3987,12 +4011,34 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     if (!P2LightRampantCircle.Contains(1)) tetherGroup.Add(1);
                     if (!P2LightRampantCircle.Contains(4)) tetherGroup.Add(4);
                 }
-                if (P2LightRampant8DirSet == P2LightRampant8DirEmum.TN_Up)
+                if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_And_East_常规八方T在东北)
+                {
+                    if (!P2LightRampantCircle.Contains(2)) tetherGroup.Add(2);
+                    if (!P2LightRampantCircle.Contains(6)) tetherGroup.Add(6);
+                    if (!P2LightRampantCircle.Contains(0)) tetherGroup.Add(0);
+                    if (!P2LightRampantCircle.Contains(7)) tetherGroup.Add(7);
+                    if (!P2LightRampantCircle.Contains(3)) tetherGroup.Add(1);
+                    if (!P2LightRampantCircle.Contains(5)) tetherGroup.Add(5);
+                    if (!P2LightRampantCircle.Contains(1)) tetherGroup.Add(3);
+                    if (!P2LightRampantCircle.Contains(4)) tetherGroup.Add(4);
+                }
+                if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_MOTH12_蓝绿全部在北MSTH12)
                 {
                     if (!P2LightRampantCircle.Contains(0)) tetherGroup.Add(0);
                     if (!P2LightRampantCircle.Contains(1)) tetherGroup.Add(1);
                     if (!P2LightRampantCircle.Contains(2)) tetherGroup.Add(2);
                     if (!P2LightRampantCircle.Contains(3)) tetherGroup.Add(3);
+                    if (!P2LightRampantCircle.Contains(7)) tetherGroup.Add(7);
+                    if (!P2LightRampantCircle.Contains(6)) tetherGroup.Add(6);
+                    if (!P2LightRampantCircle.Contains(5)) tetherGroup.Add(5);
+                    if (!P2LightRampantCircle.Contains(4)) tetherGroup.Add(4);
+                }
+                if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_H12MOT_蓝绿全部在北H12MST)
+                {
+                    if (!P2LightRampantCircle.Contains(0)) tetherGroup.Add(2);
+                    if (!P2LightRampantCircle.Contains(1)) tetherGroup.Add(3);
+                    if (!P2LightRampantCircle.Contains(2)) tetherGroup.Add(0);
+                    if (!P2LightRampantCircle.Contains(3)) tetherGroup.Add(1);
                     if (!P2LightRampantCircle.Contains(7)) tetherGroup.Add(7);
                     if (!P2LightRampantCircle.Contains(6)) tetherGroup.Add(6);
                     if (!P2LightRampantCircle.Contains(5)) tetherGroup.Add(5);
@@ -4016,7 +4062,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 Vector3 dealpos = default;
                 Vector3 dealpos2 = default;
-                if (P2LightRampantTetherDeal == P2LightRampantTetherEmum.CircleNum)
+                if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Deprecated_Circle_Counting_Old_Grey9_已废弃的数圈旧灰九法)
                 {
                     var count = 0;
                     if (myindex == 0)
@@ -4076,7 +4122,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         dealpos2 = pd;
                     }
                 }
-                if (P2LightRampantTetherDeal == P2LightRampantTetherEmum.NewGrey9)
+                if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法)
                 {
                     var count = 0;
                     if (myindex == 0)
@@ -4135,7 +4181,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         dealpos2 = pd;
                     }
                 }
-                if (P2LightRampantTetherDeal == P2LightRampantTetherEmum.LTeam)
+                if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Lucrezia_L团法)
                 {
                     dealpos = myGroupIndex switch
                     {
@@ -4155,7 +4201,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         dealpos2 = pc;
                     }
                 }
-                if (P2LightRampantTetherDeal == P2LightRampantTetherEmum.AC_Cross)
+                if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Star_Of_David_Japanese_PF_六芒星日服野队法)
                 {
                     dealpos = myGroupIndex switch
                     {
@@ -7366,7 +7412,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     break;
                 }
             }
-            if (P3LampDeal==P3LampEmum.MGL)
+            if (Phase3_Strat_Of_The_First_Half==Phase3_Strats_Of_The_First_Half.Moogle_莫古力)
             {
                 //短火
                 if (P3FireBuff[myPartyIndex] == 1)
@@ -8097,6 +8143,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             Vector3 normalPos = new(pos.X, 0, 200 - pos.Z);
             Vector3 fastPos = new(100, 0, pos.Z > 100 ? 111 : 89);
+            uint actualDuration=(0<=Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights&&Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights<=13)?
+                                (uint)(1000*Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights):
+                                3000;
 
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P4_时间结晶_灯AOE_快";
@@ -8111,8 +8160,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Scale = new(12);
             dp.Position = normalPos;
             dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 13000 - P4LampDisplayDur;
-            dp.DestoryAt = P4LampDisplayDur;
+            dp.Delay = 13000 - actualDuration;
+            dp.DestoryAt = actualDuration;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
 
             dp = accessory.Data.GetDefaultDrawProperties();
@@ -8120,8 +8169,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Scale = new(12);
             dp.Position = pos;
             dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 18000 - P4LampDisplayDur;
-            dp.DestoryAt = P4LampDisplayDur;
+            dp.Delay = 18000 - actualDuration;
+            dp.DestoryAt = actualDuration;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
         [ScriptMethod(name: "P4_时间结晶_土分摊范围", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2454"])]
@@ -9353,7 +9402,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = "P5_地火";
             dp.Scale = new(80, 5);
             dp.Owner = sid;
-            dp.Color = P5PathColor.V4.WithW(3);
+            dp.Color = Phase5_Colour_Of_Fulgent_Blade.V4.WithW(3);
             dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
 
@@ -9362,7 +9411,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Scale = new(80, 5);
             dp.Offset = new(0,0,-5);
             dp.Owner = sid;
-            dp.Color = P5PathColor.V4.WithW(3);
+            dp.Color = Phase5_Colour_Of_Fulgent_Blade.V4.WithW(3);
             dp.Delay = 7000;
             dp.DestoryAt = 20000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
