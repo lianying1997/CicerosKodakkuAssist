@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.68",
+        version:"0.0.0.69",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -113,6 +113,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Refinements for the entire phase;
          - New strats for Utopian Sky, Fall Of Faith and the towers at the end;
          - Reworked player marking during Fall Of Faith;
+        Phase 2:
+         - Reworked guidance after the knockback during Diamond Dust.
         Phase 3:
          - Guidance of the second half (including the Double Group strat and the Locomotive strat);
         Phase 4:
@@ -126,6 +128,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 整个阶段的精修;
          - 乐园绝技(雾龙),信仰崩塌(四连抓)和最后踩塔都增加了新攻略;
          - 重做信仰崩塌(四连抓)的玩家标记;
+        P2:
+         - 钻石星辰击退后指路重做;
         P3:
          - 二运指路(包括双分组法和车头法);
         P4:
@@ -139,7 +143,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** 已知问题 *****
         
         Phase 2:
-         - Diamond Dust: The guidance during Sinbound Holy is not reliable. This part will be reworked very soon.
          - Mirror,Mirror: The strat on CN (The melee group go to the closest red mirror, and go to the left one if the distances are the same) has not been added yet but it's on the way.
            The current strat is that the melee group always go to the left red mirror. The benchmark for left and right is facing the two red mirrors from the center.
          - Light Rampant: There is a rare chance that the players with 3 stacks of Lightsteep will be guided into the tower. This issue is now being investigated.
@@ -157,7 +160,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
         
         P2:
-         - 钻石星辰: 罪缚神圣(四连分摊)的指路是电椅。很快就会重做这个机制。
          - 镜中奇遇: 国服攻略(近战组去最近的红镜子,若相同则去左侧镜子)尚未适配,但很快就会做。
            现在的攻略是近战组固定去左侧红镜子。这里的左和右指的是从场中面向两面红镜子时的左右。
          - 光之失控(光暴): 有小概率电椅,持有三层过量光的人会被指路去踩塔。正在调查这个问题。
@@ -214,6 +216,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         去可达鸭的Discord,在"示例与分享"频道中找到帖子"Cicero's Kodakku Assist 个人在线脚本库",选择"已标注消息",就可以查看脚本描述了。
         对于电脑端,"已标注消息"在聊天栏的右上角。对于手机端,点击右上角的箭头标志,然后可以找到一个名为"标注"的标签页。
         阅读完中文部分大约需要花费5分钟的时间。请先完整地阅读脚本描述再使用本脚本，谢谢！
+        
+        
+        
+        前211年的春天,罗马各军团长的任职已经接近尾声。十一位军团长成功敲定了十位,唯有西班牙战线的军团长人选让元老们发愁不已。
+        正值此时,一位24岁的年轻人推开了元老院的大门。在64岁的执政官费边和一众元老们惊异地注视下,他顿了顿,自我介绍道:
+        "诸位元老及新进者们,我是普布利乌斯·科尔涅利乌斯·西庇阿。"
+        
         """;
         
         [UserSetting("-----全局设置----- (No actual meaning for this setting/此设置无实际意义)")]
