@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System.Linq;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.DirectoryServices;
 using System.Xml.Linq;
 using CicerosKodakkuAssist.FuturesRewrittenUltimate;
 using Dalamud.Game.ClientState.Objects.Types;
@@ -26,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.67",
+        version:"0.0.0.68",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -248,6 +249,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase2_Settings_____ { get; set; } = true;
+        [UserSetting("P2 击退后攻略")]
+        public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; }
         [UserSetting("P2光之失控(光暴) 初始八方站位")]
         public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; }
         [UserSetting("P2光之失控(光暴) 攻略")]
@@ -345,7 +348,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         List<int> P1塔 = [0, 0, 0, 0];
 
         bool P2DDDircle = false;
-        List<int> P2DDIceDir = [];
+        volatile List<int> Phase2_Positions_Of_Icicle_Impact=[];
+        Vector3 phase2_positionToBeKnockedBack=new Vector3(100,0,100);
+        System.Threading.AutoResetEvent phase2_positionToBeKnockedBackHasBeenDetermined=new System.Threading.AutoResetEvent(false);
         List<int> P2RedMirror = [];
         ulong P2BossId = 0;
         List<int> P2LightRampantCircle = [];
@@ -397,7 +402,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         List<int> P4ClawBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         List<int> P4OtherBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         int P4BlueTether = 0;
-        List<Vector3> P4WhiteCirclePos = [];
         List<Vector3> P4WaterPos = [];
         volatile string phase4_id1OfTheDrachenWanderers="";
         volatile string phase4_id2OfTheDrachenWanderers="";
@@ -489,6 +493,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Normal_Protean_Tanks_North_And_East_常规八方T在东北,
             Supporters_North_MOTH12_蓝绿全部在北MSTH12,
             Supporters_North_H12MOT_蓝绿全部在北H12MST
+            
+        }
+
+        public enum Phase2_Strats_After_Knockback {
+            
+            Always_Clockwise_Unless_Boss_Is_Next_总是顺时针除非Boss在眼前,
+            Always_Counterclockwise_Unless_Boss_Is_Next_总是逆时针除非Boss在眼前,
+            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
         
@@ -592,7 +604,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase1_semaphoreOfTheFinalPrompt=0;
             P1塔 = [0, 0, 0, 0];
 
-            P2DDIceDir.Clear();
+            Phase2_Positions_Of_Icicle_Impact.Clear();
+            phase2_positionToBeKnockedBack=new Vector3(100,0,100);
+            phase2_positionToBeKnockedBackHasBeenDetermined=new System.Threading.AutoResetEvent(false);
 
             phase3_bossId="";
             P3FloorFireDone = false;
@@ -2167,7 +2181,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(Enable_Developer_Mode) {
 
-                    debugOutput+=$"(untetheredPlayers[i])={(untetheredPlayers[i])}\n";
+                    debugOutput+=$"(untetheredPlayers[{i}])={(untetheredPlayers[i])}\n";
                     debugOutput+=$"phase1_markForTheUntetheredPlayer_asAConstant[i]={phase1_markForTheUntetheredPlayer_asAConstant[i]}\n";
                 
                 }
@@ -3306,7 +3320,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             parse = 2.1d;
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
             P2BossId = sid;
-            P2DDIceDir.Clear();
+            Phase2_Positions_Of_Icicle_Impact.Clear();
+            phase2_positionToBeKnockedBack=new Vector3(100,0,100);
+            phase2_positionToBeKnockedBackHasBeenDetermined=new System.Threading.AutoResetEvent(false);
         }
         [ScriptMethod(name: "P2_钻石星尘_钢铁月环记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^((4020[23]))$"],userControl: false)]
         public void P2_钻石星尘_钢铁月环记录(Event @event, ScriptAccessory accessory)
@@ -3418,7 +3434,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             };
             Vector3 epos1 = P2DDDircle ? new(119.5f, 0, 100.0f) : new(103.5f, 0, 100.0f);
             Vector3 epos2 = P2DDDircle ? new(119.5f, 0, 100.0f) : new(108.0f, 0, 100.0f);
-            var dir8 = P2DDIceDir.FirstOrDefault() % 4;
+            var dir8 = Phase2_Positions_Of_Icicle_Impact.FirstOrDefault() % 4;
             var dr = dir8 == 0 || dir8 == 2 ? -1 : 0;
             var dealpos1 = RotatePoint(epos1, new(100, 0, 100), float.Pi / 4 * (rot + dr));
             var dealpos2 = RotatePoint(epos2, new(100, 0, 100), float.Pi / 4 * (rot + dr));
@@ -3453,6 +3469,40 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.DestoryAt = 2500;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
+        
+        [ScriptMethod(name:"Phase2 Frigid Needle 冰针(冰花)",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40199"])]
+        
+        public void Phase2_Frigid_Needle_冰针(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.1) {
+
+                return;
+
+            }
+            
+            Vector3 center=JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
+            var currentProperty = accessory.Data.GetDefaultDrawProperties();
+            
+            for(int i=0;i<=7;++i) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase2_Frigid_Needle_冰针";
+                currentProperty.Scale=new(5,40);
+                currentProperty.Position=center;
+                currentProperty.Color=accessory.Data.DefaultDangerColor;
+                currentProperty.Rotation=(float.Pi/4)*i;
+                currentProperty.Delay=3250;
+                currentProperty.DestoryAt=4000;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+                
+            }
+            
+        }
+        
         [ScriptMethod(name: "P2_钻石星尘_扇形引导位置", eventType: EventTypeEnum.TargetIcon)]
         public void P2_钻石星尘_扇形引导位置(Event @event, ScriptAccessory accessory)
         {
@@ -3475,7 +3525,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 7 => 0,
                 _ => 0,
             };
-            var dir8 = P2DDIceDir.FirstOrDefault() % 4;
+            var dir8 = Phase2_Positions_Of_Icicle_Impact.FirstOrDefault() % 4;
             var dr = dir8 == 0 || dir8 == 2 ? 0 : -1;
             Vector3 epos = P2DDDircle ? new(116.5f, 0, 100f): new(101f, 0, 100f);
             var dealpos = RotatePoint(epos, new(100, 0, 100), float.Pi / 4 * (rot+dr));
@@ -3489,69 +3539,366 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.DestoryAt = 6500;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
-        [ScriptMethod(name: "P2_钻石星尘_九连环记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40198)$"], userControl: false)]
-        public void P2_钻石星尘_九连环记录(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 2.1) return;
-            var pos= JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
-            lock (P2DDIceDir)
-            {
-                P2DDIceDir.Add(PositionTo8Dir(pos, new(100, 0, 100)));
+        
+        [ScriptMethod(name:"Phase2 Record Positions Of Icicle Impact 记录冰柱冲击(冰圈)的位置",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40198"],
+            userControl:false)]
+        
+        public void Phase2_Record_Positions_Of_Icicle_Impact_记录冰柱冲击的位置(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.1) {
+                
+                return;
+                
             }
-        }
-        [ScriptMethod(name: "P2_钻石星尘_击退位置", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^((4020[23]))$", "TargetIndex:1"])]
-        public void P2_钻石星尘_击退位置(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 2.1) return;
-            Task.Delay(2500).ContinueWith(t =>
-            {
-                var nPos = new Vector3(100, 0, 96);
-                var dir8 = P2DDIceDir.FirstOrDefault() % 4;
-                int[] h1Group = [0, 2, 4, 6];
-                var myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-                var isH1Group = h1Group.Contains(myIndex);
+            
+            Vector3 currentPositions=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            int proteanPosition=PositionTo8Dir(currentPositions,new(100,0,100));
+            
+            lock(Phase2_Positions_Of_Icicle_Impact) {
                 
-                var rot = dir8 switch
-                {
-                    0 => 4,
-                    1 => 1,
-                    2 => 2,
-                    3 => 3,
-                };
+                Phase2_Positions_Of_Icicle_Impact.Add(proteanPosition);
                 
-                rot += isH1Group ? 4 : 0;
-                var dealpos = RotatePoint(nPos, new(100, 0, 100), float.Pi / 4 * rot);
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = "P2_钻石星尘_击退位置";
-                dp.Scale = new(2);
-                dp.ScaleMode |= ScaleMode.YByDistance;
-                dp.Owner = accessory.Data.Me;
-                dp.TargetPosition = dealpos;
-                dp.Color = accessory.Data.DefaultSafeColor;
-                dp.DestoryAt = 6000;
-                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-            });
+            }
+
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           currentPositions={currentPositions}
+                                           proteanPosition={proteanPosition}
+                                           
+                                           """);
+
+            }
             
         }
-        [ScriptMethod(name: "P2_钻石星尘_连续剑分身位置", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^40208$", "TargetIndex:1"])]
-        public void P2_钻石星尘_连续剑分身位置(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 2.1) return;
-            var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+        
+        [ScriptMethod(name:"Phase2 Determine The Position To Be Knocked Back 确定击退位置",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40199"],
+            userControl:false)]
+        
+        public void Phase2_Determine_The_Position_To_Be_Knocked_Back_确定击退位置(Event @event, ScriptAccessory accessory) {
 
-            Vector3 dealpos = new(100 + (pos.X - 100) * 1.4f, 0, 100 + (pos.Z - 100) * 1.4f);
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P2_钻石星尘_连续剑分身位置";
-            dp.Scale = new(2);
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Owner = accessory.Data.Me;
-            dp.TargetPosition = dealpos;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.DestoryAt = 9000;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            if(parse!=2.1) {
+                
+                return;
+                
+            }
 
+            if(Phase2_Positions_Of_Icicle_Impact.Count==0) {
+
+                return;
+
+            }
+            
+            int firstIcicleImpact=Phase2_Positions_Of_Icicle_Impact.First()%4;
+            bool inStGroup=((int[])[1,3,5,7]).Contains(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+            int rotation=firstIcicleImpact switch {
+                0 => 2,
+                1 => -1,
+                2 => 0,
+                3 => 1,
+            };
+            rotation+=((inStGroup)?(4):(0));
+            
+            phase2_positionToBeKnockedBack=RotatePoint(new Vector3(95,0,100),new(100,0,100),float.Pi/4*rotation);
+            
+            System.Threading.Thread.MemoryBarrier();
+            
+            phase2_positionToBeKnockedBackHasBeenDetermined.Set();
+            
+        }
+        
+        [ScriptMethod(name:"Phase2 Guidance Of The Position To Be Knocked Back 击退位置指路",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40199"])]
+        
+        public void Phase2_Guidance_Of_The_Position_To_Be_Knocked_Back_击退位置指路(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.1) {
+                
+                return;
+                
+            }
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            phase2_positionToBeKnockedBackHasBeenDetermined.WaitOne();
+            
+            System.Threading.Thread.MemoryBarrier();
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Guidance_Of_The_Position_To_Be_Knocked_Back_击退位置指路";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.TargetPosition=phase2_positionToBeKnockedBack;
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.DestoryAt=4500;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+            
+        }
+        
+        [ScriptMethod(name:"Phase2_Guidance_After_Knockback_击退后指路",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40208"])]
+        
+        public void Phase2_Guidance_After_Knockback_击退后指路(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.1) {
+                
+                return;
+                
+            }
+            
+            Vector3 positionOfTheReflection=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+            int proteanPositionOfTheReflection=PositionTo8Dir(positionOfTheReflection,new(100,0,100));
+            int proteanPositionOfTheCurrentGroup=PositionTo8Dir(phase2_positionToBeKnockedBack,new(100,0,100));
+            int proteanPositionOfTheOppositeGroup=phase2_getOppositeProteanPosition(proteanPositionOfTheCurrentGroup);
+            bool propertyHasBeenConfirmed=false;
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            string prompt="";
+
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           positionOfTheReflection={positionOfTheReflection}
+                                           proteanPositionOfTheReflection={proteanPositionOfTheReflection}
+                                           proteanPositionOfTheCurrentGroup={proteanPositionOfTheCurrentGroup}
+                                           proteanPositionOfTheOppositeGroup={proteanPositionOfTheOppositeGroup}
+                                           
+                                           """);
+
+            }
+            
+            currentProperty.Name="Phase2_Guidance_After_Knockback_击退后指路";
+            currentProperty.Scale=new(20);
+            currentProperty.InnerScale=new(19);
+            currentProperty.Position=new Vector3(100, 0, 100);
+            currentProperty.Rotation=float.Pi-(float.Pi/4*proteanPositionOfTheCurrentGroup);
+            currentProperty.Color=accessory.Data.DefaultSafeColor.WithW(25f);
+            currentProperty.DestoryAt=9000;
+
+            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Always_Clockwise_Unless_Boss_Is_Next_总是顺时针除非Boss在眼前) {
+
+                if(proteanPositionOfTheCurrentGroup+1==proteanPositionOfTheReflection) {
+
+                    currentProperty.Radian=float.Pi/2-float.Pi/18;
+                    currentProperty.Rotation+=(float.Pi/2-float.Pi/18)/2;
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="逆时针80度,遇见对组";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="Counterclockwise 80 degrees, encountering the opposite group";
+
+                    }
+
+                }
+
+                else {
+
+                    if(proteanPositionOfTheOppositeGroup+1==proteanPositionOfTheReflection) {
+                        
+                        currentProperty.Radian=float.Pi/2-float.Pi/18;
+                        currentProperty.Rotation+=-((float.Pi/2-float.Pi/18)/2);
+                        
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            prompt="顺时针80度,遇见对组";
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            prompt="Clockwise 80 degrees, encountering the opposite group";
+
+                        }
+                        
+                    }
+
+                    else {
+                        
+                        int rotationOfThePath=1;
+
+                        while((proteanPositionOfTheCurrentGroup+rotationOfThePath)%8!=proteanPositionOfTheReflection
+                              &&
+                              (proteanPositionOfTheCurrentGroup+rotationOfThePath)%8!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
+                        
+                            ++rotationOfThePath;
+                        
+                        }
+                    
+                        currentProperty.Radian=float.Pi/4*rotationOfThePath;
+                        currentProperty.Rotation+=-((float.Pi/4*rotationOfThePath)/2);
+
+                        rotationOfThePath*=45;
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            prompt=$"顺时针{rotationOfThePath}度";
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            prompt=$"Clockwise {rotationOfThePath} degrees";
+
+                        }
+                        
+                    }
+
+                }
+
+                propertyHasBeenConfirmed=true;
+
+            }
+            
+            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Always_Counterclockwise_Unless_Boss_Is_Next_总是逆时针除非Boss在眼前) {
+
+                if(proteanPositionOfTheCurrentGroup-1==proteanPositionOfTheReflection) {
+
+                    currentProperty.Radian=float.Pi/2-float.Pi/18;
+                    currentProperty.Rotation+=-((float.Pi/2-float.Pi/18)/2);
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="顺时针80度,遇见对组";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="Clockwise 80 degrees, encountering the opposite group";
+
+                    }
+
+                }
+
+                else {
+
+                    if(proteanPositionOfTheOppositeGroup-1==proteanPositionOfTheReflection) {
+                        
+                        currentProperty.Radian=float.Pi/2-float.Pi/18;
+                        currentProperty.Rotation+=(float.Pi/2-float.Pi/18)/2;
+                        
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            prompt="逆时针80度,遇见对组";
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            prompt="Counterclockwise 80 degrees, encountering the opposite group";
+
+                        }
+                        
+                    }
+
+                    else {
+                        
+                        int rotationOfThePath=1;
+
+                        while((proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8!=proteanPositionOfTheReflection
+                              &&
+                              (proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
+                        
+                            ++rotationOfThePath;
+                        
+                        }
+                    
+                        currentProperty.Radian=float.Pi/4*rotationOfThePath;
+                        currentProperty.Rotation+=(float.Pi/4*rotationOfThePath)/2;
+
+                        rotationOfThePath*=45;
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            prompt=$"逆时针{rotationOfThePath}度";
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            prompt=$"Counterclockwise {rotationOfThePath} degrees";
+
+                        }
+                        
+                    }
+
+                }
+
+                propertyHasBeenConfirmed=true;
+
+            }
+
+            if(propertyHasBeenConfirmed) {
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Donut,currentProperty);
+                
+            }
+
+            if(!prompt.Equals("")) {
+
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,9000);
+                    
+                }
+
+                if(Enable_Vanilla_TTS||Enable_Daily_Routines_TTS) {
+                    
+                    accessory.TTS(prompt,Enable_Vanilla_TTS,Enable_Daily_Routines_TTS);
+                    
+                }
+                
+            }
+            
+            if(!ParseObjectId(@event["SourceId"], out var sourceId)) {
+                
+                return;
+                
+            }
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Central_Axis_Of_Oracles_Reflection_神使的倒影中轴线";
+            currentProperty.Scale=new(0.5f,80f);
+            currentProperty.Owner=sourceId;
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
+            currentProperty.DestoryAt=9000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
 
         }
+
+        private int phase2_getOppositeProteanPosition(int currentProteanPosition) {
+
+            return currentProteanPosition switch{
+                0 => 4,
+                1 => 5,
+                2 => 6,
+                3 => 7,
+                4 => 0,
+                5 => 1,
+                6 => 2,
+                7 => 3,
+                _ => currentProteanPosition
+            };
+
+        }
+        
         [ScriptMethod(name: "P2_钻石星尘_连续剑范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4019[34]$"])]
         public void P2_钻石星尘_连续剑范围(Event @event, ScriptAccessory accessory)
         {
@@ -8056,7 +8403,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             parse = 4.3d;
             P4ClawBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             P4OtherBuff = [0, 0, 0, 0, 0, 0, 0, 0];
-            P4WhiteCirclePos = [];
             P4WaterPos = [];
             phase4_id1OfTheDrachenWanderers="";
             phase4_id2OfTheDrachenWanderers="";
@@ -8424,18 +8770,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 3000;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
-            }
-        }
-        [ScriptMethod(name: "P4_时间结晶_白圈位置指示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40241", "TargetIndex:1"])]
-        public void P4_时间结晶_白圈位置指示(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 4.3) return;
-            var pos = JsonConvert.DeserializeObject<Vector3>(@event["EffectPosition"]);
-            lock (P4WhiteCirclePos)
-            {
-                P4WhiteCirclePos.Add(pos);
-                if (P4WhiteCirclePos.Count == 1 || P4WhiteCirclePos.Count == 3) return;
-
             }
         }
         [ScriptMethod(name: "P4_时间结晶_放回返位置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40251"])]
