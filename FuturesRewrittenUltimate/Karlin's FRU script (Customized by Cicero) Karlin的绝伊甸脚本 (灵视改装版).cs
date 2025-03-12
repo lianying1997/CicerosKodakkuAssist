@@ -26,7 +26,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.66",
+        version:"0.0.0.67",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -77,7 +77,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         禁止1和2:前往北侧的被连线玩家。数字就是抓人的轮数。
         锁链1和2:前往南侧的被连线玩家。数字就是抓人的轮数。
         攻击1和2:前往北侧的闲人。数字1是优先级更高的。
-        攻击1和2:前往南侧的闲人。数字3是优先级更高的。
+        攻击3和4:前往南侧的闲人。数字3是优先级更高的。
         小队里只能有一个玩家启用此选项,并且同时也不能启用其他科技的标记。
         (假设优先级为 MT ST H1 H2 D1 D2 D3 D4, 那么高优先级指的是:
            高优先级 <- MT ST H1 H2 D1 D2 D3 D4 -> 低优先级)
@@ -323,8 +323,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         bool P1转轮召雷 = false;
         List<int> P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
         volatile int phase1_timesBurnishedGloryWasCast=0;
-        List<int> P1四连线 = [];
-        bool P1四连线开始 = false;
+        volatile List<int> phase1_tetheredPlayersDuringFallOfFaith=[];
+        volatile bool phase1_isInFallOfFaith=false;
         List<MarkType> phase1_markForTheTetheredPlayer_asAConstant=[
             MarkType.Stop1,
             MarkType.Bind1,
@@ -337,7 +337,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             MarkType.Attack3,
             MarkType.Attack4
         ];
-        volatile int phase1_numberOfTetheredPlayersHasBeenMarked=0;
         volatile int phase1_semaphoreOfMarkingTetheredPlayers=0;
         volatile int phase1_semaphoreOfShortPrompts=0;
         volatile int phase1_semaphoreOfDrawing=0;
@@ -389,7 +388,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Vector3 phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
         Vector3 phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
         Vector3 phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
-        Vector3 phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
         Vector3 phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         
         ulong P4FragmentId;
@@ -585,9 +583,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             P1雾龙计数 = 0;
             P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
             phase1_timesBurnishedGloryWasCast=0;
-            P1四连线 = [];
-            P1四连线开始 = false;
-            phase1_numberOfTetheredPlayersHasBeenMarked=0;
+            phase1_tetheredPlayersDuringFallOfFaith = [];
+            phase1_isInFallOfFaith = false;
             phase1_semaphoreOfMarkingTetheredPlayers=0;
             phase1_semaphoreOfShortPrompts=0;
             phase1_semaphoreOfDrawing=0;
@@ -623,7 +620,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
             phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
-            phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
             phase4_id1OfTheDrachenWanderers="";
@@ -1318,15 +1314,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
 
-            for(int i=1;i<=3;++i) {
+            for(int i=6;i<=34;i+=7) {
                 
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
             
                 currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
-                currentProperty.Scale=new(2f,7f);
+                currentProperty.Scale=new(1f,1.618f);
                 currentProperty.Owner=sourceId;
                 currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
-                currentProperty.Offset=new Vector3(0,0,-(i*10));
+                currentProperty.Offset=new Vector3(-5.382f,0,-i);
                 currentProperty.Rotation=float.Pi/2;
                 currentProperty.Delay=4000;
                 currentProperty.DestoryAt=5750;
@@ -1336,10 +1332,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 currentProperty=accessory.Data.GetDefaultDrawProperties();
             
                 currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
-                currentProperty.Scale=new(2f,7f);
+                currentProperty.Scale=new(1f,1.618f);
                 currentProperty.Owner=sourceId;
                 currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
-                currentProperty.Offset=new Vector3(0,0,-(i*10));
+                currentProperty.Offset=new Vector3(5.382f,0,-i);
                 currentProperty.Rotation=-(float.Pi/2);
                 currentProperty.Delay=4000;
                 currentProperty.DestoryAt=5750;
@@ -1709,12 +1705,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        [ScriptMethod(name:"Phase1 Mark Control 标记控制",
+        [ScriptMethod(name:"Phase1 Fall Of Faith Control 信仰崩塌(四连抓)控制",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:regex:^(40170)$"],
             userControl:false)]
         
-        public void Phase1_Mark_Control_标记控制(Event @event, ScriptAccessory accessory) {
+        public void Phase1_Fall_Of_Faith_Control_信仰崩塌控制(Event @event, ScriptAccessory accessory) {
 
             if(parse!=1d) {
                 
@@ -1722,7 +1718,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
+            System.Threading.Thread.MemoryBarrier();
+            
             ++phase1_timesBurnishedGloryWasCast;
+            
+            System.Threading.Thread.MemoryBarrier();
 
             if(Enable_Developer_Mode) {
 
@@ -1738,9 +1738,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 case 1: {
                     
-                    phase1_numberOfTetheredPlayersHasBeenMarked=0;
-                    
-                    P1四连线.Clear();
+                    phase1_tetheredPlayersDuringFallOfFaith.Clear();
                     
                     if(Phase1_Mark_Players_During_Fall_Of_Faith) {
                         
@@ -1753,8 +1751,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     phase1_semaphoreOfDrawing=0;
                     phase1_semaphoreOfMarkingUntetheredPlayers=0;
                     phase1_semaphoreOfTheFinalPrompt=0;
+                    
+                    System.Threading.Thread.MemoryBarrier();
 
-                    P1四连线开始=true;
+                    phase1_isInFallOfFaith=true;
                     
                     break;
 
@@ -1762,11 +1762,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 case 2: {
                     
-                    P1四连线开始=false;
+                    phase1_isInFallOfFaith=false;
                     
-                    phase1_numberOfTetheredPlayersHasBeenMarked=0;
+                    System.Threading.Thread.MemoryBarrier();
                     
-                    P1四连线.Clear();
+                    phase1_tetheredPlayersDuringFallOfFaith.Clear();
                     
                     if(Phase1_Mark_Players_During_Fall_Of_Faith) {
                         
@@ -1786,9 +1786,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 default: {
                     
-                    phase1_numberOfTetheredPlayersHasBeenMarked=0;
-                    
-                    P1四连线.Clear();
+                    phase1_tetheredPlayersDuringFallOfFaith.Clear();
                     
                     if(Phase1_Mark_Players_During_Fall_Of_Faith) {
                         
@@ -1811,20 +1809,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
         
-        [ScriptMethod(name: "P1_四连线_连线记录器", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^(00F9|011F)$"],userControl:false)]
-        public void P1_四连线_连线记录器(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 1d) return;
-            if (!P1四连线开始) return;
-            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            var index= accessory.Data.PartyList.IndexOf(((uint)tid));
-            var id = @event["Id"] == "00F9" ? 10 : 20;
-            P1四连线.Add(id + index);
+        [ScriptMethod(name:"Phase1 Record Tethered Players 记录被连线的玩家",
+            eventType:EventTypeEnum.Tether,
+            eventCondition:["Id:regex:^(00F9|011F)$"],
+            userControl:false)]
+        
+        public void Phase1_Record_Tethered_Players_记录被连线的玩家(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!phase1_isInFallOfFaith) {
+                
+                return;
+                
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+                
+                return;
+                
+            }
+            
+            int targetIndex=accessory.Data.PartyList.IndexOf(((uint)targetId));
+            var tetherType=(@event["Id"].Equals("00F9"))?(10):(20);
+            // 10 stands for a fire tether.
+            
+            System.Threading.Thread.MemoryBarrier();
+            
+            phase1_tetheredPlayersDuringFallOfFaith.Add(tetherType + targetIndex);
+            
+            System.Threading.Thread.MemoryBarrier();
+            
             phase1_semaphoreOfMarkingTetheredPlayers=1;
             phase1_semaphoreOfShortPrompts=1;
             phase1_semaphoreOfDrawing=1;
             phase1_semaphoreOfMarkingUntetheredPlayers=1;
             phase1_semaphoreOfTheFinalPrompt=1;
+            
         }
         
         [ScriptMethod(name:"Phase1 Mark Tethered Players 标记被连线的玩家",
@@ -1846,16 +1871,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(!P1四连线开始) {
+            if(!phase1_isInFallOfFaith) {
                 
                 return;
                 
-            }
-            
-            if(phase1_numberOfTetheredPlayersHasBeenMarked<0||phase1_numberOfTetheredPlayersHasBeenMarked>3) {
-
-                return;
-
             }
             
             while(System.Threading.Interlocked.CompareExchange(ref phase1_semaphoreOfMarkingTetheredPlayers,0,1)==0) {
@@ -1864,17 +1883,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            int targetIndex=(P1四连线.Last()%10);
-            MarkType targetMark=phase1_markForTheTetheredPlayer_asAConstant[phase1_numberOfTetheredPlayersHasBeenMarked];
+            System.Threading.Thread.MemoryBarrier();
+
+            int copyOfTheCount=phase1_tetheredPlayersDuringFallOfFaith.Count;
+            int targetIndex=(phase1_tetheredPlayersDuringFallOfFaith.Last()%10);
+            MarkType targetMark=phase1_markForTheTetheredPlayer_asAConstant[copyOfTheCount-1];
                 
             accessory.Method.Mark(accessory.Data.PartyList[targetIndex],targetMark);
-            
-            ++phase1_numberOfTetheredPlayersHasBeenMarked;
 
             if(Enable_Developer_Mode) {
                 
                 accessory.Method.SendChat($"""
                                            /e 
+                                           copyOfTheCount-1={copyOfTheCount-1}
                                            targetIndex={targetIndex}
                                            targetMark={targetMark}
                                            
@@ -1896,7 +1917,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(!P1四连线开始) {
+            if(!phase1_isInFallOfFaith) {
                 
                 return;
                 
@@ -1907,10 +1928,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
-            if(1<=P1四连线.Count&&P1四连线.Count<=3) {
+            if(1<=phase1_tetheredPlayersDuringFallOfFaith.Count&&phase1_tetheredPlayersDuringFallOfFaith.Count<=3) {
 
-                bool isFireTether=(P1四连线.Last()<20);
+                bool isFireTether=(phase1_tetheredPlayersDuringFallOfFaith.Last()<20);
                 string prompt="";
 
                 if(isFireTether) {
@@ -1977,7 +2000,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(!P1四连线开始) {
+            if(!phase1_isInFallOfFaith) {
                 
                 return;
                 
@@ -1989,7 +2012,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
-            bool isFireTether=(P1四连线.Last()<20);
+            System.Threading.Thread.MemoryBarrier();
+            
+            bool isFireTether=(phase1_tetheredPlayersDuringFallOfFaith.Last()<20);
             var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
             if(isFireTether) {
@@ -1998,13 +2023,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
                 currentProperty.Name="Phase1_Range_Of_The_Fire_Tether_火连线的范围";
                 currentProperty.Scale=new(60);
-                currentProperty.Radian=float.Pi/3*2;
-                currentProperty.Owner=accessory.Data.PartyList[(P1四连线.Last()%10)];
+                currentProperty.Radian=float.Pi/2;
+                currentProperty.Owner=accessory.Data.PartyList[(phase1_tetheredPlayersDuringFallOfFaith.Last()%10)];
                 currentProperty.TargetResolvePattern=PositionResolvePatternEnum.PlayerNearestOrder;
                 currentProperty.TargetOrderIndex=1;
                 currentProperty.Color=accessory.Data.DefaultDangerColor;
-                currentProperty.Delay=9000;
-                currentProperty.DestoryAt=4300;
+                currentProperty.Delay=9500;
+                currentProperty.DestoryAt=3800;
                     
                 accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
                 
@@ -2018,13 +2043,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
                     currentProperty.Name="Phase1_Range_Of_The_Thunder_Tether_雷连线的范围";
                     currentProperty.Scale=new(60);
-                    currentProperty.Radian=float.Pi/2;
-                    currentProperty.Owner=accessory.Data.PartyList[(P1四连线.Last()%10)];
+                    currentProperty.Radian=float.Pi/3*2;
+                    currentProperty.Owner=accessory.Data.PartyList[(phase1_tetheredPlayersDuringFallOfFaith.Last()%10)];
                     currentProperty.TargetResolvePattern=PositionResolvePatternEnum.PlayerNearestOrder;
                     currentProperty.TargetOrderIndex=i;
                     currentProperty.Color=accessory.Data.DefaultDangerColor;
-                    currentProperty.Delay=9000;
-                    currentProperty.DestoryAt=4300;
+                    currentProperty.Delay=9500;
+                    currentProperty.DestoryAt=3800;
                     
                     accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
                     
@@ -2053,7 +2078,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(!P1四连线开始) {
+            if(!phase1_isInFallOfFaith) {
                 
                 return;
                 
@@ -2064,17 +2089,21 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
-            if(P1四连线.Count!=4) {
+            if(phase1_tetheredPlayersDuringFallOfFaith.Count!=4) {
 
                 return;
 
             }
             
-            var tetheredPlayers=P1四连线.Select(o=>o%10).ToList();
+            var tetheredPlayers=phase1_tetheredPlayersDuringFallOfFaith.Select(o=>o%10).ToList();
             List<int> untetheredPlayers=[];
             
-            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_THD_Order_按THD顺序单排) {
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_THD_Order_按THD顺序单排
+               ||
+               Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234) {
                 
                 for(int i=0;i<accessory.Data.PartyList.Count;++i) {
 
@@ -2088,7 +2117,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
                     
-            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排) {
+            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排
+               ||
+               Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234) {
+                // The addition of this strat credits to @alexandria_prime. Appreciate!
                         
                 List<int> temporaryPriority=new List<int>{2,3,0,1,4,5,6,7};
                         
@@ -2119,48 +2151,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             
                 }
                         
-            }
-                    
-            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234) {
-                
-                List<int> leftGroup=[1,0,3,2];
-                List<int> rightGroup=[4,5,6,7];
-                
-                leftGroup.RemoveAll(x=>tetheredPlayers.Contains(x));
-                
-                while(leftGroup.Count>2) {
-                    
-                    int p=leftGroup.First();
-                    
-                    leftGroup.Remove(p);
-                    rightGroup.Insert(0,p);
-                    
-                }
-                
-                untetheredPlayers.AddRange(leftGroup);
-                untetheredPlayers.AddRange(rightGroup);
-                
-            }
-                    
-            if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234) {
-                
-                List<int> leftGroup=[3,2,1,0];
-                List<int> rightGroup=[4,5,6,7];
-                
-                leftGroup.RemoveAll(x=>tetheredPlayers.Contains(x));
-                
-                while(leftGroup.Count>2) {
-                    
-                    int p=leftGroup.First();
-                    
-                    leftGroup.Remove(p);
-                    rightGroup.Insert(0,p);
-                    
-                }
-                
-                untetheredPlayers.AddRange(leftGroup);
-                untetheredPlayers.AddRange(rightGroup);
-                
             }
 
             if(untetheredPlayers.Count!=4) {
@@ -2208,7 +2198,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(!P1四连线开始) {
+            if(!phase1_isInFallOfFaith) {
                 
                 return;
                 
@@ -2219,14 +2209,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
-            if(P1四连线.Count!=4) {
+            if(phase1_tetheredPlayersDuringFallOfFaith.Count!=4) {
 
                 return;
 
             }
             
-            var isFireTether=P1四连线.Select(o=>o<20).ToList();
+            var isFireTether=phase1_tetheredPlayersDuringFallOfFaith.Select(o=>o<20).ToList();
             
             if(isFireTether.Count!=4) {
 
@@ -2285,7 +2277,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name: "P1_四连线_处理位置", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^(00F9|011F)$"])]
         public void P1_四连线_处理位置(Event @event, ScriptAccessory accessory)
         {
-            if (!P1四连线开始) return;
+            if (!phase1_isInFallOfFaith) return;
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             var dis = 2.5f;//距离点名人
             var far = 5f;//距离boss
@@ -2301,7 +2293,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Vector3 t4p1 = new(100, 0, 100 + far + dis);
                 Vector3 t4p2 = new(100, 0, 100 + far);
                 
-                if (P1四连线.Count ==1 && tid==accessory.Data.Me)
+                if (phase1_tetheredPlayersDuringFallOfFaith.Count ==1 && tid==accessory.Data.Me)
                 {
                     var dp = accessory.Data.GetDefaultDrawProperties();
                     dp.Name = "P1_四连线_线1处理位置1";
@@ -2324,7 +2316,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 6000;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
-                if (P1四连线.Count == 2 && tid == accessory.Data.Me)
+                if (phase1_tetheredPlayersDuringFallOfFaith.Count == 2 && tid == accessory.Data.Me)
                 {
                     var dp = accessory.Data.GetDefaultDrawProperties();
                     dp.Name = "P1_四连线_线2处理位置1";
@@ -2347,7 +2339,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
-                if (P1四连线.Count == 3 && tid == accessory.Data.Me)
+                if (phase1_tetheredPlayersDuringFallOfFaith.Count == 3 && tid == accessory.Data.Me)
                 {
                     var dp = accessory.Data.GetDefaultDrawProperties();
                     dp.Name = "P1_四连线_线3处理位置1";
@@ -2370,7 +2362,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 6000;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
-                if (P1四连线.Count == 4 && tid == accessory.Data.Me)
+                if (phase1_tetheredPlayersDuringFallOfFaith.Count == 4 && tid == accessory.Data.Me)
                 {
                     var dp = accessory.Data.GetDefaultDrawProperties();
                     dp.Name = "P1_四连线_线4处理位置1";
@@ -2393,12 +2385,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
-                if (P1四连线.Count == 4)
+                if (phase1_tetheredPlayersDuringFallOfFaith.Count == 4)
                 {
-                    var tehterObjIndex = P1四连线.Select(o => o % 10).ToList();
-                    var tehterIsFire = P1四连线.Select(o => o < 20).ToList();
+                    var tehterObjIndex = phase1_tetheredPlayersDuringFallOfFaith.Select(o => o % 10).ToList();
+                    var tehterIsFire = phase1_tetheredPlayersDuringFallOfFaith.Select(o => o < 20).ToList();
                     List<int> idleObjIndex = [];
-                    if (Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_THD_Order_按THD顺序单排)
+                    if (Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_THD_Order_按THD顺序单排
+                        ||
+                        Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234)
                     {
                         for (int i = 0; i < accessory.Data.PartyList.Count; i++)
                         {
@@ -2407,7 +2401,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         }
                     }
                     
-                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排) {
+                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排
+                       ||
+                       Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234) {
                         // The addition of this strat credits to @alexandria_prime. Appreciate!
                         
                         List<int> htdOrder=new List<int>{2,3,0,1,4,5,6,7};
@@ -2439,36 +2435,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             
                         }
                         
-                    }
-                    
-                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234)
-                    {
-                        List<int> group1 = [1, 0, 3, 2];
-                        List<int> group2 = [4, 5, 6, 7];
-                        group1.RemoveAll(x => tehterObjIndex.Contains(x));
-                        while (group1.Count>2)
-                        {
-                            var m = group1.First();
-                            group1.Remove(m);
-                            group2.Insert(0,m);
-                        }
-                        idleObjIndex.AddRange(group1);
-                        idleObjIndex.AddRange(group2);
-                    }
-                    
-                    if(Phase1_Strat_Of_Fall_Of_Faith==Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234)
-                    {
-                        List<int> group1 = [3, 2, 1, 0];
-                        List<int> group2 = [4, 5, 6, 7];
-                        group1.RemoveAll(x => tehterObjIndex.Contains(x));
-                        while (group1.Count>2)
-                        {
-                            var m = group1.First();
-                            group1.Remove(m);
-                            group2.Insert(0,m);
-                        }
-                        idleObjIndex.AddRange(group1);
-                        idleObjIndex.AddRange(group2);
                     }
                     
                     if (!idleObjIndex.Contains(myindex)) return;
@@ -2657,15 +2623,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
                 accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
 
-                for(int i=-1;i<=1;++i) {
+                for(int i=-4;i<=4;++i) {
                 
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
             
                     currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
-                    currentProperty.Scale=new(2f,7f);
+                    currentProperty.Scale=new(1f,1.618f);
                     currentProperty.Owner=sourceId;
                     currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
-                    currentProperty.Offset=new Vector3(0,0,-(i*10));
+                    currentProperty.Offset=new Vector3(-5.382f,0,(float)(-(i*4.595d)));
                     currentProperty.Rotation=float.Pi/2;
                     currentProperty.DestoryAt=8200;
             
@@ -2674,10 +2640,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     currentProperty=accessory.Data.GetDefaultDrawProperties();
             
                     currentProperty.Name="Phase1_Knockback_Direction_Of_Fire_Burnt_Strike_火燃烧击击退方向";
-                    currentProperty.Scale=new(2f,7f);
+                    currentProperty.Scale=new(1f,1.618f);
                     currentProperty.Owner=sourceId;
                     currentProperty.Color=Phase1_Colour_Of_Burnt_Strike_Characteristics.V4.WithW(1f);
-                    currentProperty.Offset=new Vector3(0,0,-(i*10));
+                    currentProperty.Offset=new Vector3(5.382f,0,(float)(-(i*4.595d)));
                     currentProperty.Rotation=-(float.Pi/2);
                     currentProperty.DestoryAt=8200;
             
@@ -4970,7 +4936,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
             phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
-            phase3_bossPositionAfterDarkestDance=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         }
         
@@ -5042,8 +5007,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
             ++phase3_numberOfDarkWaterIiiHasBeenProcessed;
+            
+            System.Threading.Thread.MemoryBarrier();
 
             if(Enable_Developer_Mode) {
 
@@ -5077,6 +5046,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
             
             if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法) {
                 
@@ -5315,8 +5286,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 return;
 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
             ++phase3_roundOfDarkWaterIii;
+            
+            System.Threading.Thread.MemoryBarrier();
 
             phase3_rangeSemaphoreOfDarkWaterIii=1;
             phase3_guidanceSemaphoreOfDarkWaterIii=1;
@@ -5335,6 +5310,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
             Phase3_Types_Of_Dark_Water_III currentType=Phase3_Types_Of_Dark_Water_III.NONE;
 
@@ -5594,6 +5571,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
             if(phase3_numberOfDarkWaterIiiHasBeenProcessed!=6) {
 
@@ -8691,7 +8670,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
+            System.Threading.Thread.MemoryBarrier();
+            
             ++phase4_timesTheWyrmclawDebuffWasRemoved;
+            
+            System.Threading.Thread.MemoryBarrier();
 
             if(phase4_timesTheWyrmclawDebuffWasRemoved<3||phase4_timesTheWyrmclawDebuffWasRemoved>4) {
 
@@ -9362,12 +9345,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         public void Phase5_Initialization_初始化(Event @event, ScriptAccessory accessory) {
             
-            isInPhase5=true;
-            
             phase5_bossId=@event["SourceId"];
             phase5_hasAcquiredTheFirstTower=false;
             phase5_indexOfTheFirstTower="";
             phase5_hasConfirmedTheInitialPosition=false;
+            
+            System.Threading.Thread.MemoryBarrier();
+            
+            isInPhase5=true;
 
         }
         
@@ -9379,6 +9364,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void Phase5_Destruction_析构(Event @event, ScriptAccessory accessory) {
 
             isInPhase5=false;
+            
+            System.Threading.Thread.MemoryBarrier();
             
             phase5_bossId="";
             phase5_hasAcquiredTheFirstTower=false;
@@ -9780,6 +9767,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 System.Threading.Thread.Sleep(1);
                 
             }
+            
+            System.Threading.Thread.MemoryBarrier();
 
             Vector3 positionOfTheFirstTower=new Vector3(0,0,0);
 
