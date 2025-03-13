@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.70",
+        version:"0.0.0.71",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -115,6 +115,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Reworked player marking during Fall Of Faith;
         Phase 2:
          - Reworked guidance after the knockback during Diamond Dust.
+         - Reworked guidance of Mirror, Mirror.
         Phase 3:
          - Guidance of the second half (including the Double Group strat and the Locomotive strat);
         Phase 4:
@@ -130,6 +131,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 重做信仰崩塌(四连抓)的玩家标记;
         P2:
          - 钻石星辰击退后指路重做;
+         - 镜中奇遇指路重做;
         P3:
          - 二运指路(包括双分组法和车头法);
         P4:
@@ -143,8 +145,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** 已知问题 *****
         
         Phase 2:
-         - Mirror,Mirror: The strat on CN (The melee group go to the closest red mirror, and go to the left one if the distances are the same) has not been added yet but it's on the way.
-           The current strat is that the melee group always go to the left red mirror. The benchmark for left and right is facing the two red mirrors from the center.
          - Light Rampant: There is a rare chance that the players with 3 stacks of Lightsteep will be guided into the tower. This issue is now being investigated.
         Phase 3:
          - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
@@ -162,8 +162,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
         
         P2:
-         - 镜中奇遇: 国服攻略(近战组去最近的红镜子,若相同则去左侧镜子)尚未适配,但很快就会做。
-           现在的攻略是近战组固定去左侧红镜子。这里的左和右指的是从场中面向两面红镜子时的左右。
          - 光之失控(光暴): 有小概率电椅,持有三层过量光的人会被指路去踩塔。正在调查这个问题。
         P3:
          - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
@@ -264,6 +262,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool _____Phase2_Settings_____ { get; set; } = true;
         [UserSetting("P2 击退后攻略")]
         public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; }
+        [UserSetting("P2镜中奇遇 攻略")]
+        public Phase2_Strats_Of_Mirror_Mirror Phase2_Strat_Of_Mirror_Mirror { get; set; }
+        [UserSetting("P2 镜子粗略指路的颜色")]
+        public ScriptColor Phase2_Colour_Of_Mirror_Rough_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("P2 潜在危险区的颜色")]
+        public ScriptColor Phase2_Colour_Of_Potential_Dangerous_Zones { get; set; } = new() { V4=new(1f,0f,0f,1f) };
         [UserSetting("P2光之失控(光暴) 初始八方站位")]
         public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; }
         [UserSetting("P2光之失控(光暴) 攻略")]
@@ -360,13 +364,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         volatile int phase1_semaphoreOfTheFinalPrompt=0;
         List<int> P1塔 = [0, 0, 0, 0];
 
+        volatile string phase2_bossId="";
         bool P2DDDircle = false;
         volatile List<int> Phase2_Positions_Of_Icicle_Impact=[];
         Vector3 phase2_positionToBeKnockedBack=new Vector3(100,0,100);
         System.Threading.AutoResetEvent phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
         System.Threading.AutoResetEvent phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
-        List<int> P2RedMirror = [];
-        ulong P2BossId = 0;
+        volatile int phase2_proteanPositionOfTheColourlessMirror=-1;
+        System.Threading.AutoResetEvent phase2_semaphoreTheColourlessMirrorWasConfirmed=new System.Threading.AutoResetEvent(false);
+        volatile List<int> phase2_proteanPositionsOfRedMirrors=[];
+        System.Threading.AutoResetEvent phase2_semaphoreRedMirrorsWereConfirmed=new System.Threading.AutoResetEvent(false);
         List<int> P2LightRampantCircle = [];
         List<int> P2LightRampantBuff = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P2LightRampantTetherDone = new();
@@ -519,6 +526,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
+
+        public enum Phase2_Strats_Of_Mirror_Mirror {
+            
+            Melee_Group_Left_Red_近战组去左红色镜子,
+            Melee_Group_Right_Red_近战组去右红色镜子,
+            Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左,
+            Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右
+            
+        }
         
         public enum Phase2_Strats_Of_Light_Rampant {
             
@@ -620,10 +636,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase1_semaphoreOfTheFinalPrompt=0;
             P1塔 = [0, 0, 0, 0];
 
+            phase2_bossId="";
             Phase2_Positions_Of_Icicle_Impact.Clear();
             phase2_positionToBeKnockedBack=new Vector3(100,0,100);
             phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
             phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
+            phase2_proteanPositionOfTheColourlessMirror=-1;
+            phase2_semaphoreTheColourlessMirrorWasConfirmed=new System.Threading.AutoResetEvent(false);
+            phase2_proteanPositionsOfRedMirrors.Clear();
+            phase2_semaphoreRedMirrorsWereConfirmed=new System.Threading.AutoResetEvent(false);
 
             phase3_bossId="";
             P3FloorFireDone = false;
@@ -3331,17 +3352,23 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             parse = 2d;
         }
 
-        [ScriptMethod(name: "P2_钻石星尘_BossId记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40180)$"], userControl: false)]
-        public void P2_钻石星尘_BossId记录(Event @event, ScriptAccessory accessory)
-        {
-            parse = 2.1d;
-            if (!ParseObjectId(@event["SourceId"], out var sid)) return;
-            P2BossId = sid;
+        [ScriptMethod(name:"Phase2 Diamond Dust Initialization 钻石星尘初始化",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40180"],
+            userControl:false)]
+        
+        public void Phase2_Diamond_Dust_Initialization_钻石星尘初始化(Event @event, ScriptAccessory accessory) {
+            
+            parse=2.1d;
+            
+            phase2_bossId=@event["SourceId"];
             Phase2_Positions_Of_Icicle_Impact.Clear();
             phase2_positionToBeKnockedBack=new Vector3(100,0,100);
             phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
             phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
+            
         }
+        
         [ScriptMethod(name: "P2_钻石星尘_钢铁月环记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^((4020[23]))$"],userControl: false)]
         public void P2_钻石星尘_钢铁月环记录(Event @event, ScriptAccessory accessory)
         {
@@ -3596,7 +3623,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name:"Phase2 Determine The Position To Be Knocked Back 确定击退位置",
             eventType:EventTypeEnum.ActionEffect,
             eventCondition:["ActionId:40199"],
-            userControl:false)]
+            userControl:false,
+            suppress:2000)]
         
         public void Phase2_Determine_The_Position_To_Be_Knocked_Back_确定击退位置(Event @event, ScriptAccessory accessory) {
 
@@ -3721,7 +3749,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Position=new Vector3(100, 0, 100);
             currentProperty.Rotation=float.Pi-(float.Pi/4*proteanPositionOfTheCurrentGroup);
             currentProperty.Color=accessory.Data.DefaultSafeColor.WithW(25f);
-            currentProperty.DestoryAt=9000;
+            currentProperty.DestoryAt=14250;
 
             if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Clockwise_One_Group_Counterclockwise_总是顺时针单组逆时针) {
 
@@ -4108,12 +4136,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P2_钻石星尘_Boss背对(Event @event, ScriptAccessory accessory)
         {
             if (parse != 2.1) return;
+            if (!ParseObjectId(phase2_bossId, out var sid)) return;
             
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P2_钻石星尘_Boss背对";
             dp.Scale = new(5);
             dp.Owner = accessory.Data.Me;
-            dp.TargetObject=P2BossId;
+            dp.TargetObject=sid;
             dp.Color = accessory.Data.DefaultDangerColor;
             dp.Delay = 3000;
             dp.DestoryAt = 6000;
@@ -4121,13 +4150,35 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
 
         }
-
-        [ScriptMethod(name: "P2_双镜_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40179)$"], userControl: false)]
-        public void P2_双镜_分P(Event @event, ScriptAccessory accessory)
-        {
-            parse = 2.2d;
-            P2RedMirror.Clear();
+        
+        [ScriptMethod(name:"Phase2 Reset Semaphores After Diamond Dust 钻石星尘后重置信号灯",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40210"],
+            userControl:false)]
+        
+        public void Phase2_Reset_Semaphores_After_Diamond_Dust_钻石星尘后重置信号灯(Event @event, ScriptAccessory accessory) {
+            
+            phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
+            phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
+            
         }
+
+        [ScriptMethod(name:"Phase2 Mirror Mirror Initialization 镜中奇遇初始化",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40179"],
+            userControl:false)]
+        
+        public void Phase2_Mirror_Mirror_Initialization_镜中奇遇初始化(Event @event, ScriptAccessory accessory) {
+            
+            parse=2.2d;
+            
+            phase2_proteanPositionOfTheColourlessMirror=-1;
+            phase2_semaphoreTheColourlessMirrorWasConfirmed=new System.Threading.AutoResetEvent(false);
+            phase2_proteanPositionsOfRedMirrors.Clear();
+            phase2_semaphoreRedMirrorsWereConfirmed=new System.Threading.AutoResetEvent(false);
+            
+        }
+        
         [ScriptMethod(name: "P2_双镜_分散分摊", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4022[01])$"])]
         public void P2_双镜_分散分摊(Event @event, ScriptAccessory accessory)
         {
@@ -4178,7 +4229,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Position = dealpos;
             dp.Color = accessory.Data.DefaultDangerColor;
             dp.Delay = 6000;
-            dp.DestoryAt = 6000;
+            dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
 
              dp = accessory.Data.GetDefaultDrawProperties();
@@ -4238,7 +4289,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Vector3 npos = new(100, 0, 80);
             dir8--;
             Vector3 dealpos = RotatePoint(npos, new(100, 0, 100), float.Pi / 4 * dir8);
-            var dur = 3000;
+            var dur = 4000;
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "P2_双镜_红镜月环";
             dp.Scale = new(20);
@@ -4246,8 +4297,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Radian = float.Pi * 2;
             dp.Position = dealpos;
             dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Delay = 17500;
-            dp.DestoryAt = 5000;
+            dp.Delay = 17000;
+            dp.DestoryAt = 6000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
 
             dp = accessory.Data.GetDefaultDrawProperties();
@@ -4299,74 +4350,551 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
 
         }
-        [ScriptMethod(name: "P2_双镜_蓝镜月环加引导位置", eventType: EventTypeEnum.EnvControl, eventCondition: ["DirectorId:800375BF", "State:00020001"])]
-        public void P2_双镜_蓝镜月环加引导位置(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 2.2) return;
-            if (!int.TryParse(@event["Index"], out var dir8)) return;
-            Vector3 npos = new(100, 0, 80);
-            dir8--;
-            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            if (myindex == 0 || myindex == 1 || myindex == 4 || myindex == 5)
-            {
-                dir8 += 4;
-                npos = new(100, 0, 85);
+        
+        [ScriptMethod(name:"Phase2 Determine The Protean Position Of The Colourless Mirror 确定无色镜子(蓝色镜子)八方位置",
+            eventType:EventTypeEnum.EnvControl,
+            eventCondition:["DirectorId:800375BF","State:00020001"],
+            userControl:false)]
+        
+        public void Phase2_Determine_The_Protean_Position_Of_The_Colourless_Mirror_确定无色镜子八方位置(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.2) {
+                
+                return;
+                
+            }
+
+            if(!int.TryParse(@event["Index"], out var proteanPosition)) {
+                
+                return;
+                
+            }
+
+            --proteanPosition;
+            // The values of Index, which is from 1 to 8, coincidentally correspond to north, northeast, east, ..., northwest.
+            
+            phase2_proteanPositionOfTheColourlessMirror=proteanPosition;
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            phase2_semaphoreTheColourlessMirrorWasConfirmed.Set();
+
+        }
+        
+        [ScriptMethod(name:"Phase2 Rough Guidance Of The Colourless Mirror 无色镜子(蓝色镜子)粗略指路",
+            eventType:EventTypeEnum.EnvControl,
+            eventCondition:["DirectorId:800375BF","State:00020001"])]
+        
+        public void Phase2_Rough_Guidance_Of_The_Colourless_Mirror_无色镜子粗略指路(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.2) {
+                
+                return;
+                
+            }
+
+            if(!int.TryParse(@event["Index"], out var proteanPosition)) {
+                
+                return;
+                
+            }
+
+            --proteanPosition;
+            
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            Vector3 rawPosition=new(100,0,100);
+            bool isMeleeGroup=true;
+            
+            if(myIndex==0
+               ||
+               myIndex==1
+               ||
+               myIndex==4
+               ||
+               myIndex==5) {
+
+                isMeleeGroup=true;
+                rawPosition=new(100,0,85);
+                
+            }
+            
+            if(myIndex==2
+               ||
+               myIndex==3
+               ||
+               myIndex==6
+               ||
+               myIndex==7) {
+                
+                isMeleeGroup=false;
+                rawPosition=new(100,0,80.5f);
+                
+            }
+
+            if(rawPosition.Equals(new Vector3(100,0,100))) {
+
+                return;
+
             }
            
-            Vector3 dealpos = RotatePoint(npos, new(100, 0, 100), float.Pi / 4 * dir8);
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P2_双镜_蓝镜月环加引导位置";
-            dp.Scale = new(2);
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Owner = accessory.Data.Me;
-            dp.TargetPosition = dealpos;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.DestoryAt = 12000;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-        }
-        [ScriptMethod(name: "P2_双镜_红镜引导位置", eventType: EventTypeEnum.EnvControl, eventCondition: ["DirectorId:800375BF", "State:02000100"])]
-        public void P2_双镜_红镜引导位置(Event @event, ScriptAccessory accessory)
-        {
-            if (parse != 2.2) return;
-            if (!int.TryParse(@event["Index"], out var dir8)) return;
-            dir8--;
-            lock (P2RedMirror)
-            {
-                P2RedMirror.Add(dir8);
-                if (P2RedMirror.Count != 2) return;
-            }
-            var leftRot8 = (P2RedMirror[0] - P2RedMirror[1] == -2 || P2RedMirror[0] - P2RedMirror[1] - 8 == -2) ? P2RedMirror[0] : P2RedMirror[1];
-            var rightRot8 = (P2RedMirror[0] - P2RedMirror[1] == 2 || P2RedMirror[0] + 8 - P2RedMirror[1] == 2) ? P2RedMirror[0] : P2RedMirror[1];
+            Vector3 targetPosition=RotatePoint(rawPosition,new(100,0,100),float.Pi/4*(proteanPosition+((isMeleeGroup)?(4):(0))));
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Rough_Guidance_Of_The_Colourless_Mirror_无色镜子粗略指路";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.TargetPosition=targetPosition;
+            currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+            currentProperty.DestoryAt=13000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
-            var myrot = leftRot8;
-            var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
-            if (myindex == 0 || myindex == 1 || myindex == 4 || myindex == 5)
-            {
-                myrot = rightRot8;
+            if(!ParseObjectId(phase2_bossId, out var bossId)) {
+
+                return;
+
             }
-            Vector3 npos = myindex switch
-            {
-                0 => new(102f, 0, 80.5f),
-                1 => new(98f, 0, 80.5f),
-                2 => new(102f, 0, 80.5f),
-                3 => new(98f, 0, 80.5f),
-                4 => new(101.3f, 0, 83f),
-                5 => new(98.7f, 0, 83f),
-                6 => new(101.3f, 0, 83f),
-                7 => new(98.7f, 0, 83f),
-                _ => new(100, 0, 80)
-            };
-            var dealpos = RotatePoint(npos, new(100, 0, 100), myrot * float.Pi / 4);
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P2_双镜_红镜引导位置";
-            dp.Scale = new(2);
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Owner = accessory.Data.Me;
-            dp.TargetPosition = dealpos;
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.Delay = 13500;
-            dp.DestoryAt = 9000;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Potential_Dangerous_Zone_Of_The_Colourless_Mirror_无色镜子潜在危险区";
+            currentProperty.Scale=new(4);
+            currentProperty.Radian=float.Pi;
+            currentProperty.Owner=bossId;
+            currentProperty.TargetPosition=new Vector3(100,0,100);
+            currentProperty.Color=Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Delay=6000;
+            currentProperty.DestoryAt=7000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Potential_Dangerous_Zone_Of_The_Colourless_Mirror_无色镜子潜在危险区";
+            currentProperty.Scale=new(4);
+            currentProperty.Radian=float.Pi/3;
+            currentProperty.Position=RotatePoint(new(100,0,80),new(100,0,100),float.Pi/4*proteanPosition);;
+            currentProperty.TargetPosition=new Vector3(100,0,100);
+            currentProperty.Color=Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Delay=6000;
+            currentProperty.DestoryAt=7000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+            
+        }
+        
+        [ScriptMethod(name:"Phase2 Determine Protean Positions Of Red Mirrors 确定红色镜子八方位置",
+            eventType:EventTypeEnum.EnvControl,
+            eventCondition:["DirectorId:800375BF","State:02000100"],
+            userControl:false)]
+        
+        public void Phase2_Determine_Protean_Positions_Of_Red_Mirrors_确定红色镜子八方位置(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.2) {
+                
+                return;
+                
+            }
+
+            if(!int.TryParse(@event["Index"], out var proteanPosition)) {
+                
+                return;
+                
+            }
+            
+            --proteanPosition;
+            
+            lock(phase2_proteanPositionsOfRedMirrors) {
+
+                if(phase2_proteanPositionsOfRedMirrors.Count<2) {
+                    
+                    phase2_proteanPositionsOfRedMirrors.Add(proteanPosition);
+                    
+                }
+
+                if(phase2_proteanPositionsOfRedMirrors.Count==2) {
+
+                    phase2_semaphoreRedMirrorsWereConfirmed.Set();
+
+                }
+                
+            }
+            
+        }
+        
+        [ScriptMethod(name:"Phase2 Rough Guidance Of Red Mirrors 红色镜子粗略指路",
+            eventType:EventTypeEnum.EnvControl,
+            eventCondition:["DirectorId:800375BF","State:02000100"],
+            suppress:2000)]
+        
+        public void Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.2) {
+                
+                return;
+                
+            }
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            phase2_semaphoreTheColourlessMirrorWasConfirmed.WaitOne();
+            phase2_semaphoreRedMirrorsWereConfirmed.WaitOne();
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            if(phase2_proteanPositionsOfRedMirrors.Count!=2) {
+
+                return;
+
+            }
+
+            int redMirror1=phase2_proteanPositionsOfRedMirrors[0];
+            int redMirror2=phase2_proteanPositionsOfRedMirrors[1];
+            int discreteDistance=1;
+            int leftMirror=-1;
+            int rightMirror=-1;
+
+            while(((redMirror1+discreteDistance)%8)!=redMirror2) {
+                
+                ++discreteDistance;
+                
+            }
+
+            if(discreteDistance!=2&&discreteDistance!=6) {
+
+                return;
+
+            }
+
+            if(discreteDistance==2) {
+
+                leftMirror=redMirror1;
+                rightMirror=redMirror2;
+
+            }
+            
+            if(discreteDistance==6) {
+
+                leftMirror=redMirror2;
+                rightMirror=redMirror1;
+
+            }
+
+            if(leftMirror==-1||rightMirror==-1) {
+
+                return;
+
+            }
+
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           leftMirror={leftMirror}
+                                           rightMirror={rightMirror}
+                                           
+                                           """);
+
+            }
+
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            bool isMeleeGroup=true;
+            
+            if(myIndex==0
+               ||
+               myIndex==1
+               ||
+               myIndex==4
+               ||
+               myIndex==5) {
+
+                isMeleeGroup=true;
+
+            }
+            
+            if(myIndex==2
+               ||
+               myIndex==3
+               ||
+               myIndex==6
+               ||
+               myIndex==7) {
+                
+                isMeleeGroup=false;
+                
+            }
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            if(((leftMirror+1)%8)==phase2_proteanPositionOfTheColourlessMirror
+               ||
+               ((leftMirror+1)%8)==phase2_getOppositeProteanPosition(phase2_proteanPositionOfTheColourlessMirror)) {
+
+                if(Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Left_Red_近战组去左红色镜子
+                   ||
+                   Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左) {
+
+                    Vector3 targetPosition=new Vector3(100,0,100);
+
+                    if(isMeleeGroup) {
+                        
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*leftMirror);
+                        
+                    }
+
+                    else {
+                         
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*rightMirror);
+                        
+                    }
+            
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                    currentProperty.Name="Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路";
+                    currentProperty.Scale=new(2);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=targetPosition;
+                    currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+                    currentProperty.Delay=13500;
+                    currentProperty.DestoryAt=9500;
+            
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                }
+                
+                if(Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Right_Red_近战组去右红色镜子
+                   ||
+                   Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右) {
+                    
+                    Vector3 targetPosition=new Vector3(100,0,100);
+
+                    if(isMeleeGroup) {
+                        
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*rightMirror);
+                        
+                    }
+
+                    else {
+                         
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*leftMirror);
+                        
+                    }
+            
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                    currentProperty.Name="Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路";
+                    currentProperty.Scale=new(2);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=targetPosition;
+                    currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+                    currentProperty.Delay=13500;
+                    currentProperty.DestoryAt=9500;
+            
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                }
+                
+            }
+
+            else {
+                
+                if(Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Left_Red_近战组去左红色镜子) {
+
+                    Vector3 targetPosition=new Vector3(100,0,100);
+
+                    if(isMeleeGroup) {
+                        
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*leftMirror);
+                        
+                    }
+
+                    else {
+                         
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*rightMirror);
+                        
+                    }
+            
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                    currentProperty.Name="Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路";
+                    currentProperty.Scale=new(2);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=targetPosition;
+                    currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+                    currentProperty.Delay=13500;
+                    currentProperty.DestoryAt=9500;
+            
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                }
+                
+                if(Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Right_Red_近战组去右红色镜子) {
+                    
+                    Vector3 targetPosition=new Vector3(100,0,100);
+
+                    if(isMeleeGroup) {
+                        
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*rightMirror);
+                        
+                    }
+
+                    else {
+                         
+                        targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*leftMirror);
+                        
+                    }
+            
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                    currentProperty.Name="Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路";
+                    currentProperty.Scale=new(2);
+                    currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                    currentProperty.Owner=accessory.Data.Me;
+                    currentProperty.TargetPosition=targetPosition;
+                    currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+                    currentProperty.Delay=13500;
+                    currentProperty.DestoryAt=9500;
+            
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                    
+                }
+
+                int proteanPositionOfTheMeleeGroup=phase2_getOppositeProteanPosition(phase2_proteanPositionOfTheColourlessMirror);
+                int discreteDistanceToTheLeftMirror=0;
+                int discreteDistanceToTheRightMirror=0;
+
+                while(((proteanPositionOfTheMeleeGroup+discreteDistanceToTheLeftMirror)%8)!=leftMirror) {
+
+                    ++discreteDistanceToTheLeftMirror;
+
+                }
+                
+                while(((proteanPositionOfTheMeleeGroup-discreteDistanceToTheRightMirror+8)%8)!=rightMirror) {
+
+                    ++discreteDistanceToTheRightMirror;
+
+                }
+                
+                if(Enable_Developer_Mode) {
+
+                    accessory.Method.SendChat($"""
+                                               /e 
+                                               discreteDistanceToTheLeftMirror={discreteDistanceToTheLeftMirror}
+                                               discreteDistanceToTheRightMirror={discreteDistanceToTheRightMirror}
+
+                                               """);
+
+                }
+
+                if(discreteDistanceToTheLeftMirror<discreteDistanceToTheRightMirror) {
+
+                    if(Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左
+                       ||
+                       Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右) {
+                        
+                        Vector3 targetPosition=new Vector3(100,0,100);
+
+                        if(isMeleeGroup) {
+                        
+                            targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*leftMirror);
+                        
+                        }
+
+                        else {
+                         
+                            targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*rightMirror);
+                        
+                        }
+            
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                        currentProperty.Name="Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路";
+                        currentProperty.Scale=new(2);
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=targetPosition;
+                        currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+                        currentProperty.Delay=13500;
+                        currentProperty.DestoryAt=9500;
+            
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                    }
+                    
+                }
+                
+                if(discreteDistanceToTheLeftMirror>discreteDistanceToTheRightMirror) {
+                    
+                    if(Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左
+                       ||
+                       Phase2_Strat_Of_Mirror_Mirror==Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右) {
+                        
+                        Vector3 targetPosition=new Vector3(100,0,100);
+
+                        if(isMeleeGroup) {
+                        
+                            targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*rightMirror);
+                        
+                        }
+
+                        else {
+                         
+                            targetPosition=RotatePoint(new Vector3(100,0,80.5f),new(100,0,100),float.Pi/4*leftMirror);
+                        
+                        }
+            
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                        currentProperty.Name="Phase2_Rough_Guidance_Of_Red_Mirrors_红色镜子粗略指路";
+                        currentProperty.Scale=new(2);
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=targetPosition;
+                        currentProperty.Color=Phase2_Colour_Of_Mirror_Rough_Guidance.V4.WithW(1f);
+                        currentProperty.Delay=13500;
+                        currentProperty.DestoryAt=9500;
+            
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                    }
+                    
+                }
+
+            }
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Potential_Dangerous_Zone_Of_Red_Mirrors_红色镜子潜在危险区";
+            currentProperty.Scale=new(4);
+            currentProperty.Radian=float.Pi/3;
+            currentProperty.Position=RotatePoint(new(100,0,80),new(100,0,100),float.Pi/4*leftMirror);
+            currentProperty.Rotation=float.Pi/6;
+            currentProperty.TargetPosition=new Vector3(100,0,100);
+            currentProperty.Color=Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Delay=13500;
+            currentProperty.DestoryAt=10000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Potential_Dangerous_Zone_Of_Red_Mirrors_红色镜子潜在危险区";
+            currentProperty.Scale=new(4);
+            currentProperty.Radian=float.Pi/3;
+            currentProperty.Position=RotatePoint(new(100,0,80),new(100,0,100),float.Pi/4*rightMirror);
+            currentProperty.Rotation=-(float.Pi/6);
+            currentProperty.TargetPosition=new Vector3(100,0,100);
+            currentProperty.Color=Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Delay=13500;
+            currentProperty.DestoryAt=10000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Fan,currentProperty);
+            
         }
 
         [ScriptMethod(name: "P2_光之暴走_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40212)$"], userControl: false)]
