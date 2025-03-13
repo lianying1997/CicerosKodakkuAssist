@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.69",
+        version:"0.0.0.70",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -156,6 +156,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
            The current priority is THD. The priority here only involves Wyrmclaw (the red debuff).
         Phase 5:
          - Fulgent Blade: The guidance has been added yet. I've asked @milkvio for the permission of his implementation and got his approval. Therefore, I will add it very soon.
+         - Polarizing Strikes: The order of taking towers regarding the Grey9 Brain Dead strat on CN has been adjusted a little bit, and the new version has not been added yet. It's on the way.
+           The order at the moment is melees first, then ranges and healers. The new order is healers first, then melees and ranges.
         
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
         
@@ -171,8 +173,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
            现在的攻略是双换。这里的分摊指路也有小概率电椅,在未来添加攻略时会顺带修复。
          - 时间结晶(二运): 国服优先级(HTD)尚未适配,但很快就会做。
            现在的优先级是THD。这里的优先级仅与圣龙爪(红)debuff有关。
-        P4:
+        P5:
          - 璀璨之刃(地火): 尚未添加指路,但我已经向 @milkvio 申请使用他的地火指路并且得到本人同意了。很快就会补上这部分。
+         - 极化打击(挡枪): 国服的灰九脑死塔踩塔顺序有点改动,尚未适配,但很快就会做。
+           现在的踩塔顺序是先近战,然后远程和奶妈。新的顺序是先奶妈,然后远程和近战。
          
         当所有已知问题都被解决后,就不会再有大更新了。那个时候的版本就是最终版。
         
@@ -359,7 +363,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         bool P2DDDircle = false;
         volatile List<int> Phase2_Positions_Of_Icicle_Impact=[];
         Vector3 phase2_positionToBeKnockedBack=new Vector3(100,0,100);
-        System.Threading.AutoResetEvent phase2_positionToBeKnockedBackHasBeenDetermined=new System.Threading.AutoResetEvent(false);
+        System.Threading.AutoResetEvent phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
+        System.Threading.AutoResetEvent phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
         List<int> P2RedMirror = [];
         ulong P2BossId = 0;
         List<int> P2LightRampantCircle = [];
@@ -507,8 +512,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         public enum Phase2_Strats_After_Knockback {
             
-            Always_Clockwise_Unless_Boss_Is_Next_总是顺时针除非Boss在眼前,
-            Always_Counterclockwise_Unless_Boss_Is_Next_总是逆时针除非Boss在眼前,
+            Clockwise_One_Group_Counterclockwise_总是顺时针单组逆时针,
+            Counterclockwise_One_Group_Clockwise_总是逆时针单组顺时针,
+            Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针,
+            Counterclockwise_Both_Groups_Clockwise_总是逆时针双组顺时针,
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
             
         }
@@ -615,7 +622,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             Phase2_Positions_Of_Icicle_Impact.Clear();
             phase2_positionToBeKnockedBack=new Vector3(100,0,100);
-            phase2_positionToBeKnockedBackHasBeenDetermined=new System.Threading.AutoResetEvent(false);
+            phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
+            phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
 
             phase3_bossId="";
             P3FloorFireDone = false;
@@ -3331,7 +3339,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             P2BossId = sid;
             Phase2_Positions_Of_Icicle_Impact.Clear();
             phase2_positionToBeKnockedBack=new Vector3(100,0,100);
-            phase2_positionToBeKnockedBackHasBeenDetermined=new System.Threading.AutoResetEvent(false);
+            phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
+            phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
         }
         [ScriptMethod(name: "P2_钻石星尘_钢铁月环记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^((4020[23]))$"],userControl: false)]
         public void P2_钻石星尘_钢铁月环记录(Event @event, ScriptAccessory accessory)
@@ -3458,7 +3467,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
             dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "P2_钻石星尘_冰花放置位置3";
+            dp.Name = "P2_钻石星尘_冰花放置位置2";
             dp.Scale = new(2);
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Position = dealpos1;
@@ -3617,13 +3626,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             System.Threading.Thread.MemoryBarrier();
             
-            phase2_positionToBeKnockedBackHasBeenDetermined.Set();
+            phase2_semaphoreOfGuidanceBeforeKnockback.Set();
+            phase2_semaphoreOfGuidanceAfterKnockback.Set();
             
         }
         
         [ScriptMethod(name:"Phase2 Guidance Of The Position To Be Knocked Back 击退位置指路",
             eventType:EventTypeEnum.ActionEffect,
-            eventCondition:["ActionId:40199"])]
+            eventCondition:["ActionId:40199"],
+            suppress:2000)]
         
         public void Phase2_Guidance_Of_The_Position_To_Be_Knocked_Back_击退位置指路(Event @event, ScriptAccessory accessory) {
 
@@ -3633,9 +3644,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
+            if(Phase2_Positions_Of_Icicle_Impact.Count==0) {
+
+                return;
+
+            }
+            
             System.Threading.Thread.MemoryBarrier();
 
-            phase2_positionToBeKnockedBackHasBeenDetermined.WaitOne();
+            phase2_semaphoreOfGuidanceBeforeKnockback.WaitOne();
             
             System.Threading.Thread.MemoryBarrier();
             
@@ -3664,6 +3681,18 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 return;
                 
             }
+            
+            if(Phase2_Positions_Of_Icicle_Impact.Count==0) {
+
+                return;
+
+            }
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            phase2_semaphoreOfGuidanceAfterKnockback.WaitOne();
+            
+            System.Threading.Thread.MemoryBarrier();
             
             Vector3 positionOfTheReflection=JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
             int proteanPositionOfTheReflection=PositionTo8Dir(positionOfTheReflection,new(100,0,100));
@@ -3694,9 +3723,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Color=accessory.Data.DefaultSafeColor.WithW(25f);
             currentProperty.DestoryAt=9000;
 
-            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Always_Clockwise_Unless_Boss_Is_Next_总是顺时针除非Boss在眼前) {
+            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Clockwise_One_Group_Counterclockwise_总是顺时针单组逆时针) {
 
-                if(proteanPositionOfTheCurrentGroup+1==proteanPositionOfTheReflection) {
+                if(((proteanPositionOfTheCurrentGroup+1)%8)==proteanPositionOfTheReflection) {
 
                     currentProperty.Radian=float.Pi/2-float.Pi/18;
                     currentProperty.Rotation+=(float.Pi/2-float.Pi/18)/2;
@@ -3717,7 +3746,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 else {
 
-                    if(proteanPositionOfTheOppositeGroup+1==proteanPositionOfTheReflection) {
+                    if(((proteanPositionOfTheOppositeGroup+1)%8)==proteanPositionOfTheReflection) {
                         
                         currentProperty.Radian=float.Pi/2-float.Pi/18;
                         currentProperty.Rotation+=-((float.Pi/2-float.Pi/18)/2);
@@ -3740,9 +3769,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         int rotationOfThePath=1;
 
-                        while((proteanPositionOfTheCurrentGroup+rotationOfThePath)%8!=proteanPositionOfTheReflection
+                        while(((proteanPositionOfTheCurrentGroup+rotationOfThePath)%8)!=proteanPositionOfTheReflection
                               &&
-                              (proteanPositionOfTheCurrentGroup+rotationOfThePath)%8!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
+                              ((proteanPositionOfTheCurrentGroup+rotationOfThePath)%8)!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
                         
                             ++rotationOfThePath;
                         
@@ -3773,9 +3802,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Always_Counterclockwise_Unless_Boss_Is_Next_总是逆时针除非Boss在眼前) {
+            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Counterclockwise_One_Group_Clockwise_总是逆时针单组顺时针) {
 
-                if(proteanPositionOfTheCurrentGroup-1==proteanPositionOfTheReflection) {
+                if(((proteanPositionOfTheCurrentGroup-1+8)%8)==proteanPositionOfTheReflection) {
 
                     currentProperty.Radian=float.Pi/2-float.Pi/18;
                     currentProperty.Rotation+=-((float.Pi/2-float.Pi/18)/2);
@@ -3796,7 +3825,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 else {
 
-                    if(proteanPositionOfTheOppositeGroup-1==proteanPositionOfTheReflection) {
+                    if(((proteanPositionOfTheOppositeGroup-1+8)%8)==proteanPositionOfTheReflection) {
                         
                         currentProperty.Radian=float.Pi/2-float.Pi/18;
                         currentProperty.Rotation+=(float.Pi/2-float.Pi/18)/2;
@@ -3819,9 +3848,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         
                         int rotationOfThePath=1;
 
-                        while((proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8!=proteanPositionOfTheReflection
+                        while(((proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8)!=proteanPositionOfTheReflection
                               &&
-                              (proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
+                              ((proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8)!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
                         
                             ++rotationOfThePath;
                         
@@ -3844,6 +3873,122 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
                         
+                    }
+
+                }
+
+                propertyHasBeenConfirmed=true;
+
+            }
+            
+            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针) {
+
+                if(((proteanPositionOfTheCurrentGroup+1)%8)==proteanPositionOfTheReflection
+                   ||
+                   ((proteanPositionOfTheOppositeGroup+1)%8)==proteanPositionOfTheReflection) {
+
+                    currentProperty.Radian=float.Pi/4*3;
+                    currentProperty.Rotation+=(float.Pi/4*3)/2;
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="逆时针135度";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="Counterclockwise 135 degrees";
+
+                    }
+
+                }
+
+                else {
+
+                    int rotationOfThePath=1;
+
+                    while(((proteanPositionOfTheCurrentGroup+rotationOfThePath)%8)!=proteanPositionOfTheReflection
+                          &&
+                          ((proteanPositionOfTheCurrentGroup+rotationOfThePath)%8)!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
+                        
+                        ++rotationOfThePath;
+                        
+                    }
+                    
+                    currentProperty.Radian=float.Pi/4*rotationOfThePath;
+                    currentProperty.Rotation+=-((float.Pi/4*rotationOfThePath)/2);
+
+                    rotationOfThePath*=45;
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt=$"顺时针{rotationOfThePath}度";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt=$"Clockwise {rotationOfThePath} degrees";
+
+                    }
+
+                }
+
+                propertyHasBeenConfirmed=true;
+
+            }
+            
+            if(Phase2_Strat_After_Knockback==Phase2_Strats_After_Knockback.Counterclockwise_Both_Groups_Clockwise_总是逆时针双组顺时针) {
+
+                if(((proteanPositionOfTheCurrentGroup-1+8)%8)==proteanPositionOfTheReflection
+                   ||
+                   ((proteanPositionOfTheOppositeGroup-1+8)%8)==proteanPositionOfTheReflection) {
+
+                    currentProperty.Radian=float.Pi/4*3;
+                    currentProperty.Rotation+=-((float.Pi/4*3)/2);
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="顺时针135度";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="Clockwise 135 degrees";
+
+                    }
+
+                }
+
+                else {
+
+                    int rotationOfThePath=1;
+
+                    while(((proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8)!=proteanPositionOfTheReflection
+                          &&
+                          ((proteanPositionOfTheCurrentGroup-rotationOfThePath+8)%8)!=phase2_getOppositeProteanPosition(proteanPositionOfTheReflection)) {
+                        
+                        ++rotationOfThePath;
+                        
+                    }
+                    
+                    currentProperty.Radian=float.Pi/4*rotationOfThePath;
+                    currentProperty.Rotation+=(float.Pi/4*rotationOfThePath)/2;
+
+                    rotationOfThePath*=45;
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt=$"逆时针{rotationOfThePath}度";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt=$"Counterclockwise {rotationOfThePath} degrees";
+
                     }
 
                 }
