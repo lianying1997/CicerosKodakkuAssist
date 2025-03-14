@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.73",
+        version:"0.0.0.74",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -5176,6 +5176,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
                     
             }
+
+            if(Enable_Text_Prompts) {
+                
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           playersWithTethers.Count={playersWithTethers.Count}
+                                           playersWithTethers[]={playersWithTethers[0]},{playersWithTethers[1]},{playersWithTethers[2]},{playersWithTethers[3]},{playersWithTethers[4]},{playersWithTethers[5]} 
+                                           
+                                           """);
+                
+            }
             
             int myTetherIndex=playersWithTethers.IndexOf(myIndex);
             Vector3 myTower=new Vector3(100,0,100);
@@ -5234,6 +5245,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==0) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=tower4;
                     
                 }
@@ -5242,6 +5263,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==7) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=(phase2_playersWithLuminousHammer.Contains(0))?(tower4):(tower6);
                     
                 }
@@ -5249,6 +5280,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 numberOfPlayersWithLuminousHammerBefore+=(phase2_playersWithLuminousHammer.Contains(7))?(1):(0);
                 
                 if(myIndex==1) {
+                    
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
 
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower2,
@@ -5262,6 +5303,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==5) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower5,
                         1 => tower2,
@@ -5273,6 +5324,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 numberOfPlayersWithLuminousHammerBefore+=(phase2_playersWithLuminousHammer.Contains(5))?(1):(0);
                 
                 if(myIndex==3) {
+                    
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
                     
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower3,
@@ -5286,10 +5347,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==4) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower1,
                         1 => tower3,
-                        2 => tower6
+                        2 => tower5
                     };
                     
                 }
@@ -5298,11 +5369,33 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==2) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=(phase2_playersWithLuminousHammer.Contains(6))?(tower1):(tower3);
                     
                 }
                 
+                numberOfPlayersWithLuminousHammerBefore+=(phase2_playersWithLuminousHammer.Contains(2))?(1):(0);
+                
                 if(myIndex==6) {
+                    
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
                     
                     myTower=tower1;
                     
@@ -5361,6 +5454,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==0) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=tower4;
                     
                 }
@@ -5369,6 +5472,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==7) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=(phase2_playersWithLuminousHammer.Contains(0))?(tower4):(tower2);
                     
                 }
@@ -5376,6 +5489,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 numberOfPlayersWithLuminousHammerBefore+=(phase2_playersWithLuminousHammer.Contains(7))?(1):(0);
                 
                 if(myIndex==1) {
+                    
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
 
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower6,
@@ -5389,6 +5512,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==5) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower3,
                         1 => tower6,
@@ -5400,6 +5533,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 numberOfPlayersWithLuminousHammerBefore+=(phase2_playersWithLuminousHammer.Contains(5))?(1):(0);
                 
                 if(myIndex==3) {
+                    
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
                     
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower5,
@@ -5413,6 +5556,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==4) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=numberOfPlayersWithLuminousHammerBefore switch {
                         0 => tower1,
                         1 => tower5,
@@ -5425,11 +5578,33 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(myIndex==2) {
                     
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
+                    
                     myTower=(phase2_playersWithLuminousHammer.Contains(6))?(tower1):(tower5);
                     
                 }
                 
+                numberOfPlayersWithLuminousHammerBefore+=(phase2_playersWithLuminousHammer.Contains(2))?(1):(0);
+                
                 if(myIndex==6) {
+                        
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   numberOfPlayersWithLuminousHammerBefore={numberOfPlayersWithLuminousHammerBefore}
+
+                                                   """);
+
+                    }
                     
                     myTower=tower1;
                     
