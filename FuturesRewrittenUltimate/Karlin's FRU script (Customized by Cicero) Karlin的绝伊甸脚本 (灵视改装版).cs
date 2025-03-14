@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.72",
+        version:"0.0.0.73",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -4912,7 +4912,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         [ScriptMethod(name:"Phase2 Reset Semaphores After Mirror Mirror 镜中奇遇后重置信号灯",
             eventType:EventTypeEnum.StartCasting,
-            eventCondition:["ActionId:regex:^(40212)$"],
+            eventCondition:["ActionId:40212"],
             userControl:false)]
         
         public void Phase2_Reset_Semaphores_After_Mirror_Mirror_镜中奇遇后重置信号灯(Event @event, ScriptAccessory accessory) {
@@ -5655,6 +5655,18 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.DestoryAt = 9000;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
 
+        }
+        
+        [ScriptMethod(name:"Phase2 Reset Semaphores After Light Rampant 光之失控(光暴)后重置信号灯",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40224"],
+            userControl:false)]
+        
+        public void Phase2_Reset_Semaphores_After_Light_Rampant_光之失控后重置信号灯(Event @event, ScriptAccessory accessory) {
+            
+            phase2_semaphoreLuminousHammerWasConfirmed=new System.Threading.AutoResetEvent(false);
+            phase2_semaphoreFinalLightsteepedWasConfirmed=new System.Threading.AutoResetEvent(false);
+            
         }
         
         [ScriptMethod(name:"----- Phase 2.5 ----- (No actual meaning for this toggle/此开关无实际意义)",
