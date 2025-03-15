@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.74",
+        version:"0.0.0.75",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -66,10 +66,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         4. In the descriptions of Mirror Mirror strats in Phase 2, the left and right here refer to the left and right while facing red mirrors from the center.
         5. It's required to select a proper initial position for your Light Rampant strat, otherwise the guidance may be not reliable.
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
-        6. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
+        6. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
+        In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
+        7. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
         Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
-        7. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        8. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
         If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
         After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
         
@@ -88,10 +90,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         4. P2镜中奇遇攻略的描述中,左和右的基准指的是从场中面向两面红色镜子时的左和右。
         5. P2光之失控(光暴)必须在配置中设定相应的预站位,否则指路会电椅。
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
-        6. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
+        6. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
+        值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
+        7. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
         不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
-        7. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        8. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
         如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
         然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
         
@@ -150,9 +154,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** Known Issues *****
         ***** 已知问题 *****
         
-        Phase 2:
-         - Diamond Dust: If the Default Draw Mode was set to Imgui in Kodakku settings, then the guidance after knockback will always be incorrect, although the prompt is still reliable.
-           The issue will be fixed after the next update of Kodakku itself.
         Phase 3:
          - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
            The timeline here would be refined in the future.
@@ -168,9 +169,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
         
-        P2:
-         - 钻石星尘: 如果在可达鸭的设置里将默认绘图模式设为了Imgui,则击退后指路一定会失效,但是提示仍然正确。
-           这一问题将在下一次可达鸭本体的更新中修复。
         P3:
          - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
            会在未来精修此处的时间轴。
