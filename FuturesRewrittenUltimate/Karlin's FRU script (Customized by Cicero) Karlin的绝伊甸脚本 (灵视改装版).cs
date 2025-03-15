@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.75",
+        version:"0.0.0.76",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -102,13 +102,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** Credits *****
         ***** 致谢 *****
         
-        The original author also the founder: @karlin_z
+        The original author, the founder and the co-maintainer: @karlin_z
         Helpers (sorted lexicographically):
          - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1. (Mar 9, 2025)
          - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1. (Mar 5, 2025)
          - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
         
-        原作者兼奠基人: @karlin_z
+        原作者,奠基人兼共同维护者: @karlin_z
         提供帮助的人(按字典序排序):
         - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。 (2025.03.09)
         - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。 (2025.03.05)
@@ -128,6 +128,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Phase 3:
          - Guidance of the second half (including the Double Group strat and the Locomotive strat);
         Phase 4:
+         - New strat of the first half (Single Swap).
          - Guidance related to Drachen Wanderer residues of the second half;
          - Fixes and refinements for vanilla guidance of the second half;
         Phase 5:
@@ -143,6 +144,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 镜中奇遇指路重做;
          - 光之失控(光暴)的全面修复;
         P3:
+         - 一运新攻略(单换);
          - 二运指路(包括双分组法和车头法);
         P4:
          - 二运圣龙气息(龙头)白圈相关的指路;
@@ -158,8 +160,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
            The timeline here would be refined in the future.
         Phase 4:
-         - Darklit Dragonsong: The strat on CN (Single Swap) has not been added yet but it's on the way.
-           The current strat is Double Swaps. Aside from that, there's also a rare chance that the guidance of stacks here is not reliable. It will be fixed while adding the new strart in future.
          - Crystallize Time: The priority on CN (HTD) has not been added yet but it's on the way.
            The current priority is THD. The priority here only involves Wyrmclaw (the red debuff).
         Phase 5:
@@ -173,8 +173,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
            会在未来精修此处的时间轴。
         P4:
-         - 暗光龙诗(一运): 国服攻略(但换)尚未适配,但很快就会做。
-           现在的攻略是双换。这里的分摊指路也有小概率电椅,在未来添加攻略时会顺带修复。
          - 时间结晶(二运): 国服优先级(HTD)尚未适配,但很快就会做。
            现在的优先级是THD。这里的优先级仅与圣龙爪(红)debuff有关。
         P5:
@@ -304,7 +302,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool _____Phase4_Settings_____ { get; set; } = true;
 
         [UserSetting("P4一运 水分摊换位方式")]
-        public Phase4_1_StackTypeEnum Phase4_1_StackType { get; set; } = Phase4_1_StackTypeEnum.双换;
+        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Double_Swaps_双换;
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
         public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
@@ -600,10 +598,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             NONE
             
         }
-        public enum Phase4_1_StackTypeEnum
-        {
-            双换,
-            单换,
+        public enum Phase4_Strats_Of_The_First_Half {
+            
+            Single_Swap_单换,
+            Double_Swaps_双换
+            
         }
         
 
@@ -9285,7 +9284,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
             var ii = idles.IndexOf(idleStack);
 
-            if (Phase4_1_StackType == Phase4_1_StackTypeEnum.双换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_双换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -9324,7 +9323,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 }
             }
-            if (Phase4_1_StackType == Phase4_1_StackTypeEnum.单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_单换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -9631,7 +9630,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 downGroup.Add(nIndex);
                 downGroup.Add(d2Index);
             }
-            //Phase4_1_StackType
+            //Phase4_Strat_Of_The_First_Half
             var stack1 = P4Stack.IndexOf(1);
             var stack2 = P4Stack.LastIndexOf(1);
             var tetherStack = P4Tether[stack1] == -1 ? stack2 : stack1;
@@ -9646,7 +9645,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
             }
             var ii = idles.IndexOf(idleStack);
-            if(Phase4_1_StackType==Phase4_1_StackTypeEnum.双换)
+            if(Phase4_Strat_Of_The_First_Half==Phase4_Strats_Of_The_First_Half.Double_Swaps_双换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -9685,7 +9684,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 }
             }
-            if (Phase4_1_StackType == Phase4_1_StackTypeEnum.单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_单换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
