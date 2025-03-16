@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.81",
+        version:"0.0.0.82",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -116,12 +116,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Helpers (sorted lexicographically):
          - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1. (Mar 9, 2025)
          - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1. (Mar 5, 2025)
+         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2. (Mar 16,2025)
          - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
         
         原作者,奠基人兼共同维护者: @karlin_z
         提供帮助的人(按字典序排序):
         - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。 (2025.03.09)
         - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。 (2025.03.05)
+        - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告。 (2025.03.16)
         - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。 (2025.03.10)
         
         ***** New Features *****
@@ -135,7 +137,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Phase 2:
          - Reworked guidance after the knockback during Diamond Dust.
          - Reworked guidance of Mirror, Mirror.
-         - Full fixes of Light Rampant;
+         - Fixes and refinements for Light Rampant;
         Phase 3:
          - Guidance of the second half (including the Double Group strat and the Locomotive strat);
         Phase 4:
@@ -155,7 +157,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         P2:
          - 钻石星辰击退后指路重做;
          - 镜中奇遇指路重做;
-         - 光之失控(光暴)的全面修复;
+         - 光之失控(光暴)修复和细化;
         P3:
          - 二运指路(包括双分组法和车头法);
         P4:
@@ -290,6 +292,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase2_Strats_Of_Light_Rampant Phase2_Strat_Of_Light_Rampant { get; set; }
         [UserSetting("P2光之失控(光暴) 大致路径的颜色")]
         public ScriptColor Phase2_Colour_Of_Rough_Paths { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("P2光之失控(光暴) 球体AOE的颜色")]
+        public ScriptColor Phase2_Colour_Of_Sphere_AOEs { get; set; } = new() { V4=new(1f,0f,0f,1f) };
 
         [UserSetting("-----P3设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase3_Settings_____ { get; set; } = true;
@@ -6465,7 +6469,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = $"光球{sid}";
             dp.Scale = new(11f);
             dp.Owner = sid;
-            dp.Color = ColorRed.V4.WithW(4f);
+            dp.Color = Phase2_Colour_Of_Sphere_AOEs.V4.WithW(3f);
             dp.Delay = 2500;
             dp.DestoryAt = 2500;
             dp.ScaleMode |= ScaleMode.ByTime;
