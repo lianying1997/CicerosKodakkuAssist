@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.78",
+        version:"0.0.0.79",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -69,8 +69,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
         7. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
         In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
-        8. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked.
-        If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Duplicated settings would cause exceptions.
+        8. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
+        If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Allocating the same residue for different debuffs would cause exceptions.
         If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
         If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
         9. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
@@ -98,8 +98,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
         7. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
         值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
-        8. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。
-        如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。设置选项相同将导致错误。
+        8. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
+        如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。为不同Debuff分配相同白圈将导致错误。
         如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
         如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
         9. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
@@ -328,7 +328,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
         [UserSetting("P4二运 光之潮汐(地火)的颜色")]
         public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4=new(1f,1f,0f,1f) };
-        [UserSetting("P4二运 白圈指路的逻辑")]
+        [UserSetting("P4二运 白圈指路的逻辑 (Make sure only one in the party enables marking!/小队内只能有一人启用标记!)")]
         public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; }
         [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
         public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
@@ -680,7 +680,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             According_To_Debuffs_根据Debuff,
             According_To_Signs_On_Me_根据我身上的目标标记,
-            Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友
+            Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友
             
         }
         
@@ -10674,7 +10674,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(Phase4_Logic_Of_Residue_Guidance!=Phase4_Logics_Of_Residue_Guidance.Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友) {
+            if(Phase4_Logic_Of_Residue_Guidance!=Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友) {
 
                 return;
 
@@ -11979,9 +11979,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Debuffs_根据Debuff
-               ||
-               Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友) {
+            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Debuffs_根据Debuff) {
                 
                 if(P4ClawBuff[currentIndex]==3) {
                     // 3 stands for Wyrmfang (the blue debuff).
@@ -12018,7 +12016,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
-            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记) {
+            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记
+               ||
+               Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友) {
+                
                 
                 if(P4ClawBuff[currentIndex]==3) {
 
@@ -12214,7 +12215,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase4_semaphoreWyrmfangWasConfirmed=new System.Threading.AutoResetEvent(false);
             phase4_semaphoreIncidentalDebuffsWereConfirmed=new System.Threading.AutoResetEvent(false);
 
-            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友) {
+            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友) {
                 
                 accessory.Method.MarkClear();
                 
