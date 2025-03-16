@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.77",
+        version:"0.0.0.78",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -56,26 +56,27 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         And of course you need to have the plugin Daily routines installed and enabled if you'd like to use Daily Routines TTS.
         The language of TTS prompts would be consistent with that of text prompts.
         2. For any marking feature, please make sure that only one member in the party enables it, and the party are not running any similar marking feature from other plugins or triggers.
-        3. Marks during Fall Of Faith in Phase 1 involves three different types: Target To Attack, Target To Bind, Target To Ignore.
+        3. There may not be exact 2 players being marked during Utopian Sky if the initial positions of players are unbearably deviant. The marks would be based on the real-time positions of each player.
+        4. Marks during Fall Of Faith in Phase 1 involves three different types: Target To Attack, Target To Bind, Target To Ignore.
         Target To Ignore 1 and 2: The tethered players in the north. Numbers stand for the round of the play.
         Target To Bind 1 and 2: The tethered players in the south. Numbers stand for the round of the play.
         Target To Attack 1 and 2: The untethered players in the north. Number 1 stands for the player with higher priority.
         Target To Attack 3 and 4: The untethered players in the north. Number 3 stands for the player with higher priority.
         (Assuming the priority is MT OT H1 H2 M1 M2 R1 R2, then:
            Higher priority <- MT OT H1 H2 M1 M2 R1 R2 -> Lower priority)
-        4. In the descriptions of Mirror Mirror strats in Phase 2, the left and right here refer to the left and right while facing red mirrors from the center.
-        5. It's required to select a proper initial position for your Light Rampant strat, otherwise the guidance may be not reliable.
+        5. In the descriptions of Mirror Mirror strats in Phase 2, the left and right here refer to the left and right while facing red mirrors from the center.
+        6. It's required to select a proper initial position for your Light Rampant strat, otherwise the guidance may be not reliable.
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
-        6. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
+        7. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
         In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
-        7. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked.
+        8. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked.
         If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Duplicated settings would cause exceptions.
         If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
         If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
-        8. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
+        9. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
         Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
-        9. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        10. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
         If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
         After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
         
@@ -84,26 +85,27 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         当然,如果选择了Daily Routines TTS,你需要已经安装并启用了Daily Routines插件。
         TTS提示的语言与文本提示语言相同。
         2. 对于任何标记队友的功能,小队里只能有一个玩家启用,并且也不与其他科技的兼容。
-        3. P1信仰崩塌(四连抓)期间的标记涉及到攻击,止步和禁止三种。
+        3. P1乐园绝技(雾龙)期间被标记的玩家可能少于或者多于2人,因为会捕获玩家的实时位置进行计算,站位不标准可能会导致这种情况。
+        4. P1信仰崩塌(四连抓)期间的标记涉及到攻击,止步和禁止三种。
         禁止1和2:前往北侧的被连线玩家。数字就是抓人的轮数。
         锁链1和2:前往南侧的被连线玩家。数字就是抓人的轮数。
         攻击1和2:前往北侧的闲人。数字1是优先级更高的。
         攻击3和4:前往南侧的闲人。数字3是优先级更高的。
         (假设优先级为 MT ST H1 H2 D1 D2 D3 D4, 那么高优先级指的是:
            高优先级 <- MT ST H1 H2 D1 D2 D3 D4 -> 低优先级)
-        4. P2镜中奇遇攻略的描述中,左和右的基准指的是从场中面向两面红色镜子时的左和右。
-        5. P2光之失控(光暴)必须在配置中设定相应的预站位,否则指路会电椅。
+        5. P2镜中奇遇攻略的描述中,左和右的基准指的是从场中面向两面红色镜子时的左和右。
+        6. P2光之失控(光暴)必须在配置中设定相应的预站位,否则指路会电椅。
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
-        6. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
+        7. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
         值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
-        7. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。
+        8. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。
         如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。设置选项相同将导致错误。
         如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
         如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
-        8. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
+        9. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
         不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
-        9. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        10. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
         如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
         然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
         
@@ -128,6 +130,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Phase 1:
          - Refinements for the entire phase;
          - New strats for Utopian Sky, Fall Of Faith and the towers at the end;
+         - Player marking for Utopian Sky;
          - Reworked player marking during Fall Of Faith;
         Phase 2:
          - Reworked guidance after the knockback during Diamond Dust.
@@ -147,6 +150,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         P1:
          - 整个阶段的精修;
          - 乐园绝技(雾龙),信仰崩塌(四连抓)和最后踩塔都增加了新攻略;
+         - 乐园绝技(雾龙)的玩家标记;
          - 重做信仰崩塌(四连抓)的玩家标记;
         P2:
          - 钻石星辰击退后指路重做;
@@ -255,6 +259,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool _____Phase1_Settings_____ { get; set; } = true;
         [UserSetting("P1乐园绝技(雾龙) 待机站位")]
         public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; }
+        [UserSetting("P1乐园绝技(雾龙) 标记在安全位置的玩家")]
+        public bool Phase1_Mark_Players_In_Safe_Positions { get; set; } = false;
         [UserSetting("P1 燃烧击(火雷直线)特性的颜色")]
         public ScriptColor Phase1_Colour_Of_Burnt_Strike_Characteristics { get; set; } = new() { V4=new(1f,1f,0f,1f) };
         [UserSetting("P1光轮召唤 分组")]
@@ -282,6 +288,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; }
         [UserSetting("P2光之失控(光暴) 攻略")]
         public Phase2_Strats_Of_Light_Rampant Phase2_Strat_Of_Light_Rampant { get; set; }
+        [UserSetting("P2光之失控(光暴) 大致路径的颜色")]
+        public ScriptColor Phase2_Colour_Of_Rough_Paths { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
         [UserSetting("-----P3设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase3_Settings_____ { get; set; } = true;
@@ -367,8 +375,21 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         double parse = 0;
         volatile bool isInPhase5=false;
 
-        int P1雾龙计数 =0;
+        int P1雾龙计数=0;
+        readonly Object P1雾龙计数读写锁_AsAConstant=new Object();
+        int P1雾龙计数2=0;
+        readonly Object P1雾龙计数2读写锁_AsAConstant=new Object();
         int[] P1雾龙记录 = [0, 0, 0, 0];
+        List<MarkType> phase1_markForThePlayersInSafePositions_asAConstant=[
+            MarkType.Attack1,
+            MarkType.Attack2,
+            MarkType.Attack3,
+            MarkType.Attack4,
+            MarkType.Attack5,
+            MarkType.Attack6,
+            MarkType.Attack7,
+            MarkType.Attack8
+        ];
         bool P1雾龙雷=false;
         List<int> P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
         volatile int phase1_timesBurnishedGloryWasCast=0;
@@ -643,8 +664,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         }
         public enum Phase4_Strats_Of_The_First_Half {
             
-            Double_Swaps_双换,
-            Single_Swap_单换
+            Single_Swap_单换,
+            Double_Swaps_双换
             
         }
         
@@ -704,7 +725,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             isInPhase5=false;
             
             P1雾龙记录 = [0, 0, 0, 0];
-            P1雾龙计数 = 0;
+            P1雾龙计数=0;
+            P1雾龙计数2=0;
             P1转轮召抓人 = [0, 0, 0, 0, 0, 0, 0, 0];
             phase1_timesBurnishedGloryWasCast=0;
             phase1_tetheredPlayersDuringFallOfFaith = [];
@@ -1295,11 +1317,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             if (parse != 1d) return;
 
-            lock (this)
+            lock (P1雾龙计数读写锁_AsAConstant)
             {
                 P1雾龙计数 ++; 
                 if(P1雾龙计数 != 3) return;
-                Task.Delay(250).ContinueWith(t =>
+                Task.Delay(334).ContinueWith(t =>
                 {
                     if (!P1雾龙雷)
                     {
@@ -1371,6 +1393,117 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 });
                 
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase1 Mark Players In Safe Positions 标记在安全位置的玩家",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40158"],
+            userControl:false)]
+        
+        public void Phase1_Mark_Players_In_Safe_Positions_标记在安全位置的玩家(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+
+            if(!Phase1_Mark_Players_In_Safe_Positions) {
+
+                return;
+
+            }
+
+            lock(P1雾龙计数2读写锁_AsAConstant) {
+                
+                ++P1雾龙计数2;
+                
+                System.Threading.Thread.MemoryBarrier();
+
+                if(P1雾龙计数2!=3) {
+                    
+                    return;
+                    
+                }
+                
+                Task.Delay(334).ContinueWith(t => {
+                    // I know this is not a thread safe practice, but I'm just too lazy to rework it in a thread safe way. Please forgive me :(
+                    // And by the way, If something really goes wrong here, it probably indicates that the frame rate of the current user is below 3 FPS.
+                    
+                    int safePositions=P1雾龙记录.IndexOf(0);
+                    List<int> temporaryOrder=[0,1,2,3,4,5,6,7];
+                    string debugOutput="";
+
+                    if(Phase1_Standby_Position_Of_Utopian_Sky==Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4) {
+
+                        temporaryOrder=[0,1,7,5,3,4,2,6];
+
+                    }
+                    
+                    if(Phase1_Standby_Position_Of_Utopian_Sky==Phase1_Standby_Positions_Of_Utopian_Sky.Both_Tanks_Go_Center_双T去中间) {
+
+                        temporaryOrder=[0,7,3,5,1,4,2,6];
+
+                    }
+
+                    for(int i=0,j=0;i<temporaryOrder.Count;++i) {
+
+                        var currentObject=accessory.Data.Objects.SearchById(accessory.Data.PartyList[temporaryOrder[i]]);
+
+                        if(currentObject!=null) {
+
+                            if(PositionTo8Dir(currentObject.Position,new Vector3(100,0,100))==safePositions
+                               ||
+                               PositionTo8Dir(currentObject.Position,new Vector3(100,0,100))==((safePositions+4)%8)) {
+                                
+                                accessory.Method.Mark(accessory.Data.PartyList[temporaryOrder[i]],phase1_markForThePlayersInSafePositions_asAConstant[j]);
+
+                                debugOutput+=$"temporaryOrder[i]={temporaryOrder[i]},phase1_markForThePlayersInSafePositions_asAConstant[j]={phase1_markForThePlayersInSafePositions_asAConstant[j]}\n";
+
+                                ++j;
+
+                            }
+                            
+                        }
+
+                    }
+
+                    if(Enable_Developer_Mode) {
+
+                        accessory.Method.SendChat($"""
+                                                   /e 
+                                                   {debugOutput}
+                                                   
+                                                   """);
+
+                    }
+                        
+                });
+                
+            }
+
+        }
+        
+        [ScriptMethod(name:"Phase1 Clear Marks On Players In Safe Positions 清理安全位置玩家的标记",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40158"],
+            userControl:false,
+            suppress:2000)]
+        
+        public void Phase1_Clear_Marks_On_Players_In_Safe_Positions_清理安全位置玩家的标记(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=1d) {
+                
+                return;
+                
+            }
+            
+            if(Phase1_Mark_Players_In_Safe_Positions) {
+
+                accessory.Method.MarkClear();
+
             }
 
         }
@@ -2424,7 +2557,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (!ParseObjectId(@event["TargetId"], out var tid)) return;
             var dis = 2.5f;//距离点名人
             var far = 5.25f;//距离boss
-            Task.Delay(250).ContinueWith(t =>
+            Task.Delay(334).ContinueWith(t =>
             {
                 var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
                 Vector3 t1p1 = new(100, 0, 100 - far);
@@ -2802,7 +2935,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P1_塔_塔处理位置(Event @event, ScriptAccessory accessory)
         {
             if (parse != 1d) return;
-            Task.Delay(250).ContinueWith(t =>
+            Task.Delay(334).ContinueWith(t =>
             {
                 var myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
                 if (@event["ActionId"] == "40134")
@@ -4282,6 +4415,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P2_双镜_分散分摊(Event @event, ScriptAccessory accessory)
         {
             if(parse != 2.2) return;
+            string prompt="";
             if (@event["ActionId"]=="40221")
             {
                 foreach (var pm in accessory.Data.PartyList)
@@ -4294,6 +4428,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分散";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Spread";
+
+                }
+                
             }
             else
             {
@@ -4310,6 +4457,35 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分摊";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Stack";
+
+                }
+                
+            }
+
+            if(!prompt.Equals("")) {
+
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,1500);
+                    
+                }
+                
+                if(Enable_Vanilla_TTS||Enable_Daily_Routines_TTS) {
+                    
+                    accessory.TTS(prompt,Enable_Vanilla_TTS,Enable_Daily_Routines_TTS);
+                    
+                }
+                
             }
             
         }
@@ -5043,6 +5219,287 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
         
+        [ScriptMethod(name:"Phase2 Initial Positions Before Light Rampant 光之失控(光暴)前初始站位",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40212"])]
+        
+        public void Phase2_Initial_Positions_Before_Light_Rampant_光之失控前初始站位(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=2.2
+               &&
+               parse!=2.3) {
+                
+                return;
+                
+            }
+            
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            double rotation=0d;
+
+            if(Phase2_Initial_Protean_Position_Of_Light_Rampant==Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_And_East_常规八方T在东北) {
+
+                rotation=0d;
+                
+                rotation+=myIndex switch {
+                    0 => 0d,
+                    7 => 1d,
+                    1 => 2d,
+                    5 => 3d,
+                    3 => 4d,
+                    4 => 5d,
+                    2 => 6d,
+                    6 => 7d
+                };
+                
+            }
+            
+            if(Phase2_Initial_Protean_Position_Of_Light_Rampant==Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_MOTH12_蓝绿全部在北MSTH12) {
+
+                rotation=-0.5d;
+                
+                rotation+=myIndex switch {
+                    0 => -1d,
+                    1 => 0d,
+                    2 => 1d,
+                    3 => 2d,
+                    7 => 3d,
+                    6 => 4d,
+                    5 => 5d,
+                    4 => 6d
+                };
+                
+            }
+            
+            if(Phase2_Initial_Protean_Position_Of_Light_Rampant==Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_H12MOT_蓝绿全部在北H12MST) {
+
+                rotation=-0.5d;
+                
+                rotation+=myIndex switch {
+                    2 => -1d,
+                    3 => 0d,
+                    0 => 1d,
+                    1 => 2d,
+                    7 => 3d,
+                    6 => 4d,
+                    5 => 5d,
+                    4 => 6d
+                };
+                
+            }
+
+            var currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentproperty.Name="Phase2_Initial_Positions_Before_Light_Rampant_光之失控前初始站位";
+            currentproperty.Scale=new(2);
+            currentproperty.Owner=accessory.Data.Me;
+            currentproperty.TargetPosition=RotatePoint(new Vector3(100,0,95),new Vector3(100,0,100),(float)(float.Pi/4*rotation));;
+            currentproperty.ScaleMode|=ScaleMode.YByDistance;
+            currentproperty.Color=accessory.Data.DefaultSafeColor;
+            currentproperty.DestoryAt=5000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+            
+        }
+        
+        [ScriptMethod(name:"Phase2 Rough Path Of Luminous Hammer 光流侵蚀(放泥)大致路径",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40212"],
+            suppress:2000)]
+        
+        public void Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=2.3) {
+                
+                return;
+                
+            }
+            
+            var currentproperty=accessory.Data.GetDefaultDrawProperties();
+
+            if(Phase2_Strat_Of_Light_Rampant==Phase2_Strats_Of_Light_Rampant.Star_Of_David_Japanese_PF_六芒星日服野队法) {
+
+                Vector3 point1=new Vector3(97.321f,0f,106.467f);
+                Vector3 point1Symmetry=RotatePoint(point1,new Vector3(100,0,100),float.Pi);
+                Vector3 point2=new Vector3(93f,0f,100f);
+                Vector3 point2Symmetry=RotatePoint(point2,new Vector3(100,0,100),float.Pi);
+                Vector3 point3=new Vector3(97.321f,0f,93.533f);
+                Vector3 point3Symmetry=RotatePoint(point3,new Vector3(100,0,100),float.Pi);
+                Vector3 point4=new Vector3(97.321f,0f,82f);
+                Vector3 point4Symmetry=RotatePoint(point4,new Vector3(100,0,100),float.Pi);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point1;
+                currentproperty.TargetPosition=point2;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point2;
+                currentproperty.TargetPosition=point3;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point3;
+                currentproperty.TargetPosition=point4;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point1Symmetry;
+                currentproperty.TargetPosition=point2Symmetry;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point2Symmetry;
+                currentproperty.TargetPosition=point3Symmetry;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point3Symmetry;
+                currentproperty.TargetPosition=point4Symmetry;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+
+            }
+            
+            if(Phase2_Strat_Of_Light_Rampant==Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法) {
+
+                Vector3 point1=new Vector3(93f,0f,100f);
+                Vector3 point1Symmetry=RotatePoint(point1,new Vector3(100,0,100),float.Pi);
+                Vector3 point2=new Vector3(97.321f,0f,93.533f);
+                Vector3 point2Symmetry=RotatePoint(point2,new Vector3(100,0,100),float.Pi);
+                Vector3 point3=new Vector3(107.071f,0f,92.929f);
+                Vector3 point3Symmetry=RotatePoint(point3,new Vector3(100,0,100),float.Pi);
+                Vector3 point4=new Vector3(112.728f,0f,87.272f);
+                Vector3 point4Symmetry=RotatePoint(point4,new Vector3(100,0,100),float.Pi);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point1;
+                currentproperty.TargetPosition=point2;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point2;
+                currentproperty.TargetPosition=point3;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point3;
+                currentproperty.TargetPosition=point4;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point1Symmetry;
+                currentproperty.TargetPosition=point2Symmetry;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point2Symmetry;
+                currentproperty.TargetPosition=point3Symmetry;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+                currentproperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentproperty.Name="Phase2_Rough_Path_Of_Luminous_Hammer_光流侵蚀大致路径";
+                currentproperty.Scale=new(2);
+                currentproperty.Position=point3Symmetry;
+                currentproperty.TargetPosition=point4Symmetry;
+                currentproperty.ScaleMode|=ScaleMode.YByDistance;
+                currentproperty.Color=Phase2_Colour_Of_Rough_Paths.V4.WithW(1f);
+                currentproperty.Delay=3500;
+                currentproperty.DestoryAt=9500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentproperty);
+                
+            }
+            
+        }
+        
         [ScriptMethod(name:"Phase2 Determine Luminous Hammer During Light Rampant 光之失控(光暴)确定光流侵蚀(放泥)",
             eventType:EventTypeEnum.TargetIcon,
             userControl:false)]
@@ -5154,6 +5611,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P2_光之暴走_分散分摊(Event @event, ScriptAccessory accessory)
         {
             if (parse != 2.3) return;
+            string prompt="";
             if (@event["ActionId"] == "40221")
             {
                 foreach (var pm in accessory.Data.PartyList)
@@ -5166,6 +5624,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分散";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Spread";
+
+                }
+                
             }
             else
             {
@@ -5181,6 +5652,35 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     dp.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt="分摊";
+
+                }
+                
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt="Stack";
+
+                }
+                
+            }
+            
+            if(!prompt.Equals("")) {
+
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,1500);
+                    
+                }
+                
+                if(Enable_Vanilla_TTS||Enable_Daily_Routines_TTS) {
+                    
+                    accessory.TTS(prompt,Enable_Vanilla_TTS,Enable_Daily_Routines_TTS);
+                    
+                }
+                
             }
 
         }
@@ -7960,6 +8460,133 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
+            else {
+
+                var temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+
+                Vector3 point1=new Vector3(93f,0f,101f);
+                Vector3 point1Extension=new Vector3(93f,0f,109f);
+                Vector3 point2=new Vector3(93f,0f,99f);
+                Vector3 point2Extension=new Vector3(93f,0f,91f);
+                Vector3 point3=new Vector3(92f,0f,101f);
+                Vector3 point3Extension=new Vector3(85.072f,0f,105f);
+                Vector3 point4=new Vector3(92f,0f,99f);
+                Vector3 point4Extension=new Vector3(85.072f,0f,95f);
+                Vector3 point5=new Vector3(107f,0f,101f);
+                Vector3 point5Extension=new Vector3(107f,0f,109f);
+                Vector3 point6=new Vector3(107f,0f,99f);
+                Vector3 point6Extension=new Vector3(107f,0f,91f);
+                Vector3 point7=new Vector3(108f,0f,101f);
+                Vector3 point7Extension=new Vector3(114.928f,0f,105f);
+                Vector3 point8=new Vector3(108f,0f,99f);
+                Vector3 point8Extension=new Vector3(114.928f,0f,95f);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point1;
+                temporaryProperty.TargetPosition=point1Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point2;
+                temporaryProperty.TargetPosition=point2Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point3;
+                temporaryProperty.TargetPosition=point3Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point4;
+                temporaryProperty.TargetPosition=point4Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point5;
+                temporaryProperty.TargetPosition=point5Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point6;
+                temporaryProperty.TargetPosition=point6Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point7;
+                temporaryProperty.TargetPosition=point7Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+                temporaryProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                temporaryProperty.Name="Phase3_Rough_Guidance_Of_Spirit_Taker_碎灵一击粗略指路";
+                temporaryProperty.Scale=new(2);
+                temporaryProperty.Position=point8;
+                temporaryProperty.TargetPosition=point8Extension;
+                temporaryProperty.ScaleMode|=ScaleMode.YByDistance;
+                temporaryProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
+                temporaryProperty.Delay=1250;
+                temporaryProperty.DestoryAt=2500;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,temporaryProperty);
+                
+            }
+
             if(targetPositionConfirmed) {
 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
@@ -9237,6 +9864,63 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase4_1_ManualReset.Reset();
             phase4_1_TetherCount = 0;
         }
+        
+        [ScriptMethod(name:"Phase4 Initial Position Before Darklit Dragonsong 暗光龙诗前预站位",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40239"])]
+        
+        public void Phase4_Initial_Position_Before_Darklit_Dragonsong_暗光龙诗前预站位(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.1
+               &&
+               parse!=4.2) {
+
+                return;
+
+            }
+
+            List<Vector3> initialPosition=[
+                new Vector3(95.5f,0f,94f),
+                new Vector3(98.5f,0f,94f),
+                new Vector3(101.5f,0f,94f),
+                new Vector3(104.5f,0f,94f),
+                new Vector3(95.5f,0f,106f),
+                new Vector3(98.5f,0f,106f),
+                new Vector3(101.5f,0f,106f),
+                new Vector3(104.5f,0f,106f),
+            ];
+
+            int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+            for(int i=0;i<initialPosition.Count;++i) {
+                
+                currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase4_Initial_Position_Before_Darklit_Dragonsong_暗光龙诗前预站位";
+                currentProperty.Scale=new(0.5f);
+                currentProperty.Position=initialPosition[i];
+                currentProperty.Color=(i==myIndex)?accessory.Data.DefaultSafeColor:accessory.Data.DefaultDangerColor;
+                currentProperty.DestoryAt=5500;
+                
+                accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                
+            }
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase4_Initial_Position_Before_Darklit_Dragonsong_暗光龙诗前预站位";
+            currentProperty.Scale=new(2);
+            currentProperty.ScaleMode|=ScaleMode.YByDistance;
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.TargetPosition=initialPosition[myIndex];
+            currentProperty.Color=accessory.Data.DefaultSafeColor;
+            currentProperty.DestoryAt=5500;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+        }
+        
         [ScriptMethod(name: "P4_暗光龙诗_Buff记录", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2461"], userControl: false)]
         public void P4_暗光龙诗_Buff记录(Event @event, ScriptAccessory accessory)
         {
