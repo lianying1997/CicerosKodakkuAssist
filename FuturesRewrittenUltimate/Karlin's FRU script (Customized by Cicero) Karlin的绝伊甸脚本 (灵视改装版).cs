@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.76",
+        version:"0.0.0.77",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -68,10 +68,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
         6. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
         In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
-        7. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
+        7. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked.
+        If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Duplicated settings would cause exceptions.
+        If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
+        If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
+        8. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
         Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
-        8. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        9. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
         If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
         After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
         
@@ -92,10 +96,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
         6. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
         值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
-        7. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
+        7. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。
+        如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。设置选项相同将导致错误。
+        如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
+        如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
+        8. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
         不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
-        8. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        9. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
         如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
         然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
         
@@ -131,6 +139,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - New strat of the first half (Single Swap).
          - Guidance related to Drachen Wanderer residues of the second half;
          - Fixes and refinements for vanilla guidance of the second half;
+         - New strat (HTD priority) and player marking of the second half;
         Phase 5:
          - Guidance of Wings Dark And Light;
          - Guidance of Polarizing Strikes.
@@ -144,11 +153,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 镜中奇遇指路重做;
          - 光之失控(光暴)的全面修复;
         P3:
-         - 一运新攻略(单换);
          - 二运指路(包括双分组法和车头法);
         P4:
+         - 一运新攻略(单换);
          - 二运圣龙气息(龙头)白圈相关的指路;
          - 二运原版指路修复和细化;
+         - 二运新攻略(HTD优先级)与玩家标记;
         P5:
          - 光与暗之翼(踩塔)指路;
          - 极化打击(挡枪)指路。
@@ -159,9 +169,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Phase 3:
          - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
            The timeline here would be refined in the future.
-        Phase 4:
-         - Crystallize Time: The priority on CN (HTD) has not been added yet but it's on the way.
-           The current priority is THD. The priority here only involves Wyrmclaw (the red debuff).
         Phase 5:
          - Fulgent Blade: The guidance has been added yet. I've asked @milkvio for the permission of his implementation and got his approval. Therefore, I will add it very soon.
          - Polarizing Strikes: The order of taking towers regarding the Grey9 Brain Dead strat on CN has been adjusted a little bit, and the new version has not been added yet. It's on the way.
@@ -172,9 +179,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         P3:
          - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
            会在未来精修此处的时间轴。
-        P4:
-         - 时间结晶(二运): 国服优先级(HTD)尚未适配,但很快就会做。
-           现在的优先级是THD。这里的优先级仅与圣龙爪(红)debuff有关。
         P5:
          - 璀璨之刃(地火): 尚未添加指路,但我已经向 @milkvio 申请使用他的地火指路并且得到本人同意了。很快就会补上这部分。
          - 极化打击(挡枪): 国服的灰九脑死塔踩塔顺序有点改动,尚未适配,但很快就会做。
@@ -249,30 +253,30 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase1_Settings_____ { get; set; } = true;
-        [UserSetting("P1 乐园绝技(雾龙)待机站位")]
+        [UserSetting("P1乐园绝技(雾龙) 待机站位")]
         public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; }
         [UserSetting("P1 燃烧击(火雷直线)特性的颜色")]
         public ScriptColor Phase1_Colour_Of_Burnt_Strike_Characteristics { get; set; } = new() { V4=new(1f,1f,0f,1f) };
-        [UserSetting("P1 光轮召唤分组")]
+        [UserSetting("P1光轮召唤 分组")]
         public Phase1_Groups_Of_Turn_Of_The_Heavens Phase1_Group_Of_Turn_Of_The_Heavens { get; set; }
-        [UserSetting("P1 信仰崩塌(四连抓)攻略")]
+        [UserSetting("P1信仰崩塌(四连抓) 攻略")]
         public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; }
-        [UserSetting("P1 信仰崩塌(四连抓)标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
+        [UserSetting("P1信仰崩塌(四连抓) 标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
         public bool Phase1_Mark_Players_During_Fall_Of_Faith { get; set; } = false;
-        [UserSetting("P1 信仰崩塌(四连抓)的面向基准")]
+        [UserSetting("P1信仰崩塌(四连抓) 面向基准")]
         public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; }
-        [UserSetting("P1 踩塔攻略")]
+        [UserSetting("P1踩塔 攻略")]
         public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; }
 
         [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase2_Settings_____ { get; set; } = true;
-        [UserSetting("P2 击退后攻略")]
+        [UserSetting("P2钻石星辰 击退后攻略")]
         public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; }
         [UserSetting("P2镜中奇遇 攻略")]
         public Phase2_Strats_Of_Mirror_Mirror Phase2_Strat_Of_Mirror_Mirror { get; set; }
-        [UserSetting("P2 镜子粗略指路的颜色")]
+        [UserSetting("P2镜中奇遇 镜子粗略指路的颜色")]
         public ScriptColor Phase2_Colour_Of_Mirror_Rough_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
-        [UserSetting("P2 潜在危险区的颜色")]
+        [UserSetting("P2镜中奇遇 潜在危险区的颜色")]
         public ScriptColor Phase2_Colour_Of_Potential_Dangerous_Zones { get; set; } = new() { V4=new(1f,0f,0f,1f) };
         [UserSetting("P2光之失控(光暴) 初始八方站位")]
         public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; }
@@ -291,8 +295,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase3_Branches_Of_The_Locomotive_Strat Phase3_Branch_Of_The_Locomotive_Strat { get; set; }
         [UserSetting("P3二运 场地划分方式")]
         public Phase3_Divisions_Of_The_Zone Phase3_Division_Of_The_Zone { get; set; } = Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南;
-        [UserSetting("P3二运 粗略指路与倒数第二次启示(地火)的颜色")]
-        public ScriptColor Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse { get; set; } = new() { V4=new(0,1f,1f,1f) };
+        [UserSetting("P3二运 粗略指路的颜色")]
+        public ScriptColor Phase3_Colour_Of_Rough_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("P3二运 倒数第二次启示(地火)的颜色")]
+        public ScriptColor Phase3_Colour_Of_The_Penultimate_Apocalypse { get; set; } = new() { V4=new(0,1f,1f,1f) };
         [UserSetting("P3二运 引导暗夜舞蹈(最远死刑)的T")]
         public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; } = Tanks.OT_ST;
         [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
@@ -300,32 +306,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P4设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase4_Settings_____ { get; set; } = true;
-
         [UserSetting("P4一运 水分摊换位方式")]
-        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Double_Swaps_双换;
+        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; }
+        [UserSetting("P4一运 忧郁舞蹈(远近死刑)的颜色")]
+        public ScriptColor Phase4_Colour_Of_Somber_Dance { get; set; } = new() { V4=new(1f,0f,0f,1f) };
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
         public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
+        [UserSetting("P4二运 圣龙爪(红)玩家优先级")]
+        public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; }
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
-        public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4=new(0,1f,1f,1f) };
+        public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4=new(1f,1f,0f,1f) };
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
         public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
         [UserSetting("P4二运 光之潮汐(地火)的颜色")]
         public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4=new(1f,1f,0f,1f) };
-        [UserSetting("P4二运 暗炎喷发(分散)的白圈")]
+        [UserSetting("P4二运 白圈指路的逻辑")]
+        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; }
+        [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
+        public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
+        [UserSetting("P4二运 暗炎喷发(分散)的白圈 (Debuff Setting/Debuff设置)")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
-        [UserSetting("P4二运 黑暗神圣(后分摊)的白圈")]
+        [UserSetting("P4二运 黑暗神圣(后分摊)的白圈 (Debuff Setting/Debuff设置)")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Unholy_Darkness { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
-        [UserSetting("P4二运 黑暗冰封(月环)的白圈")]
+        [UserSetting("P4二运 黑暗冰封(月环)的白圈 (Debuff Setting/Debuff设置)")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Blizzard_III { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
-        [UserSetting("P4二运 黑暗狂水(先分摊)的白圈")]
+        [UserSetting("P4二运 黑暗狂水(先分摊)的白圈 (Debuff Setting/Debuff设置)")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Water_III { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
+        [UserSetting("P4二运 攻击1的白圈 (Sign Setting/目标标记设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack1 { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
+        [UserSetting("P4二运 攻击2的白圈 (Sign Setting/目标标记设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack2 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
+        [UserSetting("P4二运 攻击3的白圈 (Sign Setting/目标标记设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack3 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
+        [UserSetting("P4二运 攻击4的白圈 (Sign Setting/目标标记设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack4 { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
         [UserSetting("P4二运 白圈指路的颜色")]
         public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
 
         [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase5_Settings_____ { get; set; } = true;
         [UserSetting("P5 璀璨之刃(地火)颜色")]
-        public ScriptColor Phase5_Colour_Of_Fulgent_Blade { get; set; } = new() { V4=new(0,1,1,1)};
+        public ScriptColor Phase5_Colour_Of_Fulgent_Blade { get; set; } = new() { V4=new(0,1f,1f,1f) };
         [UserSetting("P5 Boss中轴线的颜色")]
         public ScriptColor Phase5_Colour_Of_The_Boss_Central_Axis { get; set; } = new() { V4=new(1f,0f,0f,1f) };
         [UserSetting("P5 璀璨之刃(地火)后Boss面向人群")]
@@ -431,12 +452,34 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         List<int> P4Stack = [0, 0, 0, 0, 0, 0, 0, 0];
         bool P4TetherDone = false;
         List<int> P4ClawBuff = [0, 0, 0, 0, 0, 0, 0, 0];
+        volatile int phase4_numberOfWyrmfangHasBeenCounted=0;
+        readonly Object phase4_readwriteLockOfWyrmfangCounter_AsAConstant=new Object();
+        System.Threading.AutoResetEvent phase4_semaphoreWyrmfangWasConfirmed=new System.Threading.AutoResetEvent(false);
+        volatile int phase4_numberOfIncidentalDebuffsHaveBeenCounted=0;
+        readonly Object phase4_readwriteLockOfIncidentalDebuffCounter_AsAConstant=new Object();
+        System.Threading.AutoResetEvent phase4_semaphoreIncidentalDebuffsWereConfirmed=new System.Threading.AutoResetEvent(false);
+        List<MarkType> phase4_markForPlayersWithWyrmfang_asAConstant=[
+            MarkType.Attack1,
+            MarkType.Attack2,
+            MarkType.Attack3,
+            MarkType.Attack4
+        ];
         List<int> P4OtherBuff = [0, 0, 0, 0, 0, 0, 0, 0];
+        volatile List<MarkType> phase4_marksOfPlayersWithWyrmfang=[
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1
+        ];
         int P4BlueTether = 0;
         List<Vector3> P4WaterPos = [];
         volatile string phase4_id1OfTheDrachenWanderers="";
         volatile string phase4_id2OfTheDrachenWanderers="";
-        readonly Object phase4_ReadwriteLockOfDrachenWandererIds_AsAConstant=new Object();
+        readonly Object phase4_readwriteLockOfDrachenWandererIds_AsAConstant=new Object();
         volatile int phase4_timesTheWyrmclawDebuffWasRemoved=0;
         volatile List<ulong> phase4_residueIdsFromEastToWest=[0,0,0,0];
         // The leftmost (0), the about left (1), the about right (2), the rightmost (3) while facing south.
@@ -600,11 +643,33 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         }
         public enum Phase4_Strats_Of_The_First_Half {
             
-            Single_Swap_单换,
-            Double_Swaps_双换
+            Double_Swaps_双换,
+            Single_Swap_单换
             
         }
         
+        public enum Phase4_Priorities_Of_The_Players_With_Wyrmclaw {
+            
+            In_THD_Order_按THD顺序,
+            In_HTD_Order_按HTD顺序
+            
+        }
+
+        public enum Phase4_Logics_Of_Residue_Guidance {
+            
+            According_To_Debuffs_根据Debuff,
+            According_To_Signs_On_Me_根据我身上的目标标记,
+            Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友
+            
+        }
+        
+        public enum Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang {
+            
+            According_To_Debuffs_根据Debuff,
+            According_To_The_Priority_THD_根据THD优先级,
+            According_To_The_Priority_HTD_根据HTD优先级,
+            
+        }
 
         public enum Phase4_Relative_Positions_Of_Residues {
 
@@ -694,6 +759,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
+            phase4_numberOfWyrmfangHasBeenCounted=0;
+            phase4_semaphoreWyrmfangWasConfirmed=new System.Threading.AutoResetEvent(false);
+            phase4_numberOfIncidentalDebuffsHaveBeenCounted=0;
+            phase4_semaphoreIncidentalDebuffsWereConfirmed=new System.Threading.AutoResetEvent(false);
+            phase4_marksOfPlayersWithWyrmfang=[
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1
+            ];
             phase4_id1OfTheDrachenWanderers="";
             phase4_id2OfTheDrachenWanderers="";
             phase4_timesTheWyrmclawDebuffWasRemoved=0;
@@ -4169,6 +4248,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             userControl:false)]
         
         public void Phase2_Reset_Semaphores_After_Diamond_Dust_钻石星尘后重置信号灯(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.1
+               &&
+               parse!=2.2) {
+                
+                return;
+                
+            }
             
             phase2_semaphoreOfGuidanceBeforeKnockback=new System.Threading.AutoResetEvent(false);
             phase2_semaphoreOfGuidanceAfterKnockback=new System.Threading.AutoResetEvent(false);
@@ -4211,7 +4298,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             else
             {
                 //int[] group = [6, 7, 4, 5, 2, 3, 0, 1];
-                int[] group = [4, 5, 6, 7, 0, 7, 2, 3];
+                int[] group = [4, 5, 6, 7, 0, 1, 2, 3];
                 var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
                 for (int i = 0; i < 4; i++)
                 {
@@ -4925,6 +5012,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             userControl:false)]
         
         public void Phase2_Reset_Semaphores_After_Mirror_Mirror_镜中奇遇后重置信号灯(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=2.2
+               &&
+               parse!=2.3) {
+                
+                return;
+                
+            }
             
             phase2_semaphoreTheColourlessMirrorWasConfirmed=new System.Threading.AutoResetEvent(false);
             phase2_semaphoreRedMirrorsWereConfirmed=new System.Threading.AutoResetEvent(false);
@@ -5847,6 +5942,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             userControl:false)]
         
         public void Phase2_Reset_Semaphores_After_Light_Rampant_光之失控后重置信号灯(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.3) {
+                
+                return;
+                
+            }
             
             phase2_semaphoreLuminousHammerWasConfirmed=new System.Threading.AutoResetEvent(false);
             phase2_semaphoreFinalLightsteepedWasConfirmed=new System.Threading.AutoResetEvent(false);
@@ -8405,7 +8506,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = "P3_二运_地火_第三点_11";
             dp.Scale = new(9);
             dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise);
-            dp.Color = Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse.V4;
+            dp.Color = Phase3_Colour_Of_The_Penultimate_Apocalypse.V4.WithW(1f);
             dp.Delay = 3000;
             dp.DestoryAt = 8000 - preTime;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -8421,7 +8522,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = "P3_二运_地火_第三点_21";
             dp.Scale = new(9);
             dp.Position = RotatePoint(pos, centre, float.Pi / 2 * clockwise + float.Pi);
-            dp.Color = Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse.V4;
+            dp.Color = Phase3_Colour_Of_The_Penultimate_Apocalypse.V4.WithW(1f);
             dp.Delay = 3000;
             dp.DestoryAt = 8000 - preTime;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -8472,7 +8573,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Scale=new(2);
             currentProperty.ScaleMode|=ScaleMode.YByDistance;
             currentProperty.Owner=accessory.Data.Me;
-            currentProperty.Color=Phase3_Colour_Of_Rough_Guidance_And_The_Penultimate_Apocalypse.V4;
+            currentProperty.Color=Phase3_Colour_Of_Rough_Guidance.V4.WithW(1f);
             currentProperty.Delay=500;
             currentProperty.DestoryAt=6500;
 
@@ -9429,7 +9530,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Scale = new(8);
             dp.Owner = sid;
             dp.CentreResolvePattern = PositionResolvePatternEnum.PlayerFarestOrder;
-            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Color = Phase4_Colour_Of_Somber_Dance.V4.WithW(3f);
             dp.Delay = 2000;
             dp.DestoryAt = 3000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -9448,29 +9549,28 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp2.Scale = new(8);
             dp2.Position = pos;
             dp2.CentreResolvePattern = PositionResolvePatternEnum.PlayerNearestOrder;
-            dp2.Color = accessory.Data.DefaultDangerColor;
+            dp2.Color = Phase4_Colour_Of_Somber_Dance.V4.WithW(3f);
             dp2.DestoryAt = 3500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp2);
 
         }
         #endregion
-        [ScriptMethod(name: "P4_暗光龙诗_光之束缚_保持距离提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2255"])]
+        [ScriptMethod(name: "P4_暗光龙诗_光之束缚_保持距离提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40271"], suppress: 2000)]
         public void P4_暗光龙诗_光之束缚_保持距离提示(Event @event, ScriptAccessory accessory)
         {
             if (parse != 4.2) return;
-            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
-            if (tid != accessory.Data.Me) return;
+            if (P4Tether[accessory.Data.PartyList.IndexOf(accessory.Data.Me)]==-1) return;
             if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
             {
-                accessory.Method.TextInfo("保持距离", 14000);
-                accessory.TTS($"保持距离",
+                if(Enable_Text_Prompts)accessory.Method.TextInfo("线未消失,保持距离", 1500);
+                accessory.TTS($"线未消失,保持距离",
                     Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
             }
 
             if (Language_Of_Prompts == Languages_Of_Prompts.English_英文)
             {
-                accessory.Method.TextInfo("Keep your distance", 14000);
-                accessory.TTS($"Keep your distance",
+                if(Enable_Text_Prompts)accessory.Method.TextInfo("The tether is still, keep your distance", 1500);
+                accessory.TTS($"The tether is still, keep your distance",
                     Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
             }
         }
@@ -9762,6 +9862,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
             parse = 4.3d;
             P4ClawBuff = [0, 0, 0, 0, 0, 0, 0, 0];
+            phase4_numberOfWyrmfangHasBeenCounted=0;
+            phase4_semaphoreWyrmfangWasConfirmed=new System.Threading.AutoResetEvent(false);
+            phase4_numberOfIncidentalDebuffsHaveBeenCounted=0;
+            phase4_semaphoreIncidentalDebuffsWereConfirmed=new System.Threading.AutoResetEvent(false);
+            phase4_marksOfPlayersWithWyrmfang=[
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1
+            ];
             P4OtherBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             P4WaterPos = [];
             phase4_id1OfTheDrachenWanderers="";
@@ -9813,7 +9927,216 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             {
                 P4OtherBuff[index] = 5;
             }
+            
+            System.Threading.Thread.MemoryBarrier();
+            
+            if(id.Equals("3264")) {
+
+                lock(phase4_readwriteLockOfWyrmfangCounter_AsAConstant) {
+
+                    ++phase4_numberOfWyrmfangHasBeenCounted;
+                    
+                    System.Threading.Thread.MemoryBarrier();
+                    
+                    if(phase4_numberOfWyrmfangHasBeenCounted==4) {
+
+                        phase4_semaphoreWyrmfangWasConfirmed.Set();
+
+                    }
+
+                }
+                
+            }
+            
+            if(id.Equals("2460")
+               ||
+               id.Equals("2461")
+               ||
+               id.Equals("2462")
+               ||
+               id.Equals("2463")
+               ||
+               id.Equals("2454")) {
+
+                lock(phase4_readwriteLockOfIncidentalDebuffCounter_AsAConstant) {
+
+                    ++phase4_numberOfIncidentalDebuffsHaveBeenCounted;
+                    
+                    System.Threading.Thread.MemoryBarrier();
+                    
+                    if(phase4_numberOfIncidentalDebuffsHaveBeenCounted==8) {
+
+                        phase4_semaphoreIncidentalDebuffsWereConfirmed.Set();
+
+                    }
+
+                }
+                
+            }
+            
         }
+        
+        [ScriptMethod(name:"Phase4 Mark Teammates With Wyrmfang Debuffs 标记圣龙牙(蓝)Debuff的队友",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40298"],
+            userControl:false,
+            suppress:2000)]
+        
+        public void Phase4_Mark_Teammates_With_Wyrmfang_Debuffs_标记圣龙牙Debuff的队友(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=4.3) {
+                
+                return;
+                
+            }
+
+            if(Phase4_Logic_Of_Residue_Guidance!=Phase4_Logics_Of_Residue_Guidance.Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友) {
+
+                return;
+
+            }
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            phase4_semaphoreWyrmfangWasConfirmed.WaitOne();
+            phase4_semaphoreIncidentalDebuffsWereConfirmed.WaitOne();
+            
+            System.Threading.Thread.MemoryBarrier();
+            
+            if(phase4_numberOfWyrmfangHasBeenCounted!=4) {
+
+                return;
+
+            }
+
+            string debugOutput="";
+
+            if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_根据Debuff) {
+                
+                for(int i=0;i<8;++i) {
+
+                    if(P4ClawBuff[i]==3) {
+
+                        int markIndex=-1;
+
+                        if(P4OtherBuff[i]==4) {
+
+                            markIndex=phase4_getMarkIndex(Phase4_Residue_Belongs_To_Dark_Eruption);
+
+                        }
+                        
+                        if(P4OtherBuff[i]==5) {
+
+                            markIndex=phase4_getMarkIndex(Phase4_Residue_Belongs_To_Unholy_Darkness);
+
+                        }
+                        
+                        if(P4OtherBuff[i]==1) {
+
+                            markIndex=phase4_getMarkIndex(Phase4_Residue_Belongs_To_Dark_Blizzard_III);
+
+                        }
+                        
+                        if(P4OtherBuff[i]==3) {
+
+                            markIndex=phase4_getMarkIndex(Phase4_Residue_Belongs_To_Dark_Water_III);
+
+                        }
+
+                        if(markIndex!=-1) {
+                            
+                            accessory.Method.Mark(accessory.Data.PartyList[i],phase4_markForPlayersWithWyrmfang_asAConstant[markIndex]);
+
+                            debugOutput+=$"i={i},markIndex={markIndex},phase4_markForPlayersWithWyrmfang_asAConstant[markIndex]={phase4_markForPlayersWithWyrmfang_asAConstant[markIndex]}\n";
+
+                        }
+
+                    }
+                    
+                }
+                
+            }
+            
+            if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_The_Priority_THD_根据THD优先级) {
+
+                for(int i=0,j=0;i<8;++i) {
+
+                    if(P4ClawBuff[i]==3&&j<4) {
+                        
+                        accessory.Method.Mark(accessory.Data.PartyList[i],phase4_markForPlayersWithWyrmfang_asAConstant[j]);
+                        
+                        debugOutput+=$"i={i},phase4_markForPlayersWithWyrmfang_asAConstant[j]={phase4_markForPlayersWithWyrmfang_asAConstant[j]}\n";
+
+                        ++j;
+
+                    }
+                    
+                }
+                
+            }
+            
+            if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_The_Priority_HTD_根据HTD优先级) {
+                
+                List<int> temporaryOrder=[2,3,0,1,4,5,6,7];
+
+                for(int i=0,j=0;i<temporaryOrder.Count;++i) {
+
+                    if(P4ClawBuff[temporaryOrder[i]]==3&&j<4) {
+                        
+                        accessory.Method.Mark(accessory.Data.PartyList[i],phase4_markForPlayersWithWyrmfang_asAConstant[j]);
+                        
+                        debugOutput+=$"temporaryOrder[i]={temporaryOrder[i]},phase4_markForPlayersWithWyrmfang_asAConstant[j]={phase4_markForPlayersWithWyrmfang_asAConstant[j]}\n";
+                        
+                        ++j;
+
+                    }
+                    
+                }
+                
+            }
+
+            if(Enable_Developer_Mode) {
+
+                accessory.Method.SendChat($"""
+                                           /e 
+                                           {debugOutput}
+                                           
+                                           """);
+
+            }
+
+        }
+
+        private int phase4_getMarkIndex(Phase4_Relative_Positions_Of_Residues currentPosition) {
+
+            if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧) {
+
+                return 0;
+
+            }
+            
+            if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧) {
+
+                return 1;
+
+            }
+            
+            if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧) {
+
+                return 2;
+
+            }
+            
+            if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧) {
+
+                return 3;
+
+            }
+
+            return -1;
+
+        }
+        
         [ScriptMethod(name: "P4_时间结晶_蓝线收集", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0085"], userControl: false)]
         public void P4_时间结晶_蓝线收集(Event @event, ScriptAccessory accessory)
         {
@@ -9918,7 +10241,42 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             //短红
             if (P4ClawBuff[myIndex] == 1)
             {
-                var isHigh = P4ClawBuff.IndexOf(1) == myIndex;
+                bool isHigh=true;
+                
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序) {
+                    
+                    isHigh=(P4ClawBuff.IndexOf(1)==myIndex);
+                    
+                }
+
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序) {
+
+                    List<int> temporaryPriority=[2,3,0,1,4,5,6,7];
+
+                    for(int i=0;i<temporaryPriority.Count;++i) {
+
+                        if(P4ClawBuff[temporaryPriority[i]]==1) {
+
+                            if(temporaryPriority[i]==myIndex) {
+
+                                isHigh=true;
+
+                            }
+
+                            else {
+
+                                isHigh=false;
+
+                            }
+
+                            break;
+
+                        }
+                        
+                    }
+
+                }
+                
                 Vector3 dealpos= isHigh ? new(87, 0, 100) : new(113, 0, 100);
 
                 var dp = accessory.Data.GetDefaultDrawProperties();
@@ -9983,7 +10341,42 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             //长红
             if (P4ClawBuff[myIndex] == 2)
             {
-                var isHigh = P4ClawBuff.IndexOf(2) == myIndex;
+                bool isHigh=true;
+                
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序) {
+                    
+                    isHigh=(P4ClawBuff.IndexOf(1)==myIndex);
+                    
+                }
+
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序) {
+
+                    List<int> temporaryPriority=[2,3,0,1,4,5,6,7];
+
+                    for(int i=0;i<temporaryPriority.Count;++i) {
+
+                        if(P4ClawBuff[temporaryPriority[i]]==1) {
+
+                            if(temporaryPriority[i]==myIndex) {
+
+                                isHigh=true;
+
+                            }
+
+                            else {
+
+                                isHigh=false;
+
+                            }
+
+                            break;
+
+                        }
+                        
+                    }
+
+                }
+                
                 Vector3 dealpos1 = isHigh ? new(088.5f, 0, 115.5f) : new(111.5f, 0, 115.5f);
                 Vector3 dealpos2 = isHigh ? new(090.2f, 0, 117.0f) : new(109.8f, 0, 117.0f);
                 Vector3 dealpos3 = isHigh ? new(092.5f, 0, 118.0f) : new(107.5f, 0, 118.0f);
@@ -10209,7 +10602,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            lock(phase4_ReadwriteLockOfDrachenWandererIds_AsAConstant) {
+            lock(phase4_readwriteLockOfDrachenWandererIds_AsAConstant) {
 
                 if(phase4_id1OfTheDrachenWanderers.Equals("")) {
 
@@ -10571,15 +10964,32 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             if(Enable_Developer_Mode) {
 
-                accessory.Method.SendChat($"""
-                                           /e 
-                                           phase4_residueIdsFromEastToWest[]={phase4_residueIdsFromEastToWest[0]},{phase4_residueIdsFromEastToWest[1]},{phase4_residueIdsFromEastToWest[2]},{phase4_residueIdsFromEastToWest[3]}
-                                           P4ClawBuff={P4ClawBuff[myIndex]}
-                                           P4OtherBuff={P4OtherBuff[myIndex]}
-                                           relativePositionOfMyResidue={relativePositionOfMyResidue}
-                                           idOfMyResidue={idOfMyResidue}
-                                           
-                                           """);
+                if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记) {
+                    
+                    accessory.Method.SendChat($"""
+                                               /e 
+                                               phase4_residueIdsFromEastToWest[]={phase4_residueIdsFromEastToWest[0]},{phase4_residueIdsFromEastToWest[1]},{phase4_residueIdsFromEastToWest[2]},{phase4_residueIdsFromEastToWest[3]}
+                                               phase4_marksOfPlayersWithWyrmfang[myIndex]={phase4_marksOfPlayersWithWyrmfang[myIndex]}
+                                               relativePositionOfMyResidue={relativePositionOfMyResidue}
+                                               idOfMyResidue={idOfMyResidue}
+
+                                               """);
+                    
+                }
+
+                else {
+                    
+                    accessory.Method.SendChat($"""
+                                               /e 
+                                               phase4_residueIdsFromEastToWest[]={phase4_residueIdsFromEastToWest[0]},{phase4_residueIdsFromEastToWest[1]},{phase4_residueIdsFromEastToWest[2]},{phase4_residueIdsFromEastToWest[3]}
+                                               P4ClawBuff={P4ClawBuff[myIndex]}
+                                               P4OtherBuff={P4OtherBuff[myIndex]}
+                                               relativePositionOfMyResidue={relativePositionOfMyResidue}
+                                               idOfMyResidue={idOfMyResidue}
+
+                                               """);
+                    
+                }
                 
             }
 
@@ -10614,8 +11024,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     accessory.TTS($"{phase4_getResidueDescription(relativePositionOfMyResidue)}", 
                                     Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
-
-
 
                     if (Enable_Developer_Mode) {
 
@@ -10826,8 +11234,54 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
         
-        private Phase4_Relative_Positions_Of_Residues phase4_getRelativePosition(int currentIndex) {
+        [ScriptMethod(name:"Phase4 Record Signs On Party Members 记录小队队员的目标标记",
+            eventType:EventTypeEnum.Marker,
+            userControl:false)]
 
+        public void Phase4_Record_Signs_On_Party_Members_记录小队队员的目标标记(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=4.3) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+
+                return;
+
+            }
+
+            if(!int.TryParse(@event["Id"], out var sign)) {
+                
+                return;
+                
+            }
+
+            MarkType currentType=sign switch {
+                1 => MarkType.Attack1,
+                2 => MarkType.Attack2,
+                3 => MarkType.Attack3,
+                4 => MarkType.Attack4,
+                _ => MarkType.Stop1
+            };
+
+            int currentIndex=accessory.Data.PartyList.IndexOf(((uint)targetId));
+
+            if(0<=currentIndex&&currentIndex<=7) {
+                
+                lock(phase4_marksOfPlayersWithWyrmfang) {
+
+                    phase4_marksOfPlayersWithWyrmfang[currentIndex]=currentType;
+
+                }
+                
+            }
+
+        }
+        
+        private Phase4_Relative_Positions_Of_Residues phase4_getRelativePosition(int currentIndex) {
+            
             if(currentIndex<0||currentIndex>7) {
                 
                 return Phase4_Relative_Positions_Of_Residues.Unknown_未知;
@@ -10841,37 +11295,75 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(P4ClawBuff[currentIndex]==3) {
-                // 3 stands for Wyrmfang (the blue debuff).
+            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Debuffs_根据Debuff
+               ||
+               Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友) {
+                
+                if(P4ClawBuff[currentIndex]==3) {
+                    // 3 stands for Wyrmfang (the blue debuff).
 
-                if(P4OtherBuff[currentIndex]==4) {
-                    // 4 stands for Dark Eruption.
+                    if(P4OtherBuff[currentIndex]==4) {
+                        // 4 stands for Dark Eruption.
 
-                    return Phase4_Residue_Belongs_To_Dark_Eruption;
+                        return Phase4_Residue_Belongs_To_Dark_Eruption;
+
+                    }
+
+                    if(P4OtherBuff[currentIndex]==5) {
+                        // 5 stands for Unholy Darkness.
+
+                        return Phase4_Residue_Belongs_To_Unholy_Darkness;
+
+                    }
+
+                    if(P4OtherBuff[currentIndex]==1) {
+                        // 1 stands for Dark Blizzard III.
+
+                        return Phase4_Residue_Belongs_To_Dark_Blizzard_III;
+
+                    }
+
+                    if(P4OtherBuff[currentIndex]==3) {
+                        // 3 stands for Dark Water III.
+
+                        return Phase4_Residue_Belongs_To_Dark_Water_III;
+
+                    }
 
                 }
+                
+            }
 
-                if(P4OtherBuff[currentIndex]==5) {
-                    // 5 stands for Unholy Darkness.
+            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记) {
+                
+                if(P4ClawBuff[currentIndex]==3) {
 
-                    return Phase4_Residue_Belongs_To_Unholy_Darkness;
+                    if(phase4_marksOfPlayersWithWyrmfang[currentIndex]==MarkType.Attack1) {
+
+                        return Phase4_Residue_Belongs_To_Attack1;
+
+                    }
+
+                    if(phase4_marksOfPlayersWithWyrmfang[currentIndex]==MarkType.Attack2) {
+
+                        return Phase4_Residue_Belongs_To_Attack2;
+
+                    }
+                    
+                    if(phase4_marksOfPlayersWithWyrmfang[currentIndex]==MarkType.Attack3) {
+
+                        return Phase4_Residue_Belongs_To_Attack3;
+
+                    }
+                    
+                    if(phase4_marksOfPlayersWithWyrmfang[currentIndex]==MarkType.Attack4) {
+
+                        return Phase4_Residue_Belongs_To_Attack4;
+
+                    }
 
                 }
-
-                if(P4OtherBuff[currentIndex]==1) {
-                    // 1 stands for Dark Blizzard III.
-
-                    return Phase4_Residue_Belongs_To_Dark_Blizzard_III;
-
-                }
-
-                if(P4OtherBuff[currentIndex]==3) {
-                    // 3 stands for Dark Water III.
-
-                    return Phase4_Residue_Belongs_To_Dark_Water_III;
-
-                }
-
+                
             }
 
             return Phase4_Relative_Positions_Of_Residues.Unknown_未知;
@@ -11019,6 +11511,31 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
 
+        }
+        
+        [ScriptMethod(name:"Phase2 Reset Semaphores After Crystallize Time 时间结晶后重置信号灯",
+            eventType:EventTypeEnum.ActionEffect,
+            eventCondition:["ActionId:40332"],
+            userControl:false,
+            suppress:10000)]
+        
+        public void Phase2_Reset_Semaphores_After_Crystallize_Time_时间结晶后重置信号灯(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=4.3) {
+
+                return;
+
+            }
+            
+            phase4_semaphoreWyrmfangWasConfirmed=new System.Threading.AutoResetEvent(false);
+            phase4_semaphoreIncidentalDebuffsWereConfirmed=new System.Threading.AutoResetEvent(false);
+
+            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Mark_Teammates_With_Wyrmfang_标记圣龙牙的队友) {
+                
+                accessory.Method.MarkClear();
+                
+            }
+            
         }
 
         #endregion
