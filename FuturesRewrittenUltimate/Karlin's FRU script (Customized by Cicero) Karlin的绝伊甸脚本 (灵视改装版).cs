@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent.Struct;
@@ -27,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.83",
+        version:"0.0.0.84",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -76,7 +77,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         9. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
         Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
-        10. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        10. The guidance of Fulgent Blade in Phase 5 would be always composed of two steps, one is the current step (green by default) and the other is the next step (yellow by default).
+        Please be aware that you should never move to the next step in advance, until its colour changes to the safe colour. The guidance of the next step is just a preview, which could make you be ready for it.
+        11. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
         If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
         After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
         
@@ -105,7 +108,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         9. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
         不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
-        10. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        10. P5璀璨之刃(地火)指路被分为两个部分,一部分是当前步(默认绿色),另一部分是下一步(默认黄色)。
+        直到下一步变成安全色之前,永远不要提前移动。下一步的绘制仅作预览用途,让你有个心理准备。
+        11. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
         如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
         然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
         
@@ -116,13 +121,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Helpers (sorted lexicographically):
          - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1. (Mar 9, 2025)
          - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1. (Mar 5, 2025)
-         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2. (Mar 16,2025)
+         - @milkvio provided guidance for Fulgent Blade in Phase 5. (Mar 16, 2025)
+         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2. (Mar 16, 2025)
          - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
         
         原作者,奠基人兼共同维护者: @karlin_z
         提供帮助的人(按字典序排序):
         - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。 (2025.03.09)
         - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。 (2025.03.05)
+        - @milkvio为P5璀璨之刃(地火)提供了指路。 (2025.03.16)
         - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告。 (2025.03.16)
         - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。 (2025.03.10)
         
@@ -146,6 +153,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Fixes and refinements for vanilla guidance of the second half;
          - New strat (HTD priority) and player marking of the second half;
         Phase 5:
+         - Guidance of Fulgent Blade;
          - Guidance of Wings Dark And Light;
          - Guidance of Polarizing Strikes.
         
@@ -166,6 +174,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 二运原版指路修复和细化;
          - 二运新攻略(HTD优先级)与玩家标记;
         P5:
+         - 璀璨之刃(地火)指路;
          - 光与暗之翼(踩塔)指路;
          - 极化打击(挡枪)指路。
         
@@ -176,7 +185,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
            The timeline here would be refined in the future.
         Phase 5:
-         - Fulgent Blade: The guidance has been added yet. I've asked @milkvio for the permission of his implementation and got his approval. Therefore, I will add it very soon.
          - Polarizing Strikes: The order of taking towers regarding the Grey9 Brain Dead strat on CN has been adjusted a little bit, and the new version has not been added yet. It's on the way.
            The order at the moment is melees first, then ranges and healers. The new order is healers first, then melees and ranges.
         
@@ -186,7 +194,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
            会在未来精修此处的时间轴。
         P5:
-         - 璀璨之刃(地火): 尚未添加指路,但我已经向 @milkvio 申请使用他的地火指路并且得到本人同意了。很快就会补上这部分。
          - 极化打击(挡枪): 国服的灰九脑死塔踩塔顺序有点改动,尚未适配,但很快就会做。
            现在的踩塔顺序是先近战,然后远程和奶妈。新的顺序是先奶妈,然后远程和近战。
          
@@ -357,17 +364,21 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase5_Settings_____ { get; set; } = true;
-        [UserSetting("P5 璀璨之刃(地火)颜色")]
+        [UserSetting("P5璀璨之刃(地火) 颜色")]
         public ScriptColor Phase5_Colour_Of_Fulgent_Blade { get; set; } = new() { V4=new(0,1f,1f,1f) };
-        [UserSetting("P5 Boss中轴线的颜色")]
+        [UserSetting("P5璀璨之刃(地火) 指路当前步的颜色")]
+        public ScriptColor Phase5_Colour_Of_The_Current_Guidance_Step { get; set; } = new() { V4 = new(0f,1f,0f,1f) };
+        [UserSetting("P5璀璨之刃(地火) 指路下一步的颜色")]
+        public ScriptColor Phase5_Colour_Of_The_Next_Guidance_Step { get; set; } = new() { V4=new(1f,1f,0f,1f) };
+        [UserSetting("P5璀璨之刃(地火) Boss中轴线的颜色")]
         public ScriptColor Phase5_Colour_Of_The_Boss_Central_Axis { get; set; } = new() { V4=new(1f,0f,0f,1f) };
-        [UserSetting("P5 璀璨之刃(地火)后Boss面向人群")]
+        [UserSetting("P5璀璨之刃(地火) 后Boss面向人群")]
         public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
-        [UserSetting("P5 光与暗之翼(踩塔)攻略")]
+        [UserSetting("P5光与暗之翼(踩塔) 攻略")]
         public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; }
-        [UserSetting("P5 挑衅提醒")]
-        public bool Phase5_Reminder_To_Provoke { get; set; } = true;
-        [UserSetting("P5 极化打击(挡枪)顺序")]
+        [UserSetting("P5光与暗之翼(踩塔) 挑衅提醒")]
+        public bool Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light { get; set; } = true;
+        [UserSetting("P5极化打击(挡枪) 顺序")]
         public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; }
         
         [UserSetting("-----开发者设置----- (No actual meaning for this setting/此设置无实际意义)")]
@@ -532,6 +543,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Vector3 phase5_positionToBeCoveredOnTheRight_asAConstant=new Vector3(106.19f,0,106.19f);
         Vector3 phase5_positionToStandbyOnTheRight_asAConstant=new Vector3(100.76f,0,108.72f);
         // The left and right here refer to the left and right while facing the center of the zone (100,0,100).
+        private string Phase = "";
+        private Vector2? Point1 = new Vector2(0f, 0f);
+        private Vector2? Point2 = new Vector2(0f, 0f);
+        private Vector2? Point3 = new Vector2(0f, 0f);
+        private Vector2? MiddlePoint = new Vector2(0f, 0f);
+        private onPoint? OnPoint = null;
+        //private List<Blade> blades = new List<Blade>();
+        private ConcurrentBag<Blade> blades = new ConcurrentBag<Blade>();
+        private List<Blade> P1P3Blades = new List<Blade>();
+        private List<onPoint> onPoints = new List<onPoint>();
+        private List<Vector2?> BladeRoutes;
         
         public enum Languages_Of_Prompts {
         
@@ -719,6 +741,43 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Tanks_Healers_Melees_Ranges_坦克奶妈近战远程
             
         }
+        
+        public class Blade
+        {
+            public UInt32 Id { get; set; }
+            public double X { get; set; }
+            public double Y { get; set; }
+            public double Rotation { get; set; }
+            public Blade(UInt32 id, double x, double y, double rotation)
+            {
+                Id = id;
+                X = x;
+                Y = y;
+                Rotation = rotation;
+            }
+        }
+        
+        public class onPoint
+        {
+            public string Name { get; set; }
+            public Vector2 OnCoord { get; set; }//      Point
+            public Vector2 Coord1 { get; set; }//         1
+            public Vector2 Coord2 { get; set; }//     /       \
+            
+            //   4|         |2
+            public Vector2 Coord3 { get; set; }//     \       /
+            public Vector2 Coord4 { get; set; }//         3
+            
+            public onPoint(string name, Vector2 onCoord, Vector2 coord1, Vector2 coord2, Vector2 coord3, Vector2 coord4)
+            {
+                Name = name;
+                this.OnCoord = onCoord;
+                this.Coord1 = coord1;
+                this.Coord2 = coord2;
+                this.Coord3 = coord3;
+                this.Coord4 = coord4;
+            }
+        }
 
         public void Init(ScriptAccessory accessory)
         {
@@ -809,6 +868,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase5_hasAcquiredTheFirstTower=false;
             phase5_indexOfTheFirstTower="";
             phase5_hasConfirmedTheInitialPosition=false;
+            blades.Clear();
+            P1P3Blades.Clear();
+            onPoints.Clear();
+            BladeRoutes = Enumerable.Repeat<Vector2?>(null, 7).ToList();
+            onPoints.Add(new onPoint("A", new Vector2(100, 93), new Vector2(100, 91.5f), new Vector2(101.4f, 92.9f), new Vector2(100, 94.3f), new Vector2(98.6f, 92.9f)));
+            onPoints.Add(new onPoint("B", new Vector2(107, 100), new Vector2(108.5f, 100), new Vector2(107, 101.4f), new Vector2(105.6f, 100), new Vector2(107, 98.6f)));
+            onPoints.Add(new onPoint("C", new Vector2(100, 107), new Vector2(100, 108.5f), new Vector2(98.6f, 107), new Vector2(100, 105.6f), new Vector2(101.4f, 107.1f)));
+            onPoints.Add(new onPoint("D", new Vector2(93, 100), new Vector2(91.5f, 100), new Vector2(93, 98.6f), new Vector2(94.4f, 100), new Vector2(93, 101.4f)));
         }
 
         #region P1
@@ -12354,7 +12421,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Name = "P5_地火";
             dp.Scale = new(80, 5);
             dp.Owner = sid;
-            dp.Color = Phase5_Colour_Of_Fulgent_Blade.V4.WithW(3);
+            dp.Color = Phase5_Colour_Of_Fulgent_Blade.V4.WithW(1f);
             dp.DestoryAt = 7000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
 
@@ -12363,7 +12430,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             dp.Scale = new(80, 5);
             dp.Offset = new(0,0,-5);
             dp.Owner = sid;
-            dp.Color = Phase5_Colour_Of_Fulgent_Blade.V4.WithW(3);
+            dp.Color = Phase5_Colour_Of_Fulgent_Blade.V4.WithW(1f);
             dp.Delay = 7000;
             dp.DestoryAt = 20000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
@@ -12386,6 +12453,152 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             {
                 accessory.Method.RemoveDraw($"P5_地火_前进_{@event["SourceId"]}");
             }
+        }
+        
+        //1火开始发光特效
+        [ScriptMethod(name: "Phase5 Guidance Of Fulgent Blade 璀璨之刃(地火)指路", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id2:16"])]
+        public void Phase5_Guidance_Of_Fulgent_Blade_璀璨之刃指路(Event @event, ScriptAccessory accessory)
+        {
+             if (Phase == "P5地火计算完成")//限制分组
+             {
+                 Phase = "P5运算结束";
+                 var id = Convert.ToUInt32(@event["SourceId"], 16);
+                 Vector2 FarthestPoint = new Vector2();
+                 Vector2 ClosestPoint = new Vector2();
+                 if (id == P1P3Blades[0].Id || id == P1P3Blades[1].Id)//P1起火
+                 {
+                     FarthestPoint = FindFarthestPoint(OnPoint, Point1);
+                     ClosestPoint = FindClosestPoint(OnPoint, Point1);
+                 }
+                 else if (id == P1P3Blades[2].Id || id == P1P3Blades[3].Id)//P3起火
+                 {
+                     FarthestPoint = FindFarthestPoint(OnPoint, Point3);
+                     ClosestPoint = FindClosestPoint(OnPoint, Point3);
+                 }
+                 //远 近 近 远
+                 BladeRoutes.Insert(0, FarthestPoint);//第1跑起点 与起火点相对最远
+                 BladeRoutes.Insert(1, ClosestPoint);//第2跑起点 与起火点相对最近
+                 BladeRoutes.Insert(2, FindFarthestPoint(OnPoint, Point2));//第3跑路径是上还是下 相对P2最远
+                 BladeRoutes.Insert(3, FindClosestPoint(OnPoint, Point2));//第4跑路径是上还是下 相对P2最近
+                 BladeRoutes.Insert(4, ClosestPoint);//第5跑起点 与起火点相对最近
+                 BladeRoutes.Insert(5, FarthestPoint);//第5跑起点 与起火点相对最远
+                 
+                 //指路初期想法： 0绿1红 1绿出2红 2绿出3红
+                 //每次2000毫秒？
+                 int BladeTimes = 2000;
+                 //0绿1红
+                 var Goline0 = accessory.Data.GetDefaultDrawProperties();
+                 Goline0.Owner = accessory.Data.Me;
+                 Goline0.DestoryAt = 9000;
+                 Goline0.Color = Phase5_Colour_Of_The_Current_Guidance_Step.V4;
+                 Goline0.Scale = new(2);
+                 Goline0.ScaleMode |= ScaleMode.YByDistance;
+                 Goline0.TargetPosition = Vector3Fucker(BladeRoutes[0]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, Goline0); 
+                 
+                 var line1 = accessory.Data.GetDefaultDrawProperties();
+                 line1.Position = Vector3Fucker(BladeRoutes[0]);
+                 line1.DestoryAt = 9000;
+                 line1.Color = Phase5_Colour_Of_The_Next_Guidance_Step.V4;
+                 line1.Scale = new(2);
+                 line1.ScaleMode |= ScaleMode.YByDistance;
+                 line1.TargetPosition = Vector3Fucker(BladeRoutes[1]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, line1); 
+                 /////////////////////////////////////1绿放2 基础延迟9000
+                 var Goline1 = accessory.Data.GetDefaultDrawProperties();
+                 Goline1.Owner = accessory.Data.Me;
+                 Goline1.Delay = 9000;
+                 Goline1.DestoryAt = BladeTimes;
+                 Goline1.Color = Phase5_Colour_Of_The_Current_Guidance_Step.V4;
+                 Goline1.Scale = new(2);
+                 Goline1.ScaleMode |= ScaleMode.YByDistance;
+                 Goline1.TargetPosition = Vector3Fucker(BladeRoutes[1]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, Goline1);
+                 
+                 var line2 = accessory.Data.GetDefaultDrawProperties();
+                 line2.Position = Vector3Fucker(BladeRoutes[1]);
+                 line2.Delay = 9000;
+                 line2.DestoryAt = BladeTimes;
+                 line2.Color = Phase5_Colour_Of_The_Next_Guidance_Step.V4;
+                 line2.Scale = new(2);
+                 line2.ScaleMode |= ScaleMode.YByDistance;
+                 line2.TargetPosition = Vector3Fucker(BladeRoutes[2]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, line2);
+                 
+                 /////////////////////////////////////2绿放3 基础延迟9000+bladetime
+                 var Goline2 = accessory.Data.GetDefaultDrawProperties();
+                 Goline2.Owner = accessory.Data.Me;
+                 Goline2.Delay = 9000 + BladeTimes;
+                 Goline2.DestoryAt = BladeTimes;
+                 Goline2.Color = Phase5_Colour_Of_The_Current_Guidance_Step.V4;
+                 Goline2.Scale = new(2);
+                 Goline2.ScaleMode |= ScaleMode.YByDistance;
+                 Goline2.TargetPosition = Vector3Fucker(BladeRoutes[2]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, Goline2);
+                 
+                 var line3 = accessory.Data.GetDefaultDrawProperties();
+                 line3.Position = Vector3Fucker(BladeRoutes[2]);
+                 line3.Delay = 9000 + BladeTimes;
+                 line3.DestoryAt = BladeTimes;
+                 line3.Color = Phase5_Colour_Of_The_Next_Guidance_Step.V4;
+                 line3.Scale = new(2);
+                 line3.ScaleMode |= ScaleMode.YByDistance;
+                 line3.TargetPosition = Vector3Fucker(BladeRoutes[3]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, line3);
+                 
+                 /////////////////////////////////////3绿放4 基础延迟9000+bladetime*2
+                 var Goline3 = accessory.Data.GetDefaultDrawProperties();
+                 Goline3.Owner = accessory.Data.Me;
+                 Goline3.Delay = 9000 + BladeTimes * 2;
+                 Goline3.DestoryAt = BladeTimes;
+                 Goline3.Color = Phase5_Colour_Of_The_Current_Guidance_Step.V4;
+                 Goline3.Scale = new(2);
+                 Goline3.ScaleMode |= ScaleMode.YByDistance;
+                 Goline3.TargetPosition = Vector3Fucker(BladeRoutes[3]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, Goline3);
+                 
+                 var line4 = accessory.Data.GetDefaultDrawProperties();
+                 line4.Position = Vector3Fucker(BladeRoutes[3]);
+                 line4.Delay = 9000 + BladeTimes * 2;
+                 line4.DestoryAt = BladeTimes;
+                 line4.Color = Phase5_Colour_Of_The_Next_Guidance_Step.V4;
+                 line4.Scale = new(2);
+                 line4.ScaleMode |= ScaleMode.YByDistance;
+                 line4.TargetPosition = Vector3Fucker(BladeRoutes[4]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, line4);
+                 
+                 /////////////////////////////////////4绿放5 基础延迟9000+bladetime*3
+                 var Goline4 = accessory.Data.GetDefaultDrawProperties();
+                 Goline4.Owner = accessory.Data.Me;
+                 Goline4.Delay = 9000 + BladeTimes * 3;
+                 Goline4.DestoryAt = BladeTimes;
+                 Goline4.Color = Phase5_Colour_Of_The_Current_Guidance_Step.V4;
+                 Goline4.Scale = new(2);
+                 Goline4.ScaleMode |= ScaleMode.YByDistance;
+                 Goline4.TargetPosition = Vector3Fucker(BladeRoutes[4]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, Goline4);
+                 
+                 var line5 = accessory.Data.GetDefaultDrawProperties();
+                 line5.Position = Vector3Fucker(BladeRoutes[4]);
+                 line5.Delay = 9000 + BladeTimes * 3;
+                 line5.DestoryAt = BladeTimes;
+                 line5.Color = Phase5_Colour_Of_The_Next_Guidance_Step.V4;
+                 line5.Scale = new(2);
+                 line5.ScaleMode |= ScaleMode.YByDistance;
+                 line5.TargetPosition = Vector3Fucker(BladeRoutes[5]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, line5);
+                 
+                 /////////////////////////////////////5绿放6 基础延迟9000+bladetime*4
+                 var Goline5 = accessory.Data.GetDefaultDrawProperties();
+                 Goline5.Owner = accessory.Data.Me;
+                 Goline5.Delay = 9000 + BladeTimes * 4;
+                 Goline5.DestoryAt = BladeTimes - 1000;
+                 Goline5.Color = Phase5_Colour_Of_The_Current_Guidance_Step.V4;
+                 Goline5.Scale = new(2);
+                 Goline5.ScaleMode |= ScaleMode.YByDistance;
+                 Goline5.TargetPosition = Vector3Fucker(BladeRoutes[5]);
+                 accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, Goline5);
+             }
         }
         
         [ScriptMethod(name:"Phase5 Boss Central Axis After Fulgent Blade 璀璨之刃(地火)后Boss中轴线",
@@ -12937,7 +13150,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     currentProperty.DestoryAt=4250;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
                     
-                    if(Phase5_Reminder_To_Provoke) {
+                    if(Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light) {
                         
                         System.Threading.Thread.Sleep(1500);
                             
@@ -13010,7 +13223,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     currentProperty.DestoryAt=3750;
                     accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
 
-                    if(Phase5_Reminder_To_Provoke) {
+                    if(Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light) {
                         
                         System.Threading.Thread.Sleep(1000);
                         
@@ -13877,6 +14090,179 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             return -1;
             // Just a placeholder and should never be reached.
 
+        }
+        
+        public static Vector2? mathPoint(Blade b1, Blade b2)
+        {
+            //计算方向的正弦和余弦
+            float s1 = (float)Math.Sin(b1.Rotation);
+            float c1 = (float)Math.Cos(b1.Rotation);
+            float s2 = (float)Math.Sin(b2.Rotation);
+            float c2 = (float)Math.Cos(b2.Rotation);
+    
+            //起点
+            float x1 = (float)b1.X;
+            float y1 = (float)b1.Y;
+            float x2 = (float)b2.X;
+            float y2 = (float)b2.Y;
+
+            //计算分母
+            float d = s1 * c2 - s2 * c1;
+
+            //检查合法
+            if (Math.Abs(d) < 1e-10)
+            {
+                return null; // 平行
+            }
+
+            //计算交点 感恩阿洛
+            float X = (x1 * s1 * c2 - x2 * s2 * c1 - (y2 - y1) * c1 * c2) / d;
+            float Y = (y2 * c2 * s1 - y1 * c1 * s2 + (x2 - x1) * s1 * s2) / d;
+
+            return new Vector2(X, Y);
+        }
+        
+        public static Vector2? middlePoint(Vector2? P1, Vector2? P2)
+        {
+            if (P1.HasValue && P2.HasValue)
+            {
+                float midX = (P1.Value.X + P2.Value.X) / 2;
+                float midY = (P1.Value.Y + P2.Value.Y) / 2;
+                return new Vector2(midX, midY);
+            }
+            return null; //如果任意一个点为 null，返回 null
+        }
+        
+        //获取与中点最近的点
+        public static onPoint FindClosestOnPoint(List<onPoint> points, Vector2? target)
+        {
+            onPoint closestPoint = null;
+            float closestDistance = float.MaxValue;
+            foreach (var point in points)
+            {
+                // 计算距离
+                float distance = Vector2.Distance(point.OnCoord, target.Value);
+                //如果当前距离小于已知最小距离，则更新
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestPoint = point;
+                }
+            }
+            return closestPoint;//返回最接近的点
+        }
+        
+        //正点子点最远
+        public static Vector2 FindFarthestPoint(onPoint point, Vector2? referencePoint)
+        {
+            //存储所有坐标
+            Vector2[] coords = { point.Coord1, point.Coord2, point.Coord3, point.Coord4 };
+            float maxDistance = float.MinValue;//初始化最大距离
+            Vector2 farthestCoord = Vector2.Zero;//初始化最远坐标
+            //遍历所有坐标找最远
+            foreach (var coord in coords)
+            {
+                float distance = Vector2.Distance(coord, referencePoint.Value);//计算距离
+                if (distance > maxDistance)//如果当前距离大于已知最大距离
+                {
+                    maxDistance = distance;//更新最大距离
+                    farthestCoord = coord;//更新最远坐标
+                }
+            }
+            return farthestCoord;//返回最远的坐标
+        }
+        
+        //正点子点最近
+        public static Vector2 FindClosestPoint(onPoint point, Vector2? referencePoint)
+        {
+            //存储所有坐标
+            Vector2[] coords = { point.Coord1, point.Coord2, point.Coord3, point.Coord4 };
+    
+            float minDistance = float.MaxValue;//初始化最小距离
+            Vector2 closestCoord = Vector2.Zero;//初始化最近坐标
+
+            // 遍历所有坐标，找到最近的
+            foreach (var coord in coords)
+            {
+                float distance = Vector2.Distance(coord, referencePoint.Value);//计算距离
+                if (distance < minDistance)//如果当前距离小于已知最小距离
+                {
+                    minDistance = distance;//更新最小距离
+                    closestCoord = coord;//更新最近坐标
+                }
+            }
+            return closestCoord;//返回最近的坐标
+        }
+        
+        public static Vector3 Vector3Fucker(Vector2? V)
+        {
+            Vector3 result = new Vector3();
+            if (V.HasValue)
+            {
+                result.X = V.Value.X;
+                result.Y = 0;
+                result.Z = V.Value.Y;
+            }
+            return result;
+        }
+        
+        [ScriptMethod(name: "P5地火", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40306"],userControl:false)]
+        public void 阶段记录_P5地火(Event @event, ScriptAccessory accessory)
+        {
+            Phase = "P5地火";
+            blades.Clear();
+            P1P3Blades.Clear();
+            BladeRoutes.Clear();
+            BladeRoutes = Enumerable.Repeat<Vector2?>(null, 7).ToList();
+        }
+        
+        [ScriptMethod(name: "调试开关", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40306"],userControl:false)]
+        public void 阶段记录_P5调试(Event @event, ScriptAccessory accessory)
+        {
+            if(Enable_Developer_Mode)accessory.Method.SendChat($"/e KnightRider祝地火順利~");
+        }
+        
+        //捕获组
+        [ScriptMethod(name: "地火数据捕获", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:1"], userControl:false)]
+        public void 地火数据捕获(Event @event, ScriptAccessory accessory)
+        {
+            if (Phase == "P5地火")//捕获限定区域
+            {
+                if (blades.Count < 7)//如果地火<6就继续捕获
+                {
+                    var pos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+                    //存入数据
+                    blades.Add(new Blade(
+                        id: Convert.ToUInt32(@event["SourceId"], 16),
+                        x: Convert.ToDouble(pos.X),
+                        y: Convert.ToDouble(pos.Z),
+                        rotation: Convert.ToDouble(@event["SourceRotation"])
+                    ));
+                }
+                if (blades.Count == 6)//如果收集到了6个地火数据
+                {
+                    //accessory.Method.SendChat($"/e 收集完成");
+                    var sortedBlades = blades.OrderBy(b => b.Id).ToList();//按OID排序List
+                    //accessory.Method.SendChat($"/e 排序完成");
+                    if (sortedBlades != null)
+                    {
+                        //accessory.Method.SendChat($"/e 排序完成");
+                        //存入13点
+                        P1P3Blades.Add(sortedBlades[0]);
+                        P1P3Blades.Add(sortedBlades[1]);
+                        P1P3Blades.Add(sortedBlades[4]);
+                        P1P3Blades.Add(sortedBlades[5]);
+                        //计算三个交点
+                        Point1 = mathPoint(sortedBlades[0], sortedBlades[1]);//计算第1交点
+                        Point2 = mathPoint(sortedBlades[2], sortedBlades[3]);//计算第2交点
+                        Point3 = mathPoint(sortedBlades[4], sortedBlades[5]);//计算第3交点
+                        MiddlePoint = middlePoint(Point1, Point3);//计算第13中点
+                        OnPoint = FindClosestOnPoint(onPoints,MiddlePoint);//计算从哪个正点开始起跑
+                        //accessory.Method.SendChat($"/e 去{OnPoint.Name}点起跑");
+                        Phase = "P5地火计算完成";
+                    }
+                }
+            }
         }
 
         #endregion
