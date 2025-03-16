@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.82",
+        version:"0.0.0.83",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -3926,7 +3926,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
         }
         
-        [ScriptMethod(name:"Phase2_Guidance_After_Knockback_击退后指路",
+        [ScriptMethod(name:"Phase2 Guidance After Knockback 击退后指路",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:40208"])]
         
@@ -4283,13 +4283,35 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             currentProperty=accessory.Data.GetDefaultDrawProperties();
             
-            currentProperty.Name="Phase2_Central_Axis_Of_Oracles_Reflection_神使的倒影中轴线";
-            currentProperty.Scale=new(0.5f,80f);
+            currentProperty.Name="Phase2_Front_Central_Axis_Of_Oracles_Reflection_神使的倒影前中轴线";
+            currentProperty.Scale=new(0.5f,50f);
             currentProperty.Owner=sourceId;
             currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
-            currentProperty.DestoryAt=9000;
+            currentProperty.DestoryAt=14250;
             
-            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight,currentProperty);
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Rear_Separator_Of_Oracles_Reflection_神使的倒影背分割线";
+            currentProperty.Scale=new(0.3f,10f);
+            currentProperty.Owner=sourceId;
+            currentProperty.Rotation=float.Pi/4*3;
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
+            currentProperty.DestoryAt=14250;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
+            
+            currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Rear_Separator_Of_Oracles_Reflection_神使的倒影背分割线";
+            currentProperty.Scale=new(0.3f,10f);
+            currentProperty.Owner=sourceId;
+            currentProperty.Rotation=-(float.Pi/4*3);
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(25f);
+            currentProperty.DestoryAt=14250;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Rect,currentProperty);
 
         }
 
@@ -4306,6 +4328,31 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 7 => 3,
                 _ => currentProteanPosition
             };
+
+        }
+        
+        [ScriptMethod(name:"Phase2 Prediction Of Skating 滑冰预测",
+            eventType:EventTypeEnum.StartCasting,
+            eventCondition:["ActionId:40208"])]
+        
+        public void Phase2_Prediction_Of_Skating_滑冰预测(Event @event, ScriptAccessory accessory) {
+
+            if(parse!=2.1) {
+                
+                return;
+                
+            }
+            
+            var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+            currentProperty.Name="Phase2_Prediction_Of_Skating_滑冰预测";
+            currentProperty.Scale=new(2f,32f);
+            currentProperty.Owner=accessory.Data.Me;
+            currentProperty.Color=accessory.Data.DefaultDangerColor.WithW(3f);
+            currentProperty.Delay=14250;
+            currentProperty.DestoryAt=9000;
+            
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Displacement,currentProperty);
 
         }
         
