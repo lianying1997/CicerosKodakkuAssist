@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.79",
+        version:"0.0.0.80",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -11029,7 +11029,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序) {
                     
-                    isHigh=(P4ClawBuff.IndexOf(1)==myIndex);
+                    isHigh=(P4ClawBuff.IndexOf(2)==myIndex);
                     
                 }
 
@@ -11039,7 +11039,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     for(int i=0;i<temporaryPriority.Count;++i) {
 
-                        if(P4ClawBuff[temporaryPriority[i]]==1) {
+                        if(P4ClawBuff[temporaryPriority[i]]==2) {
 
                             if(temporaryPriority[i]==myIndex) {
 
