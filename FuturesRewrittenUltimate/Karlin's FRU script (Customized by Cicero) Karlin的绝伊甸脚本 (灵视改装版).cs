@@ -27,7 +27,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.80",
+        version:"0.0.0.81",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -5877,7 +5877,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
                     
-                    myTower=(phase2_playersWithLuminousHammer.Contains(0))?(tower4):(tower6);
+                    myTower=(phase2_playersWithLuminousHammer.Contains(0))?(tower6):(tower4);
                     
                 }
                 
@@ -6086,7 +6086,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
                     
-                    myTower=(phase2_playersWithLuminousHammer.Contains(0))?(tower4):(tower2);
+                    myTower=(phase2_playersWithLuminousHammer.Contains(0))?(tower2):(tower4);
                     
                 }
                 
