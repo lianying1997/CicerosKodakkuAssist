@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.87",
+        version: "0.0.0.88",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -330,7 +330,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("-----P4设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase4_Settings_____ { get; set; } = true;
         [UserSetting("P4一运 水分摊换位方式")]
-        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Pre_Induction_Single_Swap_引导前单换;
+        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导;
         [UserSetting("P4一运 忧郁舞蹈(远近死刑)的颜色")]
         public ScriptColor Phase4_Colour_Of_Somber_Dance { get; set; } = new() { V4 = new(1f, 0f, 0f, 1f) };
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
@@ -366,7 +366,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P4二运 白圈指路的颜色")]
         public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P4二运 击退解法")]
-        public Phase4_2_Repel_Enum Phase4_2_Repel { get; set; } = Phase4_2_Repel_Enum.正攻;
+        public Phase4_Positions_Before_Knockback Phase4_Position_Before_Knockback { get; set; } = Phase4_Positions_Before_Knockback.Normal_正攻;
 
         [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase5_Settings_____ { get; set; } = true;
@@ -729,11 +729,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             NONE
 
         }
+        
         public enum Phase4_Strats_Of_The_First_Half
         {
 
-            Pre_Induction_Single_Swap_引导前单换,
-            Post_Induction_Single_Swap_引导后单换,
+            Single_Swap_Baiting_After_先单换再引导,
+            Single_Swap_Baiting_First_先引导再单换,
             Double_Swaps_双换
 
         }
@@ -777,11 +778,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        public enum Phase4_2_Repel_Enum
+        public enum Phase4_Positions_Before_Knockback
         {
 
-            正攻,
-            Y字
+            Normal_正攻,
+            Y_Formation_Y字队形
 
         }
 
@@ -6808,7 +6809,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
 
-                    myTower = (phase2_playersWithLuminousHammer.Contains(0)) ? (tower2) : (tower4);
+                    myTower = (phase2_playersWithLuminousHammer.Contains(0)) ? (tower4) : (tower2);
 
                 }
 
@@ -11680,7 +11681,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 }
             }
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Pre_Induction_Single_Swap_引导前单换 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Post_Induction_Single_Swap_引导后单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -11913,7 +11914,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (parse != 4.2) return;
             phase4_1_ManualReset.WaitOne();
             Vector3 dealpos = new();
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_双换 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Post_Induction_Single_Swap_引导后单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_双换 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
             {
                 List<int> idles = [];
                 for (int i = 0; i < 8; i++)
@@ -11933,7 +11934,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     3 => new(104.2f, 0, 102.0f),
                 };
             }
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Pre_Induction_Single_Swap_引导前单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导)
             {
                 var tIndex = P4Tether[0] == -1 ? 1 : 0;
                 var nIndex = P4Tether[2] == -1 ? 3 : 2;
@@ -12174,7 +12175,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 }
             }
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Pre_Induction_Single_Swap_引导前单换 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Post_Induction_Single_Swap_引导后单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -13055,7 +13056,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (P4WaterPos.Count == 1) return;
             var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
             Vector3 centre = new(100, 0, 100);
-            if (Phase4_2_Repel == Phase4_2_Repel_Enum.正攻)
+            if (Phase4_Position_Before_Knockback == Phase4_Positions_Before_Knockback.Normal_正攻)
             {
                 var dir8 = PositionTo8Dir((P4WaterPos[0] + P4WaterPos[1]) / 2, centre) - 1;
                 Vector3 mtPos = new(107, 0, 88);
@@ -13111,7 +13112,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
             }
-            if (Phase4_2_Repel == Phase4_2_Repel_Enum.Y字)
+            if (Phase4_Position_Before_Knockback == Phase4_Positions_Before_Knockback.Y_Formation_Y字队形)
             {
                 Vector3 mtPos = P4WaterPos[1].Z < 100 ? new(92, 0, 90) : new(92, 0, 110);
                 Vector3 stPos = P4WaterPos[1].Z < 100 ? new(108, 0, 90) : new(108, 0, 110);
