@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.85",
+        version:"0.0.0.86",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -70,16 +70,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
         7. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
         In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
-        8. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
+        8. If Moglin_Meow_Based_On_Signs was selected for the second half of Phase 3, then all following drawing and guidance would be based on the signs on players from Moglin Meow's Triggers.
+        Attack 1 to 4 stand for the players in the left group, bind 1 to three & square stand for the players on the right. The marks with the number 1 or 2 stand for the players on melee positions.
+        Missing signs or incorrect signs will cause unreliable results.
+        9. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
         If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Allocating the same residue for different debuffs would cause exceptions.
         If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
         If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
-        9. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
+        10. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
         Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
-        10. The guidance of Fulgent Blade in Phase 5 would be always composed of two steps, one is the current step (green by default) and the other is the next step (yellow by default).
+        11. The guidance of Fulgent Blade in Phase 5 would be always composed of two steps, one is the current step (green by default) and the other is the next step (yellow by default).
         Please be aware that you should never move to the next step in advance, until its colour changes to the safe colour. The guidance of the next step is just a preview, which could make you be ready for it.
-        11. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        12. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
         If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
         After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
         
@@ -101,16 +104,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
         7. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
         值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
-        8. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
+        8. 如果P3二运选择了"根据标记的莫灵喵法",则接下来几乎所有绘制和指路都会依赖来自莫灵喵触发器的目标标记。
+        攻击1到4代表去左组的人,止步1到3和方块代表去右组的。下标1和2表示站近战位。
+        残缺或者错误的标记将导致电椅。
+        9. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
         如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。为不同Debuff分配相同白圈将导致错误。
         如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
         如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
-        9. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
+        10. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
         不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
-        10. P5璀璨之刃(地火)指路被分为两个部分,一部分是当前步(默认绿色),另一部分是下一步(默认黄色)。
+        11. P5璀璨之刃(地火)指路被分为两个部分,一部分是当前步(默认绿色),另一部分是下一步(默认黄色)。
         直到下一步变成安全色之前,永远不要提前移动。下一步的绘制仅作预览用途,让你有个心理准备。
-        11. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        12. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
         如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
         然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
         
@@ -146,7 +152,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Reworked guidance of Mirror, Mirror.
          - Fixes and refinements for Light Rampant;
         Phase 3:
-         - Guidance of the second half (including the Double Group strat and the Locomotive strat);
+         - Guidance of the second half (including the Double Group strat, the Locomotive strat and the Moglin Meow strat based on signs);
         Phase 4:
          - New strat of the first half (Single Swap).
          - Guidance related to Drachen Wanderer residues of the second half;
@@ -167,7 +173,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 镜中奇遇指路重做;
          - 光之失控(光暴)修复和细化;
         P3:
-         - 二运指路(包括双分组法和车头法);
+         - 二运指路(包括双分组法,车头法和基于标记的莫灵喵法);
         P4:
          - 一运新攻略(单换);
          - 二运圣龙气息(龙头)白圈相关的指路;
@@ -261,7 +267,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase1_Settings_____ { get; set; } = true;
         [UserSetting("P1乐园绝技(雾龙) 待机站位")]
-        public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; }
+        public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; } = Phase1_Standby_Positions_Of_Utopian_Sky.Both_Tanks_Go_Center_双T去中间;
         [UserSetting("P1乐园绝技(雾龙) 标记在安全位置的玩家")]
         public bool Phase1_Mark_Players_In_Safe_Positions { get; set; } = false;
         [UserSetting("P1 燃烧击(火雷直线)特性的颜色")]
@@ -269,20 +275,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P1光轮召唤 分组")]
         public Phase1_Groups_Of_Turn_Of_The_Heavens Phase1_Group_Of_Turn_Of_The_Heavens { get; set; }
         [UserSetting("P1信仰崩塌(四连抓) 攻略")]
-        public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; }
+        public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; } = Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排;
         [UserSetting("P1信仰崩塌(四连抓) 标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
         public bool Phase1_Mark_Players_During_Fall_Of_Faith { get; set; } = false;
         [UserSetting("P1信仰崩塌(四连抓) 面向基准")]
-        public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; }
+        public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; } = Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级;
         [UserSetting("P1踩塔 攻略")]
-        public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; }
+        public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; } = Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级;
 
         [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase2_Settings_____ { get; set; } = true;
         [UserSetting("P2钻石星辰 击退后攻略")]
-        public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; }
+        public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; } = Phase2_Strats_After_Knockback.Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针;
         [UserSetting("P2镜中奇遇 攻略")]
-        public Phase2_Strats_Of_Mirror_Mirror Phase2_Strat_Of_Mirror_Mirror { get; set; }
+        public Phase2_Strats_Of_Mirror_Mirror Phase2_Strat_Of_Mirror_Mirror { get; set; } = Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右;
         [UserSetting("P2镜中奇遇 镜子粗略指路的颜色")]
         public ScriptColor Phase2_Colour_Of_Mirror_Rough_Guidance { get; set; } = new() { V4=new(1f,1f,0f,1f) };
         [UserSetting("P2镜中奇遇 潜在危险区的颜色")]
@@ -299,13 +305,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("-----P3设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase3_Settings_____ { get; set; } = true;
         [UserSetting("P3一运 攻略")]
-        public Phase3_Strats_Of_The_First_Half Phase3_Strat_Of_The_First_Half { get; set; }
+        public Phase3_Strats_Of_The_First_Half Phase3_Strat_Of_The_First_Half { get; set; } = Phase3_Strats_Of_The_First_Half.Moogle_莫古力;
         [UserSetting("P3二运 攻略")]
-        public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; }
+        public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; } = Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法;
         [UserSetting("P3二运 双分组法的分支")]
         public Phase3_Branches_Of_The_Double_Group_Strat Phase3_Branch_Of_The_Double_Group_Strat { get; set; } = Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准;
         [UserSetting("P3二运 车头低换法的分支")]
-        public Phase3_Branches_Of_The_Locomotive_Strat Phase3_Branch_Of_The_Locomotive_Strat { get; set; }
+        public Phase3_Branches_Of_The_Locomotive_Strat Phase3_Branch_Of_The_Locomotive_Strat { get; set; } = Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_人群为车头;
         [UserSetting("P3二运 场地划分方式")]
         public Phase3_Divisions_Of_The_Zone Phase3_Division_Of_The_Zone { get; set; } = Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南;
         [UserSetting("P3二运 粗略指路的颜色")]
@@ -313,20 +319,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P3二运 倒数第二次启示(地火)的颜色")]
         public ScriptColor Phase3_Colour_Of_The_Penultimate_Apocalypse { get; set; } = new() { V4=new(0,1f,1f,1f) };
         [UserSetting("P3二运 引导暗夜舞蹈(最远死刑)的T")]
-        public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; } = Tanks.OT_ST;
+        public Tanks Phase3_Tank_Who_Baits_Darkest_Dance { get; set; }
         [UserSetting("P3二运 暗夜舞蹈(最远死刑)的颜色")]
         public ScriptColor Phase3_Colour_Of_Darkest_Dance { get; set; } = new() { V4=new(1f,0f,0f,1f) };
 
         [UserSetting("-----P4设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase4_Settings_____ { get; set; } = true;
         [UserSetting("P4一运 水分摊换位方式")]
-        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; }
+        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Single_Swap_单换;
         [UserSetting("P4一运 忧郁舞蹈(远近死刑)的颜色")]
         public ScriptColor Phase4_Colour_Of_Somber_Dance { get; set; } = new() { V4=new(1f,0f,0f,1f) };
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
         public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
         [UserSetting("P4二运 圣龙爪(红)玩家优先级")]
-        public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; }
+        public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; } = Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序;
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
         public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4=new(1f,1f,0f,1f) };
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
@@ -334,7 +340,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P4二运 光之潮汐(地火)的颜色")]
         public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4=new(1f,1f,0f,1f) };
         [UserSetting("P4二运 白圈指路的逻辑 (Make sure only one in the party enables marking!/小队内只能有一人启用标记!)")]
-        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; }
+        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; } = Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记;
         [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
         public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
         [UserSetting("P4二运 暗炎喷发(分散)的白圈 (Debuff Setting/Debuff设置)")]
@@ -369,13 +375,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P5璀璨之刃(地火) 后Boss面向人群")]
         public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
         [UserSetting("P5光与暗之翼(踩塔) 攻略")]
-        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; }
+        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; } = Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法;
         [UserSetting("P5光与暗之翼(踩塔) 灰9倒三角法的分支")]
-        public Phase5_Branches_Of_Grey9_Reverse_Triangle Phase5_Branch_Of_Grey9_Reverse_Triangle { get; set; }
+        public Phase5_Branches_Of_Grey9_Reverse_Triangle Phase5_Branch_Of_Grey9_Reverse_Triangle { get; set; } = Phase5_Branches_Of_Grey9_Reverse_Triangle.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右;
         [UserSetting("P5光与暗之翼(踩塔) 挑衅提醒")]
         public bool Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light { get; set; } = true;
         [UserSetting("P5极化打击(挡枪) 顺序")]
-        public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; }
+        public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; } = Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈;
         
         [UserSetting("-----开发者设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Developer_Settings_____ { get; set; } = true;
@@ -460,7 +466,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Phase3_Types_Of_Dark_Water_III.NONE,
             Phase3_Types_Of_Dark_Water_III.NONE
         ];
+        volatile List<MarkType> phase3_marksOfPlayers=[
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1,
+            MarkType.Stop1
+        ];
         volatile int phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
+        volatile int phase3_numberOfMarksHaveBeenRecorded=0;
+        System.Threading.AutoResetEvent phase3_semaphoreMarksHaveBeenRecorded=new System.Threading.AutoResetEvent(false);
         volatile int phase3_roundOfDarkWaterIii=0;
         volatile int phase3_rangeSemaphoreOfDarkWaterIii=0;
         volatile int phase3_guidanceSemaphoreOfDarkWaterIii=0;
@@ -477,6 +495,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Vector3 phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
         Vector3 phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
         Vector3 phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+        Vector3 phase3_moglinMeow_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+        Vector3 phase3_moglinMeow_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+        Vector3 phase3_moglinMeow_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+        Vector3 phase3_moglinMeow_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
         Vector3 phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
         
         ulong P4FragmentId;
@@ -651,7 +673,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             Double_Group_双分组法,
             High_Priority_As_Locomotives_车头低换法,
-            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
+            Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法
             
         }
 
@@ -694,7 +716,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase4_Priorities_Of_The_Players_With_Wyrmclaw {
             
             In_THD_Order_按THD顺序,
-            In_HTD_Order_按HTD顺序
+            In_HTD_Order_按HTD顺序,
+            In_H1TDH2_Order_按H1TDH2顺序
             
         }
 
@@ -711,6 +734,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             According_To_Debuffs_根据Debuff,
             According_To_The_Priority_THD_根据THD优先级,
             According_To_The_Priority_HTD_根据HTD优先级,
+            According_To_The_Priority_H1TDH2_根据H1TDH2优先级
             
         }
 
@@ -832,7 +856,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
+            phase3_marksOfPlayers=[
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1
+            ];
             phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
+            phase3_numberOfMarksHaveBeenRecorded=0; 
+            phase3_semaphoreMarksHaveBeenRecorded=new System.Threading.AutoResetEvent(false);
             phase3_roundOfDarkWaterIii=0;
             phase3_rangeSemaphoreOfDarkWaterIii=0;
             phase3_guidanceSemaphoreOfDarkWaterIii=0;
@@ -845,6 +881,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
             phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_moglinMeow_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_moglinMeow_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_moglinMeow_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_moglinMeow_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
 
             phase4_numberOfWyrmfangHasBeenCounted=0;
@@ -2907,7 +2947,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
         }
         
-        [ScriptMethod(name:"Phase1_Burnt_Strike_With_Towers_And_Tank_Busters_带有塔和死刑的燃烧击(最后机制)",
+        [ScriptMethod(name:"Phase1 Burnt Strike With Towers And Tank Busters 带有塔和死刑的火燃烧击(最后踩塔)",
             eventType:EventTypeEnum.StartCasting,
             eventCondition:["ActionId:regex:^(40134|40129)$"])]
         
@@ -7222,7 +7262,19 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 Phase3_Types_Of_Dark_Water_III.NONE,
                 Phase3_Types_Of_Dark_Water_III.NONE
             ];
+            phase3_marksOfPlayers=[
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1,
+                MarkType.Stop1
+            ];
             phase3_numberOfDarkWaterIiiHasBeenProcessed=0;
+            phase3_numberOfMarksHaveBeenRecorded=0; 
+            phase3_semaphoreMarksHaveBeenRecorded=new System.Threading.AutoResetEvent(false);
             phase3_roundOfDarkWaterIii=0;
             phase3_rangeSemaphoreOfDarkWaterIii=0;
             phase3_guidanceSemaphoreOfDarkWaterIii=0;
@@ -7235,7 +7287,71 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_locomotive_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
             phase3_locomotive_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_locomotive_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_moglinMeow_initialSafePositionOfTheLeftGroup=new Vector3(100,0,100);
+            phase3_moglinMeow_initialSafePositionOfTheRightGroup=new Vector3(100,0,100);
+            phase3_moglinMeow_leftPositionToStackOfTheSecondRound=new Vector3(100,0,100);
+            phase3_moglinMeow_rightPositionToStackOfTheSecondRound=new Vector3(100,0,100);
             phase3_finalPositionOfTheBoss=new Vector3(100,0,100);
+        }
+        
+        [ScriptMethod(name:"Phase3 Record Signs On Party Members 记录小队队员的目标标记",
+            eventType:EventTypeEnum.Marker,
+            userControl:false)]
+
+        public void Phase3_Record_Signs_On_Party_Members_记录小队队员的目标标记(Event @event, ScriptAccessory accessory) {
+            
+            if(parse!=3.2) {
+
+                return;
+
+            }
+
+            if(!ParseObjectId(@event["TargetId"], out var targetId)) {
+
+                return;
+
+            }
+
+            if(!int.TryParse(@event["Id"], out var sign)) {
+                
+                return;
+                
+            }
+
+            MarkType currentType=sign switch {
+                1 => MarkType.Attack1,
+                2 => MarkType.Attack2,
+                3 => MarkType.Attack3,
+                4 => MarkType.Attack4,
+                6 => MarkType.Bind1,
+                7 => MarkType.Bind2,
+                8 => MarkType.Bind3,
+                11 => MarkType.Square,
+                _ => MarkType.Stop1
+            };
+
+            int currentIndex=accessory.Data.PartyList.IndexOf(((uint)targetId));
+
+            if(0<=currentIndex&&currentIndex<=7) {
+                
+                lock(phase3_marksOfPlayers) {
+
+                    phase3_marksOfPlayers[currentIndex]=currentType;
+                    
+                    ++phase3_numberOfMarksHaveBeenRecorded;
+                    
+                    System.Threading.Thread.MemoryBarrier();
+
+                    if(phase3_numberOfMarksHaveBeenRecorded==8) {
+
+                        phase3_semaphoreMarksHaveBeenRecorded.Set();
+
+                    }
+
+                }
+                
+            }
+
         }
         
         [ScriptMethod(name:"Phase3 Determine Types Of Dark Water III 确定黑暗狂水(分摊)类型",
@@ -7570,6 +7686,71 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法) {
+
+                System.Threading.Thread.MemoryBarrier();
+                
+                phase3_semaphoreMarksHaveBeenRecorded.WaitOne();
+                
+                System.Threading.Thread.MemoryBarrier();
+
+                int myIndex=accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+                bool goLeft=phase3_moglinMeow_shouldGoLeft(myIndex);
+                string prompt="";
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+            
+                currentProperty.Name="Phase3_Prompt_Before_Dark_Water_III_暗黑狂水前提示";
+                currentProperty.Scale=new(2);
+                currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                currentProperty.Owner=accessory.Data.Me;
+                currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                currentProperty.Color=accessory.Data.DefaultSafeColor;
+                currentProperty.DestoryAt=5000;
+            
+                accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                if(goLeft) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt+="始终去左组分摊";
+
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="Always stack on the left";
+
+                    }
+                
+                }
+
+                else {
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt+="始终去右组分摊";
+
+                    }
+                
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt+="Always stack on the right";
+
+                    }
+                
+                }
+
+                if(Enable_Text_Prompts) {
+                
+                    accessory.Method.TextInfo(prompt,3500);
+                
+                }
+
+                accessory.TTS($"{prompt}", Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
+
+            }
+            
         }
 
         [ScriptMethod(name:"Phase3 Release The Semaphore Of Dark Water III 释放黑暗狂水(分摊)的信号灯",
@@ -7783,6 +7964,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                             currentProperty.DestoryAt=5000;
 
                             if(phase3_locomotive_shouldGoLeft(i)==goLeft) {
+
+                                currentProperty.Color=accessory.Data.DefaultSafeColor;
+
+                            }
+
+                            else {
+
+                                currentProperty.Color=accessory.Data.DefaultDangerColor;
+
+                            }
+                                        
+                            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Circle,currentProperty);
+                                        
+                        }
+                                    
+                    }
+
+                    return;
+
+                }
+
+            }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法) {
+                
+                if(phase3_numberOfMarksHaveBeenRecorded>=8) {
+                    
+                    bool goLeft=phase3_moglinMeow_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+            
+                    for(int i=0;i<8;++i) {
+
+                        if(phase3_typeOfDarkWaterIii[i]==currentType) {
+                                        
+                            currentProperty=accessory.Data.GetDefaultDrawProperties();
+                                        
+                            currentProperty.Name="Phase3_Range_Of_Dark_Water_III_黑暗狂水范围";
+                            currentProperty.Scale=new(6);
+                            currentProperty.Owner=accessory.Data.PartyList[i];
+                            currentProperty.DestoryAt=5000;
+
+                            if(phase3_moglinMeow_shouldGoLeft(i)==goLeft) {
 
                                 currentProperty.Color=accessory.Data.DefaultSafeColor;
 
@@ -8212,6 +8434,145 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
             }
             
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法) {
+                
+                bool goLeft=phase3_moglinMeow_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                if(Enable_Developer_Mode) {
+
+                    accessory.Method.SendChat($"""
+                                               /e 
+                                               goLeft={goLeft}
+                                               phase3_roundOfDarkWaterIii={phase3_roundOfDarkWaterIii}
+                                               
+                                               """);
+
+                }
+
+                switch(phase3_roundOfDarkWaterIii) {
+
+                    case 1: {
+                        
+                        currentProperty.TargetPosition=(goLeft)?(new Vector3(93,0,100)):(new Vector3(107,0,100));
+                    
+                        targetPositionConfirmed=true;
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            prompt= (goLeft)?("左侧分摊"):("右侧分摊");
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            prompt=(goLeft)?("Stack on the left"):("Stack on the right");
+
+                        }
+
+                        break;
+
+                    }
+                    
+                    case 2: {
+                        
+                        currentProperty.TargetPosition=(goLeft)?
+                            (phase3_moglinMeow_leftPositionToStackOfTheSecondRound):
+                            (phase3_moglinMeow_rightPositionToStackOfTheSecondRound);
+                    
+                        targetPositionConfirmed=true;
+
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                            prompt="场中当前侧分摊";
+
+                        }
+                    
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                            prompt="Stack on this side of the center";
+
+                        }
+
+                        break;
+
+                    }
+
+                    case 3: {
+                        
+                        if(ParseObjectId(phase3_bossId, out var bossId)) {
+
+                            var bossObject=accessory.Data.Objects.SearchById(bossId);
+
+                            if(bossObject!=null) {
+                                
+                                float currentRotation=bossObject.Rotation;
+                                currentRotation=-(currentRotation-float.Pi);
+
+                                Vector3 groupPosition=new Vector3(100,0,100);
+            
+                                if(Enable_Developer_Mode) {
+
+                                    accessory.Method.SendChat($"""
+                                                               /e 
+                                                               currentRotation={currentRotation}
+
+                                                               """);
+
+                                }
+
+                                if(goLeft) {
+
+                                    groupPosition=new Vector3(bossObject.Position.X-6.89f,
+                                                              bossObject.Position.Y,
+                                                              bossObject.Position.Z+6.89f);
+
+                                }
+
+                                else {
+                                    
+                                    groupPosition=new Vector3(bossObject.Position.X+6.89f,
+                                                              bossObject.Position.Y,
+                                                              bossObject.Position.Z+6.89f);
+                                    
+                                }
+
+                                groupPosition=RotatePoint(groupPosition,bossObject.Position,currentRotation);
+                                
+                                currentProperty.TargetPosition=groupPosition;
+                                
+                                targetPositionConfirmed=true;
+
+                            }
+
+                        }
+                        
+                        if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+                                
+                            prompt=(goLeft)?("左侧分摊"):("右侧分摊");
+                                
+                        }
+                            
+                        if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+                                
+                            prompt=(goLeft)?("Stack on the left"):("Stack on the right");
+                                
+                        }
+
+                        break;
+
+                    }
+
+                    default: {
+                        // Just a placeholder and should never be reached.
+
+                        break;
+
+                    }
+                    
+                }
+                
+            }
+            
             if(targetPositionConfirmed) {
 
                 accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
@@ -8376,6 +8737,43 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
 
             return currentIndex;
+            // Just a placeholder and should never be reached.
+
+        }
+        
+        private bool phase3_moglinMeow_shouldGoLeft(int currentIndex) {
+
+            if(currentIndex<0||currentIndex>7) {
+
+                return true;
+
+            }
+
+            if(phase3_marksOfPlayers[currentIndex]==MarkType.Attack1
+               ||
+               phase3_marksOfPlayers[currentIndex]==MarkType.Attack2
+               ||
+               phase3_marksOfPlayers[currentIndex]==MarkType.Attack3
+               ||
+               phase3_marksOfPlayers[currentIndex]==MarkType.Attack4) {
+
+                return true;
+
+            }
+            
+            if(phase3_marksOfPlayers[currentIndex]==MarkType.Bind1
+               ||
+               phase3_marksOfPlayers[currentIndex]==MarkType.Bind2
+               ||
+               phase3_marksOfPlayers[currentIndex]==MarkType.Bind3
+               ||
+               phase3_marksOfPlayers[currentIndex]==MarkType.Square) {
+
+                return false;
+
+            }
+
+            return true;
             // Just a placeholder and should never be reached.
 
         }
@@ -9175,6 +9573,52 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
 
             }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法) {
+                
+                if(direction1OfTheLast==0
+                   ||
+                   direction1OfTheLast==7
+                   ||
+                   direction1OfTheLast==6
+                   ||
+                   direction1OfTheLast==5) {
+                    
+                    phase3_moglinMeow_initialSafePositionOfTheLeftGroup=position1OfTheLast;
+                    phase3_moglinMeow_leftPositionToStackOfTheSecondRound=new Vector3((position1OfTheLast.X-100)/3+100,
+                                                                                               position1OfTheLast.Y,
+                                                                                               (position1OfTheLast.Z-100)/3+100);
+                    phase3_moglinMeow_initialSafePositionOfTheRightGroup=position2OfTheLast;
+                    phase3_moglinMeow_rightPositionToStackOfTheSecondRound=new Vector3((position2OfTheLast.X-100)/3+100,
+                                                                                                position2OfTheLast.Y,
+                                                                                                (position2OfTheLast.Z-100)/3+100);
+
+                    phase3_hasConfirmedInitialSafePositions=true;
+
+                }
+
+                if(direction1OfTheLast==1
+                   ||
+                   direction1OfTheLast==2
+                   ||
+                   direction1OfTheLast==3
+                   ||
+                   direction1OfTheLast==4) {
+                    
+                    phase3_moglinMeow_initialSafePositionOfTheLeftGroup=position2OfTheLast;
+                    phase3_moglinMeow_leftPositionToStackOfTheSecondRound=new Vector3((position2OfTheLast.X-100)/3+100,
+                                                                                               position2OfTheLast.Y,
+                                                                                               (position2OfTheLast.Z-100)/3+100); 
+                    phase3_moglinMeow_initialSafePositionOfTheRightGroup=position1OfTheLast;
+                    phase3_moglinMeow_rightPositionToStackOfTheSecondRound=new Vector3((position1OfTheLast.X-100)/3+100,
+                                                                                                position1OfTheLast.Y,
+                                                                                                (position1OfTheLast.Z-100)/3+100);
+
+                    phase3_hasConfirmedInitialSafePositions=true;
+
+                }
+
+            }
 
         }
         
@@ -9382,6 +9826,28 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 else {
 
                     currentProperty.TargetPosition=phase3_locomotive_initialSafePositionOfTheRightGroup;
+                    
+                    targetPositionConfirmed=true;
+                    
+                }
+
+            }
+            
+            if(Phase3_Strat_Of_The_Second_Half==Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法) {
+
+                bool goLeft=phase3_moglinMeow_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
+
+                if(goLeft) {
+
+                    currentProperty.TargetPosition=phase3_moglinMeow_initialSafePositionOfTheLeftGroup;
+                    
+                    targetPositionConfirmed=true;
+                    
+                }
+
+                else {
+
+                    currentProperty.TargetPosition=phase3_moglinMeow_initialSafePositionOfTheRightGroup;
                     
                     targetPositionConfirmed=true;
                     
@@ -10917,6 +11383,26 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
                 
             }
+            
+            if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_The_Priority_H1TDH2_根据H1TDH2优先级) {
+                
+                List<int> temporaryOrder=[2,0,1,4,5,6,7,3];
+
+                for(int i=0,j=0;i<temporaryOrder.Count;++i) {
+
+                    if(P4ClawBuff[temporaryOrder[i]]==3&&j<4) {
+                        
+                        accessory.Method.Mark(accessory.Data.PartyList[i],phase4_markForPlayersWithWyrmfang_asAConstant[j]);
+                        
+                        debugOutput+=$"temporaryOrder[i]={temporaryOrder[i]},phase4_markForPlayersWithWyrmfang_asAConstant[j]={phase4_markForPlayersWithWyrmfang_asAConstant[j]}\n";
+                        
+                        ++j;
+
+                    }
+                    
+                }
+                
+            }
 
             if(Enable_Developer_Mode) {
 
@@ -11100,6 +11586,34 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 }
                 
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_H1TDH2_Order_按H1TDH2顺序) {
+
+                    List<int> temporaryPriority=[2,0,1,4,5,6,7,3];
+
+                    for(int i=0;i<temporaryPriority.Count;++i) {
+
+                        if(P4ClawBuff[temporaryPriority[i]]==1) {
+
+                            if(temporaryPriority[i]==myIndex) {
+
+                                isHigh=true;
+
+                            }
+
+                            else {
+
+                                isHigh=false;
+
+                            }
+
+                            break;
+
+                        }
+                        
+                    }
+
+                }
+                
                 Vector3 dealpos= isHigh ? new(87, 0, 100) : new(113, 0, 100);
 
                 var dp = accessory.Data.GetDefaultDrawProperties();
@@ -11175,6 +11689,34 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序) {
 
                     List<int> temporaryPriority=[2,3,0,1,4,5,6,7];
+
+                    for(int i=0;i<temporaryPriority.Count;++i) {
+
+                        if(P4ClawBuff[temporaryPriority[i]]==2) {
+
+                            if(temporaryPriority[i]==myIndex) {
+
+                                isHigh=true;
+
+                            }
+
+                            else {
+
+                                isHigh=false;
+
+                            }
+
+                            break;
+
+                        }
+                        
+                    }
+
+                }
+                
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_H1TDH2_Order_按H1TDH2顺序) {
+
+                    List<int> temporaryPriority=[2,0,1,4,5,6,7,3];
 
                     for(int i=0;i<temporaryPriority.Count;++i) {
 
