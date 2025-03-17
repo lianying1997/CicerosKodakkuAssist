@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.84",
+        version:"0.0.0.85",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -182,20 +182,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** 已知问题 *****
         
         Phase 3:
-         - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
+         - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear slightly earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
            The timeline here would be refined in the future.
-        Phase 5:
-         - Polarizing Strikes: The order of taking towers regarding the Grey9 Brain Dead strat on CN has been adjusted a little bit, and the new version has not been added yet. It's on the way.
-           The order at the moment is melees first, then ranges and healers. The new order is healers first, then melees and ranges.
         
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
         
         P3:
-         - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能早于实际判定时间。请确保成功引导后再移动。
+         - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能略微早于实际判定时间。请确保成功引导后再移动。
            会在未来精修此处的时间轴。
-        P5:
-         - 极化打击(挡枪): 国服的灰九脑死塔踩塔顺序有点改动,尚未适配,但很快就会做。
-           现在的踩塔顺序是先近战,然后远程和奶妈。新的顺序是先奶妈,然后远程和近战。
          
         当所有已知问题都被解决后,就不会再有大更新了。那个时候的版本就是最终版。
         
@@ -376,6 +370,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
         [UserSetting("P5光与暗之翼(踩塔) 攻略")]
         public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; }
+        [UserSetting("P5光与暗之翼(踩塔) 灰9倒三角法的分支")]
+        public Phase5_Branches_Of_Grey9_Reverse_Triangle Phase5_Branch_Of_Grey9_Reverse_Triangle { get; set; }
         [UserSetting("P5光与暗之翼(踩塔) 挑衅提醒")]
         public bool Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light { get; set; } = true;
         [UserSetting("P5极化打击(挡枪) 顺序")]
@@ -730,8 +726,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         public enum Phase5_Strats_Of_Wings_Dark_And_Light {
             
-            Grey9_Brain_Dead_灰九脑死法,
+            Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法,
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
+            
+        }
+
+        public enum Phase5_Branches_Of_Grey9_Reverse_Triangle {
+            
+            Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右,
+            Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右
             
         }
 
@@ -12974,7 +12977,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法) {
 
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
@@ -13097,7 +13100,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法) {
 
                 Vector3 position1OfCurrentMt=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
                 // Just opposite the first tower.
@@ -13307,7 +13310,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
             
-            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_灰九脑死法) {
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法) {
+
+                if(Phase5_Branch_Of_Grey9_Reverse_Triangle==Phase5_Branches_Of_Grey9_Reverse_Triangle.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右) {
+                // I'm just too lazy to adjust the indentation here. So I guiltily leave it as it is.
+                // This branch was not necessary before, but the strat on CN does vary a little bit.
                 
                 var currentProperty=accessory.Data.GetDefaultDrawProperties();
 
@@ -13716,6 +13723,420 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 }
 
+                }
+                
+                if(Phase5_Branch_Of_Grey9_Reverse_Triangle==Phase5_Branches_Of_Grey9_Reverse_Triangle.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右) {
+                
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                if(phase5_indexOfTheFirstTower.Equals("00000030")) {
+                    // The first tower is in the northwest.
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+                        // The healer group, that is H1 & H2.
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
+                        // I'm also too lazy to change the name of currentProperty. The same below.
+                        // Please always refer to the if statements only.
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_rightSideOfTheNorthwest_asAConstant:phase5_leftSideOfTheNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_rightSideOfTheNorthwest_asAConstant:phase5_leftSideOfTheNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+                        // The range group, that is R1 & R2 or D3 & D4.
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheSouth_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheSouth_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+                        // The melee group, that is M1 & M2 or D1 & D2.
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNorthwest_asAConstant:phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+
+                }
+            
+                if(phase5_indexOfTheFirstTower.Equals("00000031")) {
+                    // The first tower is in the northeast.
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_rightSideOfTheNortheast_asAConstant:phase5_leftSideOfTheNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_rightSideOfTheNortheast_asAConstant:phase5_leftSideOfTheNortheast_asAConstant;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant:phase5_standbyPointBetweenSouthAndNortheast_asAConstant;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheSouth_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheSouth_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                
+                }
+            
+                if(phase5_indexOfTheFirstTower.Equals("00000032")) {
+                    // The first tower is in the south.
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_rightSideOfTheSouth_asAConstant:phase5_leftSideOfTheSouth_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_rightSideOfTheSouth_asAConstant:phase5_leftSideOfTheSouth_asAConstant;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_standbyPointBetweenNortheastAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_rightSideOfTheNortheast_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=isLeftFirstAndFarFirst?phase5_standbyPointBetweenSouthAndNortheast_asAConstant:phase5_standbyPointBetweenSouthAndNorthwest_asAConstant;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=phase5_leftSideOfTheNorthwest_asAConstant;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+                
+                }
+
+                }
                 
             }
 
