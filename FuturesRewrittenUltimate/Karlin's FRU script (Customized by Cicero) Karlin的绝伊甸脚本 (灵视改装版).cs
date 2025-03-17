@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name:"Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys:[1238],
         guid:"148718fd-575d-493a-8ac7-1cc7092aff85",
-        version:"0.0.0.86",
+        version:"0.0.0.87",
         note:notesOfTheScript,
         author:"Karlin")]
     
@@ -52,71 +52,75 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         当然也请不要同时开着改装脚本和原版脚本。
         如果你有直播需求,脚本中没有强制使用Vfx的绘图,所以经过适当的配置可以直播时使用。
         
-        1. Two types of TTS prompts are provided, vanilla TTS and Daily Routines TTS.
+        1. The entire set of default settings is consistent with Moglin Meow's FRU strat video, except the settings which have multiple branches in Moglin Meow's Triggers.
+        Regarding settings without a specified default option, its actual default settings would be based on the enumeration values in the code.
+        2. Two types of TTS prompts are provided, vanilla TTS and Daily Routines TTS.
         Please make sure you only enable one of the two options. You couldn't run the both TTS simultaneously.
         And of course you need to have the plugin Daily routines installed and enabled if you'd like to use Daily Routines TTS.
         The language of TTS prompts would be consistent with that of text prompts.
-        2. For any marking feature, please make sure that only one member in the party enables it, and the party are not running any similar marking feature from other plugins or triggers.
-        3. There may not be exact 2 players being marked during Utopian Sky if the initial positions of players are unbearably deviant. The marks would be based on the real-time positions of each player.
-        4. Marks during Fall Of Faith in Phase 1 involves three different types: Target To Attack, Target To Bind, Target To Ignore.
+        3. For any marking feature, please make sure that only one member in the party enables it, and the party are not running any similar marking feature from other plugins or triggers.
+        4. There may not be exact 2 players being marked during Utopian Sky if the initial positions of players are unbearably deviant. The marks would be based on the real-time positions of each player.
+        5. Marks during Fall Of Faith in Phase 1 involves three different types: Target To Attack, Target To Bind, Target To Ignore.
         Target To Ignore 1 and 2: The tethered players in the north. Numbers stand for the round of the play.
         Target To Bind 1 and 2: The tethered players in the south. Numbers stand for the round of the play.
         Target To Attack 1 and 2: The untethered players in the north. Number 1 stands for the player with higher priority.
         Target To Attack 3 and 4: The untethered players in the north. Number 3 stands for the player with higher priority.
         (Assuming the priority is MT OT H1 H2 M1 M2 R1 R2, then:
            Higher priority <- MT OT H1 H2 M1 M2 R1 R2 -> Lower priority)
-        5. In the descriptions of Mirror Mirror strats in Phase 2, the left and right here refer to the left and right while facing red mirrors from the center.
-        6. It's required to select a proper initial position for your Light Rampant strat, otherwise the guidance may be not reliable.
+        6. In the descriptions of Mirror Mirror strats in Phase 2, the left and right here refer to the left and right while facing red mirrors from the center.
+        7. It's required to select a proper initial position for your Light Rampant strat, otherwise the guidance may be not reliable.
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
-        7. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
+        8. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
         In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
-        8. If Moglin_Meow_Based_On_Signs was selected for the second half of Phase 3, then all following drawing and guidance would be based on the signs on players from Moglin Meow's Triggers.
+        9. If Moglin_Meow_Based_On_Signs was selected for the second half of Phase 3, then all following drawing and guidance would be based on the signs on players from Moglin Meow's Triggers.
         Attack 1 to 4 stand for the players in the left group, bind 1 to three & square stand for the players on the right. The marks with the number 1 or 2 stand for the players on melee positions.
         Missing signs or incorrect signs will cause unreliable results.
-        9. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
+        10. If the logic of residue guidance in Phase 4 was set to Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
         If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Allocating the same residue for different debuffs would cause exceptions.
         If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
         If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
-        10. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
+        11. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
         Anyway, those situations are pretty much already a wipe. Aside from that, fixing this issue is technically difficult, so I'll just leave it there.
-        11. The guidance of Fulgent Blade in Phase 5 would be always composed of two steps, one is the current step (green by default) and the other is the next step (yellow by default).
+        12. The guidance of Fulgent Blade in Phase 5 would be always composed of two steps, one is the current step (green by default) and the other is the next step (yellow by default).
         Please be aware that you should never move to the next step in advance, until its colour changes to the safe colour. The guidance of the next step is just a preview, which could make you be ready for it.
-        12. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
+        13. It's highly recommended to run the script while running the plugin A Realm Record (ARR) and enabling its recording feature.
         If you encounter any issue or bug, leave the duty to cut off the recording (which would help me quickly pinpoint the pull with issues).
         After that, please describe the issue and share the related ARR recording with me. Appreciate your help!
         
-        1. 提供两种类型的TTS播报,原版TTS和Daily Routines TTS。
+        1. 整套默认设置是跟莫灵喵视频攻略保持一致的,除了莫灵喵触发器中提供多个选择的部分。
+        没有默认选项的设置,其实际默认设置将根据代码中的枚举类型实际值决定。
+        2. 提供两种类型的TTS播报,原版TTS和Daily Routines TTS。
         请确保你只启用了二者其一,这两个不能同时开。
         当然,如果选择了Daily Routines TTS,你需要已经安装并启用了Daily Routines插件。
         TTS提示的语言与文本提示语言相同。
-        2. 对于任何标记队友的功能,小队里只能有一个玩家启用,并且也不与其他科技的兼容。
-        3. P1乐园绝技(雾龙)期间被标记的玩家可能少于或者多于2人,因为会捕获玩家的实时位置进行计算,站位不标准可能会导致这种情况。
-        4. P1信仰崩塌(四连抓)期间的标记涉及到攻击,止步和禁止三种。
+        3. 对于任何标记队友的功能,小队里只能有一个玩家启用,并且也不与其他科技的兼容。
+        4. P1乐园绝技(雾龙)期间被标记的玩家可能少于或者多于2人,因为会捕获玩家的实时位置进行计算,站位不标准可能会导致这种情况。
+        5. P1信仰崩塌(四连抓)期间的标记涉及到攻击,止步和禁止三种。
         禁止1和2:前往北侧的被连线玩家。数字就是抓人的轮数。
         锁链1和2:前往南侧的被连线玩家。数字就是抓人的轮数。
         攻击1和2:前往北侧的闲人。数字1是优先级更高的。
         攻击3和4:前往南侧的闲人。数字3是优先级更高的。
         (假设优先级为 MT ST H1 H2 D1 D2 D3 D4, 那么高优先级指的是:
            高优先级 <- MT ST H1 H2 D1 D2 D3 D4 -> 低优先级)
-        5. P2镜中奇遇攻略的描述中,左和右的基准指的是从场中面向两面红色镜子时的左和右。
-        6. P2光之失控(光暴)必须在配置中设定相应的预站位,否则指路会电椅。
+        6. P2镜中奇遇攻略的描述中,左和右的基准指的是从场中面向两面红色镜子时的左和右。
+        7. P2光之失控(光暴)必须在配置中设定相应的预站位,否则指路会电椅。
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
-        7. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
+        8. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
         值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
-        8. 如果P3二运选择了"根据标记的莫灵喵法",则接下来几乎所有绘制和指路都会依赖来自莫灵喵触发器的目标标记。
+        9. 如果P3二运选择了"根据标记的莫灵喵法",则接下来几乎所有绘制和指路都会依赖来自莫灵喵触发器的目标标记。
         攻击1到4代表去左组的人,止步1到3和方块代表去右组的。下标1和2表示站近战位。
         残缺或者错误的标记将导致电椅。
-        9. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
+        10. 如果P4二运的白圈指路逻辑设置为"标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
         如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。为不同Debuff分配相同白圈将导致错误。
         如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
         如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
-        10. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
+        11. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
         不过如果已经这样那大概率是要团灭了,修复这个问题在技术层面上也有点难度,所以我就不管了。
-        11. P5璀璨之刃(地火)指路被分为两个部分,一部分是当前步(默认绿色),另一部分是下一步(默认黄色)。
+        12. P5璀璨之刃(地火)指路被分为两个部分,一部分是当前步(默认绿色),另一部分是下一步(默认黄色)。
         直到下一步变成安全色之前,永远不要提前移动。下一步的绘制仅作预览用途,让你有个心理准备。
-        12. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
+        13. 非常建议在用这个脚本打本的同时,启用插件A Realm Record(ARR)并开启录制。
         如果遇到了问题或bug,请退本一次来切断录像(这样我能快速定位出问题的那一把)。
         然后,简单描述一下问题并分享一下那份出了问题的ARR录像。非常感谢!
         
