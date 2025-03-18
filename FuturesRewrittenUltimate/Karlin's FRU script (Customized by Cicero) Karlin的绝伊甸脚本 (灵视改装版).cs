@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.89",
+        version: "0.0.0.90",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -391,9 +391,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P5璀璨之刃(地火) 后Boss面向人群")]
         public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
         [UserSetting("P5光与暗之翼(踩塔) 攻略")]
-        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; } = Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法;
-        [UserSetting("P5光与暗之翼(踩塔) 灰9倒三角法的分支")]
-        public Phase5_Branches_Of_Grey9_Reverse_Triangle Phase5_Branch_Of_Grey9_Reverse_Triangle { get; set; } = Phase5_Branches_Of_Grey9_Reverse_Triangle.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右;
+        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; } = Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧;
+        [UserSetting("P5光与暗之翼(踩塔) 灰9脑死法的分支")]
+        public Phase5_Branches_Of_Grey9_Brain_Dead Phase5_Branch_Of_Grey9_Brain_Dead { get; set; } = Phase5_Branches_Of_Grey9_Brain_Dead.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右;
         [UserSetting("P5光与暗之翼(踩塔) 挑衅提醒")]
         public bool Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light { get; set; } = true;
         [UserSetting("P5极化打击(挡枪) 顺序")]
@@ -799,12 +799,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase5_Strats_Of_Wings_Dark_And_Light
         {
 
-            Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法,
+            Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧,
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
 
         }
 
-        public enum Phase5_Branches_Of_Grey9_Reverse_Triangle
+        public enum Phase5_Branches_Of_Grey9_Brain_Dead
         {
 
             Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右,
@@ -14965,7 +14965,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法)
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧)
             {
 
                 var currentProperty = accessory.Data.GetDefaultDrawProperties();
@@ -15104,7 +15104,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法)
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧)
             {
 
                 Vector3 position1OfCurrentMt = RotatePoint(positionOfTheFirstTower, new Vector3(100, 0, 100), float.Pi);
@@ -15337,10 +15337,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Reverse_Triangle_Brain_Dead_灰九倒三角脑死法)
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧)
             {
 
-                if (Phase5_Branch_Of_Grey9_Reverse_Triangle == Phase5_Branches_Of_Grey9_Reverse_Triangle.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右)
+                if (Phase5_Branch_Of_Grey9_Brain_Dead == Phase5_Branches_Of_Grey9_Brain_Dead.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右)
                 {
                     // I'm just too lazy to adjust the indentation here. So I guiltily leave it as it is.
                     // This branch was not necessary before, but the strat on CN does vary a little bit.
@@ -15766,7 +15766,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 }
 
-                if (Phase5_Branch_Of_Grey9_Reverse_Triangle == Phase5_Branches_Of_Grey9_Reverse_Triangle.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右)
+                if (Phase5_Branch_Of_Grey9_Brain_Dead == Phase5_Branches_Of_Grey9_Brain_Dead.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右)
                 {
 
                     var currentProperty = accessory.Data.GetDefaultDrawProperties();
