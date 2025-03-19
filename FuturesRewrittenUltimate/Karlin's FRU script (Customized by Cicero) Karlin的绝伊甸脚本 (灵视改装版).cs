@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.93",
+        version: "0.0.0.94",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -79,9 +79,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Target To Ignore 1 and 2: The players who are going to deal with the mechanism in the west. Number 2 stands for the longer debuff.
         Target To Bind 1 and 2: The players who are going to deal with the mechanism in the east. Number 2 stands for the longer debuff.
         The mark priority would be based on the priority of players with Wyrmclaw (red) above.
-        11. If the logic of residue guidance in Phase 4 was set to Guidance_And_Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
-        If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Allocating the same residue position for different debuffs would cause exceptions.
-        If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
+        11. If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
+        Meanwhile, the option According_To_Signs_On_Me could work perfectly combined with the marking feature above for the second half of Phase 4.
         If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
         12. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
         the related drawing may be removed with delay and may cause some confusion in the second half of Phase 4.
@@ -119,9 +118,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         禁止1和2:前往西侧处理机制。数字2是长debuff。
         止步1和2:前往东侧处理机制。数字2是长debuff。
         标记的优先级将取决于上面圣龙爪(红)玩家优先级的设置。
-        11. 如果P4二运的白圈指路逻辑设置为"指路同时标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
-        如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。为不同Debuff分配相同的白圈位置将导致错误。
-        如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
+        11. 如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
+        同时,选项"根据我身上的目标标记"可以有效配合上面的P4二运标记功能使用。
         如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
         12. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
         那么相关绘制的移除可能有延迟并且会干扰玩家。
