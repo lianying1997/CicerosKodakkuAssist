@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.90",
+        version: "0.0.0.91",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -139,6 +139,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Helpers (sorted lexicographically):
          - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1. (Mar 9, 2025)
          - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1. (Mar 5, 2025)
+         - @cyf5119 provided ranges of halo AOEs for Turn of the Heavens in Phase 1. (Mar 19, 2025)
          - @milkvio provided guidance for Fulgent Blade in Phase 5. (Mar 16, 2025)
          - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2. (Mar 16, 2025)
          - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
@@ -147,6 +148,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         提供帮助的人(按字典序排序):
         - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。 (2025.03.09)
         - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。 (2025.03.05)
+        - @cyf5119为P1光轮召唤提供了雷焰之光轮的AOE范围。 (2025.3.19)
         - @milkvio为P5璀璨之刃(地火)提供了指路。 (2025.03.16)
         - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告。 (2025.03.16)
         - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。 (2025.03.10)
@@ -1842,6 +1844,22 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
+        }
+        
+        [ScriptMethod(name: "P1-乐园绝技-光轮范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4015[23])$"])]
+        public void P1_乐园绝技_光轮范围(Event evt, ScriptAccessory sa)
+        {
+            if (!ParseObjectId(@evt["SourceId"], out var sid)) return;
+            //var sid = evt.SourceId();
+            var delay = 4000;
+            var dp = sa.Data.GetDefaultDrawProperties();
+            dp.Name = "P1-乐园绝技-光轮范围";
+            dp.Owner = sid;
+            dp.Scale = new(evt["ActionId"] == "40152" ? 5: 10);
+            dp.Color = sa.Data.DefaultDangerColor;
+            dp.Delay = delay;
+            dp.DestoryAt = 8000 - delay;
+            sa.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
 
         [ScriptMethod(name: "P1_转轮召_抓人记录", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4165"], userControl: false)]
