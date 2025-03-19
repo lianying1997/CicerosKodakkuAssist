@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.92",
+        version: "0.0.0.93",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -166,7 +166,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - Reworked guidance of Mirror, Mirror.
          - Fixes and refinements for Light Rampant;
         Phase 3:
-         - Guidance of the second half (including the Double Group strat, the Locomotive strat and the Moglin Meow strat based on signs);
+         - Guidance of the second half (including the Double Group strat, the Locomotive strat and the Moglin Meow strat or Baby Wheelchair strat based on signs);
         Phase 4:
          - New strat of the first half (Single Swap).
          - Guidance related to Drachen Wanderer residues of the second half;
@@ -174,7 +174,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - New strat (HTD priority) and player marking of the second half;
         Phase 5:
          - Guidance of Fulgent Blade;
-         - Guidance of Wings Dark And Light;
+         - Guidance of Wings Dark And Light (including the Grey9 Brain Dead strat and the Reverse Triangle strat);
          - Guidance of Polarizing Strikes.
 
         P1:
@@ -187,7 +187,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 镜中奇遇指路重做;
          - 光之失控(光暴)修复和细化;
         P3:
-         - 二运指路(包括双分组法,车头法和基于标记的莫灵喵法);
+         - 二运指路(包括双分组法,车头法和基于标记的莫灵喵或宝宝椅法);
         P4:
          - 一运新攻略(单换);
          - 二运圣龙气息(龙头)白圈相关的指路;
@@ -195,20 +195,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - 二运新攻略(HTD优先级)与玩家标记;
         P5:
          - 璀璨之刃(地火)指路;
-         - 光与暗之翼(踩塔)指路;
+         - 光与暗之翼(踩塔)指路(包括灰九脑死法和倒三角法);
          - 极化打击(挡枪)指路。
 
         ***** Known Issues *****
         ***** 已知问题 *****
 
         Phase 3:
-         - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear slightly earlier than the time that the direction is anchored. Please make sure that bait it precisely before leaving.
+         - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear a tiny bit earlier than the time that the direction is anchored. It's not fatal by any mean, but it's always recommended that baiting it precisely before leaving.
            The timeline here would be refined in the future.
 
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
 
         P3:
-         - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能略微早于实际判定时间。请确保成功引导后再移动。
+         - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能略微早于实际判定时间一点点。不是大问题,但最好还是确保引导到了以后再移动。
            会在未来精修此处的时间轴。
 
         当所有已知问题都被解决后,就不会再有大更新了。那个时候的版本就是最终版。
@@ -258,10 +258,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         
         
-        前211年的春天,罗马各军团长的任职已经接近尾声。十一位军团长成功敲定了十位,唯有西班牙战线的军团长人选让元老们发愁不已。
-        正值此时,一位24岁的年轻人推开了元老院的大门。在64岁的执政官费边和一众元老们惊异地注视下,他顿了顿,自我介绍道:
-        "诸位元老及新进者们,我是普布利乌斯·科尔涅利乌斯·西庇阿。"
-        
+        后世的我们满怀遐想和敬意提起的"希腊文化"时期就是指伯里克利统治希腊的30年里达到鼎盛的,先后持续不到200年的时期。同时代的历史学家修昔底德告诉我们,伯里克利曾经说过这样一些话:
+        我们的日常生活享有充分的自由。雅典公民享有的自由程度之高,甚至连怀疑与妒忌都是自由的。
+        尽管如此,我们可以享受各种娱乐,丰富我们的精神世界,忘却日间劳作的辛苦。每年在规定的日子里举行各种比赛和祭祀,不忘让我们的居所变得更加舒适。
+        在教育上,我们的竞争对手从孩提时代起,即加以最严格的训练,使其成为勇敢的人,而我们对孩子的教育没有他们那样严酷。
+        我们不学习他们通过非人的残酷训练来应对考验,我们用每个人具备的能力,即决断力,来应对考验。我们的勇气不是产生于法律的要求,而是源于每个雅典公民在日常生活中各自的行为准则。
+        我们爱美,但我们有度;我们尊重智慧,但绝不迷恋于此;我们追求财富,但我们只会尽可能地利用它,而不以此炫耀。在雅典,贫穷不可耻,可耻的是不为脱离贫穷而努力。
+        我们尊重个人利益,却是为了更加关心公共利益。这是因为在以追求个人利益为目的的事业中表现出的能力,同样可以服务于公共事业。
         """;
 
         [UserSetting("-----全局设置----- (No actual meaning for this setting/此设置无实际意义)")]
