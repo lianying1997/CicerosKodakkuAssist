@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.91",
+        version: "0.0.0.92",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -72,7 +72,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         For example, if you've selected Star_Of_David_Japanese_PF, your should also select one of the two positions where supporters are all in the north.
         8. If a player is in position and facing the Boss at the end of the first half of Phase 3, the player will definitely not be affected by Shadoweye.
         In some cases it could be hard for the players deal with the last mechanism to be in position on time. An alternative would be looking at the light belongs to the player.
-        9. If Moglin_Meow_Based_On_Signs was selected for the second half of Phase 3, then all following drawing and guidance would be based on the signs on players from Moglin Meow's Triggers.
+        9. If Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs was selected for the second half of Phase 3, then all following drawing and guidance would be based on the signs on players from Moglin Meow's Triggers or the Baby Wheelchair Triggers.
         Attack 1 to 4 stand for the players in the left group, bind 1 to three & square stand for the players on the right. The marks with the number 1 or 2 stand for the players on melee positions.
         Missing signs or incorrect signs will cause unreliable results.
         10. Marks for players with Wyrmclaw (red) debuffs during the second half of Phase 4 involve Target To Ignore and Target To Bind.
@@ -80,7 +80,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Target To Bind 1 and 2: The players who are going to deal with the mechanism in the east. Number 2 stands for the longer debuff.
         The mark priority would be based on the priority of players with Wyrmclaw (red) above.
         11. If the logic of residue guidance in Phase 4 was set to Guidance_And_Mark_Teammates_With_Wyrmfang, then the teammates would be automatically marked. If not, the following setting the logic of marking teammates could be ignored.
-        If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Allocating the same residue for different debuffs would cause exceptions.
+        If the logic of marking teammates was set to According_To_Debuffs, then the teammates would be marked according to debuff settings. Allocating the same residue position for different debuffs would cause exceptions.
         If the logic of residue guidance was set to According_To_Signs_On_Me, then the guidance would be based on the signs (Attack 1 to 4) on yourself from other plugins, triggers or manually marking.
         If the logic of residue guidance was set to According_To_Debuffs, then the guidance would be based on the debuffs. All signs would be ignored.
         12. If a player with the Wyrmclaw (the red debuff) takes a residue from Drachen Wanderers, or a player with the Wyrmfang (the blue debuff) hits a Drachen Wanderers,
@@ -112,7 +112,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         例如如果你选择"六芒星日服野队法",你必须要选择两种蓝绿在北半场的预站位之一。
         8. P3一运的最后如果玩家站在指路的点上并面向Boss,就一定不会吃到暗影之眼(石化眼)。
         值得一提的是处理最后机制的人可能来不及就位,这种情况下可以通过面向自己的灯解决。
-        9. 如果P3二运选择了"根据标记的莫灵喵法",则接下来几乎所有绘制和指路都会依赖来自莫灵喵触发器的目标标记。
+        9. 如果P3二运选择了"根据目标标记的莫灵喵法或宝宝椅法",则接下来几乎所有绘制和指路都会依赖来自莫灵喵触发器或者宝宝椅的目标标记。
         攻击1到4代表去左组的人,止步1到3和方块代表去右组的。下标1和2表示站近战位。
         残缺或者错误的标记将导致电椅。
         10. P4二运对圣龙爪(红)debuff玩家的标记涉及到禁止和止步。
@@ -120,7 +120,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         止步1和2:前往东侧处理机制。数字2是长debuff。
         标记的优先级将取决于上面圣龙爪(红)玩家优先级的设置。
         11. 如果P4二运的白圈指路逻辑设置为"指路同时标记圣龙牙的队友",则会对队友进行标记。如果设置的不是此项,可以无视下面标记队友的逻辑这一设置。
-        如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。为不同Debuff分配相同白圈将导致错误。
+        如果标记队友的逻辑设置为"根据Debuff",则会根据Debuff设置进行标记。为不同Debuff分配相同的白圈位置将导致错误。
         如果P4二运的白圈指路逻辑设置为"根据我身上的目标标记",则会根据来自其他科技或者手摇的自身的标记(攻击1到4)指路。
         如果P4二运的白圈指路逻辑设置为"根据Debuff",则只会根据Debuff指路,标记将完全被无视。
         12. 如果P4二运持有圣龙爪(红)debuff的玩家吃了圣龙气息(龙头)的白圈,或者持有圣龙牙(蓝)debuff的玩家撞了圣龙气息(龙头),
@@ -216,16 +216,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         ***** To Resellers *****
         ***** 致倒卖者 *****
 
-        我衷心地祝愿:
-        你的人生像尼禄;
-        你的运气像戴克里先;
-        你的名誉像康茂德;
-        你的诚信像卡拉卡拉;
-        你的道德像埃拉伽巴路斯;
-        你的信用像加里恩努斯;
-        你的未来像塞维鲁·亚历山大;
-        而你的结局像罗慕路斯·奥古斯都。
-
         I sincerely wish:
         Your life will be like Nero;
         Your luck will be like Diocletian;
@@ -235,6 +225,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Your credibility will be like Gallienus;
         Your future will be like Severus Alexander;
         And your end will be like Romulus Augustulus.
+        
+        我衷心地祝愿:
+        你的人生像尼禄;
+        你的运气像戴克里先;
+        你的名誉像康茂德;
+        你的诚信像卡拉卡拉;
+        你的道德像埃拉伽巴路斯;
+        你的信用像加里恩努斯;
+        你的未来像塞维鲁·亚历山大;
+        而你的结局像罗慕路斯·奥古斯都。
 
         """;
         */
@@ -321,7 +321,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P3一运 攻略")]
         public Phase3_Strats_Of_The_First_Half Phase3_Strat_Of_The_First_Half { get; set; } = Phase3_Strats_Of_The_First_Half.Moogle_莫古力;
         [UserSetting("P3二运 攻略")]
-        public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; } = Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法;
+        public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; } = Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法;
         [UserSetting("P3二运 双分组法的分支")]
         public Phase3_Branches_Of_The_Double_Group_Strat Phase3_Branch_Of_The_Double_Group_Strat { get; set; } = Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准;
         [UserSetting("P3二运 车头低换法的分支")]
@@ -345,17 +345,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public ScriptColor Phase4_Colour_Of_Somber_Dance { get; set; } = new() { V4 = new(1f, 0f, 0f, 1f) };
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
         public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
+        [UserSetting("P4二运 标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
+        public bool Phase4_Mark_Players_During_The_Second_Half { get; set; } = false;
         [UserSetting("P4二运 圣龙爪(红)玩家优先级")]
         public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; } = Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序;
-        [UserSetting("P4二运 标记圣龙爪(红)的玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
-        public bool Phase4_Mark_Players_With_Wyrmclaw { get; set; } = false;
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
         public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
         public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
         [UserSetting("P4二运 光之潮汐(地火)的颜色")]
         public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
-        [UserSetting("P4二运 白圈指路的逻辑 (Make sure only one in the party enables marking!/小队内只能有一人启用标记!)")]
+        [UserSetting("P4二运 白圈指路的逻辑")]
         public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; } = Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记;
         [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
         public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
@@ -394,8 +394,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
         [UserSetting("P5光与暗之翼(踩塔) 攻略")]
         public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; } = Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧;
-        [UserSetting("P5光与暗之翼(踩塔) 灰9脑死法的分支")]
-        public Phase5_Branches_Of_Grey9_Brain_Dead Phase5_Branch_Of_Grey9_Brain_Dead { get; set; } = Phase5_Branches_Of_Grey9_Brain_Dead.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右;
+        [UserSetting("P5光与暗之翼(踩塔) 踩塔顺序")]
+        public Phase5_Orders_Of_Taking_Towers Phase5_Order_Of_Taking_Towers { get; set; } = Phase5_Orders_Of_Taking_Towers.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右;
         [UserSetting("P5光与暗之翼(踩塔) 挑衅提醒")]
         public bool Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light { get; set; } = true;
         [UserSetting("P5极化打击(挡枪) 顺序")]
@@ -704,7 +704,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             Double_Group_双分组法,
             High_Priority_As_Locomotives_车头低换法,
-            Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法
+            Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法
 
         }
 
@@ -764,15 +764,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
 
             According_To_Debuffs_根据Debuff,
-            According_To_Signs_On_Me_根据我身上的目标标记,
-            Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友
+            According_To_Signs_On_Me_根据我身上的目标标记
 
         }
 
         public enum Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang
         {
 
-            According_To_Debuffs_根据Debuff,
+            According_To_Debuffs_1234_From_East_To_West_根据Debuff从东到西1234,
+            According_To_Debuffs_1342_From_East_To_West_根据Debuff从东到西1342,
             According_To_The_Priority_THD_根据THD优先级,
             According_To_The_Priority_HTD_根据HTD优先级,
             According_To_The_Priority_H1TDH2_根据H1TDH2优先级
@@ -802,11 +802,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
 
             Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧,
+            Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导,
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
 
         }
 
-        public enum Phase5_Branches_Of_Grey9_Brain_Dead
+        public enum Phase5_Orders_Of_Taking_Towers
         {
 
             Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右,
@@ -1691,6 +1692,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                                    {debugOutput}
                                                    
                                                    """);
+                        
+                        accessory.Log.Debug($"{debugOutput}");
 
                     }
 
@@ -2784,6 +2787,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                            {debugOutput}
 
                                            """);
+                
+                accessory.Log.Debug($"{debugOutput}");
 
             }
 
@@ -8390,7 +8395,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法)
             {
 
                 System.Threading.Thread.MemoryBarrier();
@@ -8731,7 +8736,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法)
             {
 
                 if (phase3_numberOfMarksHaveBeenRecorded >= 8)
@@ -9237,7 +9242,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法)
             {
 
                 bool goLeft = phase3_moglinMeow_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
@@ -10486,7 +10491,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法)
             {
 
                 if (direction1OfTheLast == 0
@@ -10756,7 +10761,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Based_On_Signs_根据标记的莫灵喵法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法)
             {
 
                 bool goLeft = phase3_moglinMeow_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
@@ -12401,13 +12406,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        [ScriptMethod(name: "Phase4 Mark Teammates With Wyrmfang Debuffs 标记圣龙牙(蓝)Debuff的队友",
+        [ScriptMethod(name: "Phase4 Mark Teammates During The Second Half 二运标记队友",
             eventType: EventTypeEnum.ActionEffect,
             eventCondition: ["ActionId:40298"],
             userControl: false,
             suppress: 2000)]
 
-        public void Phase4_Mark_Teammates_With_Wyrmfang_Debuffs_标记圣龙牙Debuff的队友(Event @event, ScriptAccessory accessory)
+        public void Phase4_Mark_Teammates_During_The_Second_Half_二运标记队友(Event @event, ScriptAccessory accessory)
         {
 
             if (parse != 4.3)
@@ -12417,9 +12422,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase4_Logic_Of_Residue_Guidance != Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友
-                &&
-                !Phase4_Mark_Players_With_Wyrmclaw)
+            if (!Phase4_Mark_Players_During_The_Second_Half)
             {
 
                 return;
@@ -12433,18 +12436,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             System.Threading.Thread.MemoryBarrier();
 
-            if (phase4_numberOfMajorDebuffsHaveBeenCounted != 8)
-            {
-
-                return;
-
-            }
-
+            List<int> temporaryOrder=[0,1,2,3,4,5,6,7];
             string debugOutput = "";
-            
-            if(Phase4_Logic_Of_Residue_Guidance==Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友) {
 
-            if (Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang == Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_根据Debuff)
+            if (Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang == Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_1234_From_East_To_West_根据Debuff从东到西1234
+                ||
+                Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_1342_From_East_To_West_根据Debuff从东到西1342)
             {
 
                 for (int i = 0; i < 8; ++i)
@@ -12522,7 +12519,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang == Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_The_Priority_HTD_根据HTD优先级)
             {
 
-                List<int> temporaryOrder = [2, 3, 0, 1, 4, 5, 6, 7];
+                temporaryOrder = [2, 3, 0, 1, 4, 5, 6, 7];
 
                 for (int i = 0, j = 0; i < temporaryOrder.Count; ++i)
                 {
@@ -12545,7 +12542,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang == Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_The_Priority_H1TDH2_根据H1TDH2优先级)
             {
 
-                List<int> temporaryOrder = [2, 0, 1, 4, 5, 6, 7, 3];
+                temporaryOrder = [2, 0, 1, 4, 5, 6, 7, 3];
 
                 for (int i = 0, j = 0; i < temporaryOrder.Count; ++i)
                 {
@@ -12565,11 +12562,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            }
-
-            if(Phase4_Mark_Players_With_Wyrmclaw) {
-
-                List<int> temporaryOrder=[0,1,2,3,4,5,6,7];
+                temporaryOrder=[0,1,2,3,4,5,6,7];
 
                 if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序) {
                     
@@ -12615,8 +12608,6 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
 
                 }
-
-            }
             
             if (Enable_Developer_Mode)
             {
@@ -12626,40 +12617,69 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                                            {debugOutput}
                                            
                                            """);
+                
+                accessory.Log.Debug($"{debugOutput}");
 
             }
 
         }
 
-        private int phase4_getMarkIndex(Phase4_Relative_Positions_Of_Residues currentPosition)
-        {
+        private int phase4_getMarkIndex(Phase4_Relative_Positions_Of_Residues currentPosition) {
 
-            if (currentPosition == Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧)
-            {
+            if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_1234_From_East_To_West_根据Debuff从东到西1234) {
+                
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧) {
 
-                return 0;
+                    return 0;
 
+                }
+
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧) {
+
+                    return 1;
+
+                }
+
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧) {
+
+                    return 2;
+
+                }
+
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧) {
+
+                    return 3;
+
+                }
+                
             }
+            
+            if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_1342_From_East_To_West_根据Debuff从东到西1342) {
+                
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧) {
 
-            if (currentPosition == Phase4_Relative_Positions_Of_Residues.About_East_次东侧)
-            {
+                    return 0;
 
-                return 1;
+                }
 
-            }
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧) {
 
-            if (currentPosition == Phase4_Relative_Positions_Of_Residues.About_West_次西侧)
-            {
+                    return 2;
 
-                return 2;
+                }
 
-            }
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧) {
 
-            if (currentPosition == Phase4_Relative_Positions_Of_Residues.Westmost_最西侧)
-            {
+                    return 3;
 
-                return 3;
+                }
 
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧) {
+
+                    return 1;
+
+                }
+                
             }
 
             return -1;
@@ -14086,9 +14106,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记
-               ||
-               Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友)
+            if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记)
             {
 
 
@@ -14317,7 +14335,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase4_semaphoreMajorDebuffsWereConfirmed = new System.Threading.AutoResetEvent(false);
             phase4_semaphoreIncidentalDebuffsWereConfirmed = new System.Threading.AutoResetEvent(false);
 
-            if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.Guidance_And_Mark_Teammates_With_Wyrmfang_指路同时标记圣龙牙的队友)
+            if (Phase4_Mark_Players_During_The_Second_Half)
             {
 
                 accessory.Method.MarkClear();
@@ -14883,11 +14901,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
-        [ScriptMethod(name: "Phase5 Initial Position Before Towers 踩塔前的起始位置",
+        [ScriptMethod(name: "Phase5 Initial Position Of The Current MT Before Towers 踩塔前当前MT的起始位置",
             eventType: EventTypeEnum.EnvControl,
             eventCondition: ["DirectorId:800375BF", "State:00010004", "Index:regex:^(0000003[012])"])]
 
-        public void Phase5_Initial_Position_Before_Towers_踩塔前的起始位置(Event @event, ScriptAccessory accessory)
+        public void Phase5_Initial_Position_Of_The_Current_MT_Before_Towers_踩塔前当前MT的起始位置(Event @event, ScriptAccessory accessory)
         {
 
             if (!isInPhase5)
@@ -14983,12 +15001,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧)
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧
+                ||
+                Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导)
             {
 
                 var currentProperty = accessory.Data.GetDefaultDrawProperties();
 
-                currentProperty.Name = "Phase5_Initial_Position_Before_Towers_踩塔前的起始位置";
+                currentProperty.Name = "Phase5_Initial_Position_Of_The_Current_MT_Before_Towers_踩塔前当前MT的起始位置";
                 currentProperty.Scale = new(2);
                 currentProperty.Owner = accessory.Data.Me;
                 currentProperty.TargetPosition = RotatePoint(positionOfTheFirstTower, new Vector3(100, 0, 100), float.Pi);
@@ -15306,6 +15326,188 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
 
             }
+            
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导) {
+                
+                Vector3 positionOfTheLeftTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi/3*2);
+                Vector3 positionOfTheRightTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),-(float.Pi/3*2));
+                Vector3 oppositeOfTheFirstTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
+
+                Vector3 position1OfCurrentMt=(isLeftFirstAndFarFirst)?(positionOfTheRightTower):(positionOfTheLeftTower);
+                // Always keep the first hit away from others.
+                Vector3 position2OfCurrentMt=(isLeftFirstAndFarFirst)?
+                    new Vector3((oppositeOfTheFirstTower.X-100)/7+100,0,(oppositeOfTheFirstTower.Z-100)/7+100):
+                    new Vector3((oppositeOfTheFirstTower.X-100)/7*18+100,0,(oppositeOfTheFirstTower.Z-100)/7*18+100);
+
+                Vector3 position2OfCurrentOt=(isLeftFirstAndFarFirst)?
+                    (RotatePoint(positionOfTheLeftTower,new Vector3(100,0,100),float.Pi)):
+                    (RotatePoint(positionOfTheRightTower,new Vector3(100,0,100),float.Pi));
+                // OT would be opposite of the other tower.
+                Vector3 position1OfCurrentOt=(isLeftFirstAndFarFirst)?
+                    new Vector3((positionOfTheFirstTower.X-100)/7*18+100,0,(positionOfTheFirstTower.Z-100)/7*18+100):
+                    new Vector3((positionOfTheFirstTower.X-100)/7+100,0,(positionOfTheFirstTower.Z-100)/7+100);
+
+                if(isCurrentMt) {
+
+                    var currentProperty = accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name = "Phase5_Guidance_1_For_The_Current_MT_During_Towers_当前MT踩塔指路1";
+                    currentProperty.Scale = new(2);
+                    currentProperty.Owner = accessory.Data.Me;
+                    currentProperty.TargetPosition = position1OfCurrentMt;
+                    currentProperty.ScaleMode |= ScaleMode.YByDistance;
+                    currentProperty.Color = accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt = 7150;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    currentProperty = accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name = "Phase5_Guidance_2_Preview_For_The_Current_MT_During_Towers_当前MT踩塔指路2预览";
+                    currentProperty.Scale = new(2);
+                    currentProperty.Position = position1OfCurrentMt;
+                    currentProperty.TargetPosition = position2OfCurrentMt;
+                    currentProperty.ScaleMode |= ScaleMode.YByDistance;
+                    currentProperty.Color = accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt = 7150;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    currentProperty = accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name = "Phase5_Guidance_2_For_The_Current_MT_During_Towers_当前MT踩塔指路2";
+                    currentProperty.Scale = new(2);
+                    currentProperty.Owner = accessory.Data.Me;
+                    currentProperty.TargetPosition = position2OfCurrentMt;
+                    currentProperty.ScaleMode |= ScaleMode.YByDistance;
+                    currentProperty.Color = accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay = 7150;
+                    currentProperty.DestoryAt = 4250;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    if (Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light)
+                    {
+
+                        System.Threading.Thread.Sleep(1500);
+
+                        if (Enable_Text_Prompts)
+                        {
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
+                            {
+
+                                accessory.Method.TextInfo("等待挑衅后退避", 2500);
+
+                            }
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.English_英文)
+                            {
+
+                                accessory.Method.TextInfo("Wait for provocation then shirk", 2500);
+
+                            }
+
+                        }
+
+                        if (Enable_Vanilla_TTS || Enable_Daily_Routines_TTS)
+                        {
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
+                            {
+
+                                accessory.TTS("等待挑衅后退避", Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
+
+                            }
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.English_英文)
+                            {
+
+                                accessory.TTS("Wait for provocation then shirk", Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                else {
+
+                    var currentProperty = accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name = "Phase5_Guidance_1_For_The_Current_OT_During_Towers_当前ST踩塔指路1";
+                    currentProperty.Scale = new(2);
+                    currentProperty.Owner = accessory.Data.Me;
+                    currentProperty.TargetPosition = position1OfCurrentOt;
+                    currentProperty.ScaleMode |= ScaleMode.YByDistance;
+                    currentProperty.Color = accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt = 7650;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    currentProperty = accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name = "Phase5_Guidance_2_Preview_For_The_Current_OT_During_Towers_当前ST踩塔指路2预览";
+                    currentProperty.Scale = new(2);
+                    currentProperty.Position = position1OfCurrentOt;
+                    currentProperty.TargetPosition = position2OfCurrentOt;
+                    currentProperty.ScaleMode |= ScaleMode.YByDistance;
+                    currentProperty.Color = accessory.Data.DefaultSafeColor;
+                    currentProperty.DestoryAt = 7650;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    currentProperty = accessory.Data.GetDefaultDrawProperties();
+                    currentProperty.Name = "Phase5_Guidance_2_For_The_Current_OT_During_Towers_当前ST踩塔指路2";
+                    currentProperty.Scale = new(2);
+                    currentProperty.Owner = accessory.Data.Me;
+                    currentProperty.TargetPosition = position2OfCurrentOt;
+                    currentProperty.ScaleMode |= ScaleMode.YByDistance;
+                    currentProperty.Color = accessory.Data.DefaultSafeColor;
+                    currentProperty.Delay = 7650;
+                    currentProperty.DestoryAt = 3750;
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    if (Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light)
+                    {
+
+                        System.Threading.Thread.Sleep(1000);
+
+                        if (Enable_Text_Prompts)
+                        {
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
+                            {
+
+                                accessory.Method.TextInfo("立即挑衅！", 2500);
+
+                            }
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.English_英文)
+                            {
+
+                                accessory.Method.TextInfo("Now provoke!", 2500);
+
+                            }
+
+                        }
+
+                        if (Enable_Vanilla_TTS || Enable_Daily_Routines_TTS)
+                        {
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
+                            {
+
+                                accessory.TTS("立即挑衅！", Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
+
+                            }
+
+                            if (Language_Of_Prompts == Languages_Of_Prompts.English_英文)
+                            {
+
+                                accessory.TTS("Now provoke!", Enable_Vanilla_TTS, Enable_Daily_Routines_TTS);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
 
         }
 
@@ -15358,7 +15560,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧)
             {
 
-                if (Phase5_Branch_Of_Grey9_Brain_Dead == Phase5_Branches_Of_Grey9_Brain_Dead.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右)
+                if (Phase5_Order_Of_Taking_Towers == Phase5_Orders_Of_Taking_Towers.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右)
                 {
                     // I'm just too lazy to adjust the indentation here. So I guiltily leave it as it is.
                     // This branch was not necessary before, but the strat on CN does vary a little bit.
@@ -15781,10 +15983,57 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         }
 
                     }
+                    
+                    Vector3 positionOfTheFirstTower=new Vector3(100,0,100);
+                    Vector3 positionOfTheLeftTower=new Vector3(100,0,100);
+                    Vector3 positionOfTheRightTower=new Vector3(100,0,100);
+                    
+                    if(phase5_indexOfTheFirstTower.Equals("00000030"))positionOfTheFirstTower=new Vector3(93.94f,0,96.50f);
+                    if(phase5_indexOfTheFirstTower.Equals("00000031"))positionOfTheFirstTower=new Vector3(106.06f,0,96.50f);
+                    if(phase5_indexOfTheFirstTower.Equals("00000032"))positionOfTheFirstTower=new Vector3(100,0,107);
+                    if(positionOfTheFirstTower.Equals(new Vector3(100,0,100)))return;
+                    positionOfTheLeftTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi/3*2);
+                    positionOfTheRightTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),-(float.Pi/3*2));
+
+                    bool isMelee=false,isRange=false,isHealer=false;
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2||accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3)isHealer=true;
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4||accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5)isMelee=true;
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6||accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7)isRange=true;
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheFirstTower;
+                    currentProperty.Color=(isMelee)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=7300;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheLeftTower;
+                    currentProperty.Color=(isHealer)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheRightTower;
+                    currentProperty.Color=(isRange)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
 
                 }
 
-                if (Phase5_Branch_Of_Grey9_Brain_Dead == Phase5_Branches_Of_Grey9_Brain_Dead.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右)
+                if (Phase5_Order_Of_Taking_Towers == Phase5_Orders_Of_Taking_Towers.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右)
                 {
 
                     var currentProperty = accessory.Data.GetDefaultDrawProperties();
@@ -16207,7 +16456,436 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         }
 
                     }
+                    
+                    Vector3 positionOfTheFirstTower=new Vector3(100,0,100);
+                    Vector3 positionOfTheLeftTower=new Vector3(100,0,100);
+                    Vector3 positionOfTheRightTower=new Vector3(100,0,100);
+                    
+                    if(phase5_indexOfTheFirstTower.Equals("00000030"))positionOfTheFirstTower=new Vector3(93.94f,0,96.50f);
+                    if(phase5_indexOfTheFirstTower.Equals("00000031"))positionOfTheFirstTower=new Vector3(106.06f,0,96.50f);
+                    if(phase5_indexOfTheFirstTower.Equals("00000032"))positionOfTheFirstTower=new Vector3(100,0,107);
+                    if(positionOfTheFirstTower.Equals(new Vector3(100,0,100)))return;
+                    positionOfTheLeftTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi/3*2);
+                    positionOfTheRightTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),-(float.Pi/3*2));
 
+                    bool isMelee=false,isRange=false,isHealer=false;
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2||accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3)isHealer=true;
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4||accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5)isMelee=true;
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6||accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7)isRange=true;
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheFirstTower;
+                    currentProperty.Color=(isHealer)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=7300;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheLeftTower;
+                    currentProperty.Color=(isMelee)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheRightTower;
+                    currentProperty.Color=(isRange)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+
+                }
+
+            }
+            
+            if(Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导) {
+
+                float rotation=0;
+
+                if(phase5_indexOfTheFirstTower.Equals("00000030")) {
+
+                    rotation=float.Pi/3*2;
+
+                }
+
+                if(phase5_indexOfTheFirstTower.Equals("00000031")) {
+                    
+                    rotation=-(float.Pi/3*2);
+
+                }
+
+                if(phase5_indexOfTheFirstTower.Equals("00000032")) {
+
+                    rotation=0;
+
+                }
+
+                Vector3 positionOfTheFirstTower=RotatePoint(new Vector3(100,0,107),new Vector3(100,0,100),rotation);
+                Vector3 positionOfTheLeftTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi/3*2);
+                Vector3 positionOfTheRightTower=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),-(float.Pi/3*2));
+                Vector3 leftOfTheLeftTower=RotatePoint(phase5_leftSideOfTheNorthwest_asAConstant,new Vector3(100,0,100),rotation);
+                Vector3 rightOfTheRightTower=RotatePoint(phase5_rightSideOfTheNortheast_asAConstant,new Vector3(100,0,100),rotation);
+                Vector3 oppositeStandbyPosition=RotatePoint(positionOfTheFirstTower,new Vector3(100,0,100),float.Pi);
+                Vector3 leftStandbyPosition=RotatePoint(phase5_standbyPointBetweenSouthAndNorthwest_asAConstant,new Vector3(100,0,100),rotation-(float.Pi/12));
+                Vector3 rightStandbyPosition=RotatePoint(phase5_standbyPointBetweenSouthAndNortheast_asAConstant,new Vector3(100,0,100),rotation+(float.Pi/12));
+                // I won't be so stupid as to enumerate every position anymore.
+                // Maybe it could say that this is some kind of my growth?
+                var currentProperty=accessory.Data.GetDefaultDrawProperties();
+                
+                if(Phase5_Order_Of_Taking_Towers==Phase5_Orders_Of_Taking_Towers.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右) {
+
+                    bool isMelee=false;
+                    bool isRange=false;
+                    bool isHealer=false;
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+
+                        isMelee=true;
+
+                        currentProperty = accessory.Data.GetDefaultDrawProperties();
+                        
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=positionOfTheFirstTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=positionOfTheFirstTower;
+                        currentProperty.TargetPosition=oppositeStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=oppositeStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    }
+
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+
+                        isRange=true;
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=rightStandbyPosition;
+                        currentProperty.TargetPosition=rightOfTheRightTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightOfTheRightTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+
+                        isHealer=true;
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor; 
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=leftStandbyPosition;
+                        currentProperty.TargetPosition=leftOfTheLeftTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftOfTheLeftTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                    }
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheFirstTower;
+                    currentProperty.Color=(isMelee)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=7300;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheLeftTower;
+                    currentProperty.Color=(isHealer)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheRightTower;
+                    currentProperty.Color=(isRange)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+
+                }
+
+                if(Phase5_Order_Of_Taking_Towers==Phase5_Orders_Of_Taking_Towers.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右) {
+                    
+                    bool isMelee=false;
+                    bool isRange=false;
+                    bool isHealer=false;
+                    
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==2
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==3) {
+
+                        isHealer=true;
+
+                        currentProperty = accessory.Data.GetDefaultDrawProperties();
+                        
+                        currentProperty.Name="Phase5_Guidance_1_For_Healers_During_Towers_奶妈踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=positionOfTheFirstTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+                        
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Healers_During_Towers_奶妈踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=positionOfTheFirstTower;
+                        currentProperty.TargetPosition=oppositeStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=7300;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_For_Healers_During_Towers_奶妈踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=oppositeStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=7300;
+                        currentProperty.DestoryAt=7100;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, currentProperty);
+
+                    }
+
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==6
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==7) {
+
+                        isRange=true;
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_1_For_Ranges_During_Towers_远程踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Ranges_During_Towers_远程踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=rightStandbyPosition;
+                        currentProperty.TargetPosition=rightOfTheRightTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_For_Ranges_During_Towers_远程踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=rightOfTheRightTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                    }
+
+                    if(accessory.Data.PartyList.IndexOf(accessory.Data.Me)==4
+                       ||
+                       accessory.Data.PartyList.IndexOf(accessory.Data.Me)==5) {
+
+                        isMelee=true;
+                        
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_1_For_Melees_During_Towers_近战踩塔指路1";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftStandbyPosition;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor; 
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_Preview_For_Melees_During_Towers_近战踩塔指路2预览";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Position=leftStandbyPosition;
+                        currentProperty.TargetPosition=leftOfTheLeftTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.DestoryAt=6900;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+
+                        currentProperty=accessory.Data.GetDefaultDrawProperties();
+
+                        currentProperty.Name="Phase5_Guidance_2_For_Melees_During_Towers_近战踩塔指路2";
+                        currentProperty.Scale=new(2);
+                        currentProperty.Owner=accessory.Data.Me;
+                        currentProperty.TargetPosition=leftOfTheLeftTower;
+                        currentProperty.ScaleMode|=ScaleMode.YByDistance;
+                        currentProperty.Color=accessory.Data.DefaultSafeColor;
+                        currentProperty.Delay=6900;
+                        currentProperty.DestoryAt=7500;
+
+                        accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Displacement,currentProperty);
+                        
+                    }
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheFirstTower;
+                    currentProperty.Color=(isHealer)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=7300;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheLeftTower;
+                    currentProperty.Color=(isMelee)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
+                    currentProperty=accessory.Data.GetDefaultDrawProperties();
+                    
+                    currentProperty.Name="Phase5_Range_Of_Towers_塔的范围";
+                    currentProperty.Scale=new(3);
+                    currentProperty.Position=positionOfTheRightTower;
+                    currentProperty.Color=(isRange)?(accessory.Data.DefaultSafeColor):(accessory.Data.DefaultDangerColor);
+                    currentProperty.DestoryAt=14400;
+                    
+                    accessory.Method.SendDraw(DrawModeEnum.Imgui,DrawTypeEnum.Circle,currentProperty);
+                    
                 }
 
             }
