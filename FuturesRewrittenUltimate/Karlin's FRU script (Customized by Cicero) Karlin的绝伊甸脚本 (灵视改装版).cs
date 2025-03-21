@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.96",
+        version: "0.0.0.97",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -208,12 +208,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Phase 3:
          - Ultimate Relativity: The guidance of Sinbound Meltdown may disappear a tiny bit earlier than the time that the direction is anchored. It's not fatal by any mean, but it's always recommended that baiting it precisely before leaving.
            The timeline here would be refined in the future.
+        Phase 5:
+         - Wings Dark And Light: There is no tower order inline with the order mentioned in the MMW strat video at the moment. I'm now working on it and it's on the way.
 
         After all the known issues are resolved, there will be no more major update. The version will be considered as the final version.
 
         P3:
          - 时间压缩·绝(一运): 罪缚熔毁(激光)的指路变化时间可能略微早于实际判定时间一点点。不是大问题,但最好还是确保引导到了以后再移动。
            会在未来精修此处的时间轴。
+        P5:
+         - 光与暗之翼: 目前的踩塔顺序没有和国服MMW视频攻略一致的。正在做,很快就好。
 
         当所有已知问题都被解决后,就不会再有大更新了。那个时候的版本就是最终版。
 
@@ -350,30 +354,22 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW;
         [UserSetting("P4一运 忧郁舞蹈(远近死刑)的颜色")]
         public ScriptColor Phase4_Colour_Of_Somber_Dance { get; set; } = new() { V4 = new(1f, 0f, 0f, 1f) };
-        [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
-        public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
         [UserSetting("P4二运 标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
         public bool Phase4_Mark_Players_During_The_Second_Half { get; set; } = false;
         [UserSetting("P4二运 圣龙爪(红)玩家优先级")]
         public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; } = Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵;
-        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
-        public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
-        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
-        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
-        [UserSetting("P4二运 光之潮汐(地火)的颜色")]
-        public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
-        [UserSetting("P4二运 白圈指路的逻辑")]
-        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; } = Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW;
         [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
         public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
-        [UserSetting("P4二运 暗炎喷发(分散)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
-        [UserSetting("P4二运 黑暗神圣(后分摊)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Unholy_Darkness { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
-        [UserSetting("P4二运 黑暗冰封(月环)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Blizzard_III { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
-        [UserSetting("P4二运 黑暗狂水(先分摊)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Water_III { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
+        [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
+        public float Phase4_Drawing_Duration_Of_Normal_And_Delayed_Lights { get; set; } = 3f;
+        [UserSetting("P4二运 光之潮汐(地火)的颜色")]
+        public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
+        [UserSetting("P4二运 击退前站位")]
+        public Phase4_Positions_Before_Knockback Phase4_Position_Before_Knockback { get; set; } = Phase4_Positions_Before_Knockback.Normal_正攻_莫灵喵与MMW;
+        [UserSetting("P4二运 白圈指路的逻辑")]
+        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; } = Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW;
+        [UserSetting("P4二运 白圈指路的颜色")]
+        public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P4二运 攻击1的白圈 (Sign Setting/目标标记设置)")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack1 { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
         [UserSetting("P4二运 攻击2的白圈 (Sign Setting/目标标记设置)")]
@@ -382,10 +378,18 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack3 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
         [UserSetting("P4二运 攻击4的白圈 (Sign Setting/目标标记设置)")]
         public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack4 { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
-        [UserSetting("P4二运 白圈指路的颜色")]
-        public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
-        [UserSetting("P4二运 击退解法")]
-        public Phase4_Positions_Before_Knockback Phase4_Position_Before_Knockback { get; set; } = Phase4_Positions_Before_Knockback.Normal_正攻_莫灵喵与MMW;
+        [UserSetting("P4二运 暗炎喷发(分散)的白圈 (Debuff Setting/Debuff设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
+        [UserSetting("P4二运 黑暗神圣(后分摊)的白圈 (Debuff Setting/Debuff设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Unholy_Darkness { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
+        [UserSetting("P4二运 黑暗冰封(月环)的白圈 (Debuff Setting/Debuff设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Blizzard_III { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
+        [UserSetting("P4二运 黑暗狂水(先分摊)的白圈 (Debuff Setting/Debuff设置)")]
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Water_III { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
+        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
+        public float Phase4_Length_Of_Drachen_Wanderer_Hitboxes { get; set; } = 1.5f;
+        [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
+        public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
 
         [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase5_Settings_____ { get; set; } = true;
@@ -770,8 +774,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase4_Logics_Of_Residue_Guidance
         {
 
-            According_To_Debuffs_根据Debuff,
-            According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW
+            According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW,
+            According_To_Debuffs_根据Debuff
 
         }
 
