@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.94",
+        version: "0.0.0.95",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -137,6 +137,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Helpers (sorted lexicographically):
          - @abigseal provided Fixed_H1_H2_R2_The_Rest_Fill_Vacancies for towers at the end of Phase 1. (Mar 9, 2025)
          - @alexandria_prime provided Single_Line_In_HTD_Order, Single_Line_In_H1TDH2_Order and Face_The_Boss for Fall Of Faith in Phase 1. (Mar 5, 2025)
+         - @bupleurum. provided affixes regarding the MMW strats on CN. (Mar 20, 2025)
          - @cyf5119 provided ranges of halo AOEs for Turn of the Heavens in Phase 1. (Mar 19, 2025)
          - @milkvio provided guidance for Fulgent Blade in Phase 5. (Mar 16, 2025)
          - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2. (Mar 16, 2025)
@@ -146,6 +147,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         提供帮助的人(按字典序排序):
         - @abigseal为P1末尾踩塔提供了打法"固定H1_H2_D4剩余人补位"。 (2025.03.09)
         - @alexandria_prime为P1信仰崩塌(四连抓)提供了打法"按HTD顺序单排","按H1TDH2顺序单排"和"面向Boss"。 (2025.03.05)
+        - @bupleurum.为配置文本提供了国服MMW攻略相关标注。 (2025.3.20)
         - @cyf5119为P1光轮召唤提供了雷焰之光轮的AOE范围。 (2025.3.19)
         - @milkvio为P5璀璨之刃(地火)提供了指路。 (2025.03.16)
         - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告。 (2025.03.16)
@@ -282,36 +284,36 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("-----P1设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase1_Settings_____ { get; set; } = true;
         [UserSetting("P1乐园绝技(雾龙) 待机站位")]
-        public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; } = Phase1_Standby_Positions_Of_Utopian_Sky.Both_Tanks_Go_Center_双T去中间;
+        public Phase1_Standby_Positions_Of_Utopian_Sky Phase1_Standby_Position_Of_Utopian_Sky { get; set; } = Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4_莫灵喵与MMW;
         [UserSetting("P1乐园绝技(雾龙) 标记在安全位置的玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
         public bool Phase1_Mark_Players_In_Safe_Positions { get; set; } = false;
         [UserSetting("P1 燃烧击(火雷直线)特性的颜色")]
         public ScriptColor Phase1_Colour_Of_Burnt_Strike_Characteristics { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P1光轮召唤 分组")]
-        public Phase1_Groups_Of_Turn_Of_The_Heavens Phase1_Group_Of_Turn_Of_The_Heavens { get; set; }
+        public Phase1_Groups_Of_Turn_Of_The_Heavens Phase1_Group_Of_Turn_Of_The_Heavens { get; set; } = Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTM1_vary_MTSTH1H2去北MTD1换_莫灵喵与MMW;
         [UserSetting("P1信仰崩塌(四连抓) 攻略")]
-        public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; } = Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排;
+        public Phase1_Strats_Of_Fall_Of_Faith Phase1_Strat_Of_Fall_Of_Faith { get; set; } = Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排_莫灵喵;
         [UserSetting("P1信仰崩塌(四连抓) 标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
         public bool Phase1_Mark_Players_During_Fall_Of_Faith { get; set; } = false;
         [UserSetting("P1信仰崩塌(四连抓) 面向基准")]
-        public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; } = Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级_国服MMW;
+        public Phase1_Orientation_Benchmarks_During_Fall_Of_Faith Phase1_Orientation_Benchmark_During_Fall_Of_Faith { get; set; } = Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级_莫灵喵与MMW;
         [UserSetting("P1踩塔 攻略")]
-        public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; } = Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级;
+        public Phase1_Strats_Of_Towers Phase1_Strat_Of_Towers { get; set; } = Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级_莫灵喵;
 
         [UserSetting("-----P2设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase2_Settings_____ { get; set; } = true;
         [UserSetting("P2钻石星辰 击退后攻略")]
-        public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; } = Phase2_Strats_After_Knockback.Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针_国服MMW;
+        public Phase2_Strats_After_Knockback Phase2_Strat_After_Knockback { get; set; } = Phase2_Strats_After_Knockback.Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针_莫灵喵与MMW;
         [UserSetting("P2镜中奇遇 攻略")]
-        public Phase2_Strats_Of_Mirror_Mirror Phase2_Strat_Of_Mirror_Mirror { get; set; } = Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_国服MMW;
+        public Phase2_Strats_Of_Mirror_Mirror Phase2_Strat_Of_Mirror_Mirror { get; set; } = Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_莫灵喵与MMW;
         [UserSetting("P2镜中奇遇 镜子粗略指路的颜色")]
         public ScriptColor Phase2_Colour_Of_Mirror_Rough_Guidance { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P2镜中奇遇 潜在危险区的颜色")]
         public ScriptColor Phase2_Colour_Of_Potential_Dangerous_Zones { get; set; } = new() { V4 = new(1f, 0f, 0f, 1f) };
         [UserSetting("P2光之失控(光暴) 初始八方站位")]
-        public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; }
+        public Phase2_Initial_Protean_Positions_Of_Light_Rampant Phase2_Initial_Protean_Position_Of_Light_Rampant { get; set; } = Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_East_For_Both_Grey9_常规八方T在东北_灰9用;
         [UserSetting("P2光之失控(光暴) 攻略")]
-        public Phase2_Strats_Of_Light_Rampant Phase2_Strat_Of_Light_Rampant { get; set; }
+        public Phase2_Strats_Of_Light_Rampant Phase2_Strat_Of_Light_Rampant { get; set; } = Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法_莫灵喵与MMW;
         [UserSetting("P2光之失控(光暴) 大致路径的颜色")]
         public ScriptColor Phase2_Colour_Of_Rough_Paths { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P2光之失控(光暴) 球体AOE的颜色")]
@@ -320,15 +322,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("-----P3设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase3_Settings_____ { get; set; } = true;
         [UserSetting("P3一运 攻略")]
-        public Phase3_Strats_Of_The_First_Half Phase3_Strat_Of_The_First_Half { get; set; } = Phase3_Strats_Of_The_First_Half.Moogle_莫古力_国服MMW;
+        public Phase3_Strats_Of_The_First_Half Phase3_Strat_Of_The_First_Half { get; set; } = Phase3_Strats_Of_The_First_Half.Moogle_莫古力_莫灵喵与MMW;
         [UserSetting("P3二运 攻略")]
         public Phase3_Strats_Of_The_Second_Half Phase3_Strat_Of_The_Second_Half { get; set; } = Phase3_Strats_Of_The_Second_Half.Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法;
         [UserSetting("P3二运 双分组法的分支")]
-        public Phase3_Branches_Of_The_Double_Group_Strat Phase3_Branch_Of_The_Double_Group_Strat { get; set; } = Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准_国服MMW双分组;
+        public Phase3_Branches_Of_The_Double_Group_Strat Phase3_Branch_Of_The_Double_Group_Strat { get; set; } = Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准_MMW;
         [UserSetting("P3二运 车头低换法的分支")]
-        public Phase3_Branches_Of_The_Locomotive_Strat Phase3_Branch_Of_The_Locomotive_Strat { get; set; } = Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_人群为车头;
+        public Phase3_Branches_Of_The_Locomotive_Strat Phase3_Branch_Of_The_Locomotive_Strat { get; set; } = Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_Chinese_PF_国服野队人群为车头;
         [UserSetting("P3二运 场地划分方式")]
-        public Phase3_Divisions_Of_The_Zone Phase3_Division_Of_The_Zone { get; set; } = Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_国服MMW;
+        public Phase3_Divisions_Of_The_Zone Phase3_Division_Of_The_Zone { get; set; } = Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_莫灵喵与MMW;
         [UserSetting("P3二运 粗略指路的颜色")]
         public ScriptColor Phase3_Colour_Of_Rough_Guidance { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P3二运 倒数第二次启示(地火)的颜色")]
@@ -341,7 +343,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("-----P4设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase4_Settings_____ { get; set; } = true;
         [UserSetting("P4一运 水分摊换位方式")]
-        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_国服MMW;
+        public Phase4_Strats_Of_The_First_Half Phase4_Strat_Of_The_First_Half { get; set; } = Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW;
         [UserSetting("P4一运 忧郁舞蹈(远近死刑)的颜色")]
         public ScriptColor Phase4_Colour_Of_Somber_Dance { get; set; } = new() { V4 = new(1f, 0f, 0f, 1f) };
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
@@ -349,7 +351,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P4二运 标记玩家 (Make sure only one in the party enables this!/小队内只能有一人启用此选项!)")]
         public bool Phase4_Mark_Players_During_The_Second_Half { get; set; } = false;
         [UserSetting("P4二运 圣龙爪(红)玩家优先级")]
-        public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; } = Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序;
+        public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; } = Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵;
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的颜色")]
         public ScriptColor Phase4_Colour_Of_Drachen_Wanderer_Hitboxes { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P4二运 圣龙气息(龙头)碰撞箱的长度(meter/米)")]
@@ -357,29 +359,29 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P4二运 光之潮汐(地火)的颜色")]
         public ScriptColor Phase4_Colour_Of_Tidal_Light { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P4二运 白圈指路的逻辑")]
-        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; } = Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_国服MMW;
+        public Phase4_Logics_Of_Residue_Guidance Phase4_Logic_Of_Residue_Guidance { get; set; } = Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW;
         [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
         public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
         [UserSetting("P4二运 暗炎喷发(分散)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧_国服MMW攻击1;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Eruption { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
         [UserSetting("P4二运 黑暗神圣(后分摊)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Unholy_Darkness { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧_国服MMW攻击2;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Unholy_Darkness { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
         [UserSetting("P4二运 黑暗冰封(月环)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Blizzard_III { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧_国服MMW攻击3;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Blizzard_III { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
         [UserSetting("P4二运 黑暗狂水(先分摊)的白圈 (Debuff Setting/Debuff设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Water_III { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧_国服MMW攻击4;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Dark_Water_III { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
         [UserSetting("P4二运 攻击1的白圈 (Sign Setting/目标标记设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack1 { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧_国服MMW攻击1;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack1 { get; set; } = Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧;
         [UserSetting("P4二运 攻击2的白圈 (Sign Setting/目标标记设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack2 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧_国服MMW攻击2;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack2 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_East_次东侧;
         [UserSetting("P4二运 攻击3的白圈 (Sign Setting/目标标记设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack3 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧_国服MMW攻击3;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack3 { get; set; } = Phase4_Relative_Positions_Of_Residues.About_West_次西侧;
         [UserSetting("P4二运 攻击4的白圈 (Sign Setting/目标标记设置)")]
-        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack4 { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧_国服MMW攻击4;
+        public Phase4_Relative_Positions_Of_Residues Phase4_Residue_Belongs_To_Attack4 { get; set; } = Phase4_Relative_Positions_Of_Residues.Westmost_最西侧;
         [UserSetting("P4二运 白圈指路的颜色")]
         public ScriptColor Phase4_Colour_Of_Residue_Guidance { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
         [UserSetting("P4二运 击退解法")]
-        public Phase4_Positions_Before_Knockback Phase4_Position_Before_Knockback { get; set; } = Phase4_Positions_Before_Knockback.Normal_正攻;
+        public Phase4_Positions_Before_Knockback Phase4_Position_Before_Knockback { get; set; } = Phase4_Positions_Before_Knockback.Normal_正攻_莫灵喵与MMW;
 
         [UserSetting("-----P5设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Phase5_Settings_____ { get; set; } = true;
@@ -394,13 +396,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [UserSetting("P5璀璨之刃(地火) 后Boss面向人群")]
         public bool Phase5_Boss_Faces_Players_After_Fulgent_Blade { get; set; } = true;
         [UserSetting("P5光与暗之翼(踩塔) 攻略")]
-        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; } = Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_国服MMW;
+        public Phase5_Strats_Of_Wings_Dark_And_Light Phase5_Strat_Of_Wings_Dark_And_Light { get; set; } = Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_莫灵喵与MMW;
         [UserSetting("P5光与暗之翼(踩塔) 踩塔顺序")]
         public Phase5_Orders_Of_Taking_Towers Phase5_Order_Of_Taking_Towers { get; set; } = Phase5_Orders_Of_Taking_Towers.Healers_First_Then_Melees_Left_Ranges_Right_奶妈先然后近战左远程右;
         [UserSetting("P5光与暗之翼(踩塔) 挑衅提醒")]
         public bool Phase5_Reminder_To_Provoke_During_Wings_Dark_And_Light { get; set; } = true;
         [UserSetting("P5极化打击(挡枪) 顺序")]
-        public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; } = Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈_国服MMW;
+        public Phase5_Orders_During_Polarizing_Strikes Phase5_Order_During_Polarizing_Strikes { get; set; } = Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈_莫灵喵与MMW;
 
         [UserSetting("-----开发者设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Developer_Settings_____ { get; set; } = true;
@@ -611,7 +613,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase1_Standby_Positions_Of_Utopian_Sky
         {
 
-            Swap_OT_And_M2_交换ST与D4_国服MMW,
+            Swap_OT_And_M2_交换ST与D4_莫灵喵与MMW,
             Both_Tanks_Go_Center_双T去中间
 
         }
@@ -619,9 +621,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase1_Groups_Of_Turn_Of_The_Heavens
         {
 
-            MTOTH1H2_Go_North_MTSTH1H2去北_国服MMW,
-            MTH1M1R1_Go_North_MTH1D1D3去北,
-            MTOTR1R2_Go_North_MTSTD3D4去北
+            MTOTH1H2_Go_North_MTM1_vary_MTSTH1H2去北MTD1换_莫灵喵与MMW,
+            MTH1M1R1_Go_North_MTOT_vary_MTH1D1D3去北MTST换,
+            MTOTR1R2_Go_North_MTM1_vary_MTSTD3D4去北MTD1换_莫灵喵
 
         }
 
@@ -629,9 +631,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
 
             Single_Line_In_THD_Order_按THD顺序单排,
-            Single_Line_In_HTD_Order_按HTD顺序单排,
+            Single_Line_In_HTD_Order_按HTD顺序单排_莫灵喵,
             Single_Line_In_H1TDH2_Order_按H1TDH2顺序单排,
-            Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234_国服MMW,
+            Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234_莫灵喵与MMW,
             Double_Lines_MOTH12_Left_M12R12_Right_双排左MSTH12右D1234
 
         }
@@ -640,25 +642,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
 
             High_Priority_Left_Facing_Due_North_面向正北左侧高优先级,
-            High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级_国服MMW
+            High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级_莫灵喵与MMW
 
         }
 
         public enum Phase1_Strats_Of_Towers
         {
 
-            Completely_Based_On_Priority_完全根据优先级,
+            Completely_Based_On_Priority_完全根据优先级_莫灵喵,
             Fixed_H1H2R2_Priority_For_Rest_固定H1H2D4剩余人优先级,
-            Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位_国服MMW
-
-        }
-
-        public enum Phase2_Initial_Protean_Positions_Of_Light_Rampant
-        {
-
-            Supporters_North_MOTH12_蓝绿全部在北MSTH12_MMW正六芒星,
-            Supporters_North_H12MOT_蓝绿全部在北H12MST,
-            Normal_Protean_Tanks_North_And_East_常规八方T在东北_MMW灰9
+            Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位_MMW
 
         }
 
@@ -667,7 +660,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             Clockwise_One_Group_Counterclockwise_总是顺时针单组逆时针,
             Counterclockwise_One_Group_Clockwise_总是逆时针单组顺时针,
-            Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针_国服MMW,
+            Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针_莫灵喵与MMW,
             Counterclockwise_Both_Groups_Clockwise_总是逆时针双组顺时针
 
         }
@@ -678,24 +671,33 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Melee_Group_Left_Red_近战组去左红色镜子,
             Melee_Group_Right_Red_近战组去右红色镜子,
             Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左,
-            Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_国服MMW
+            Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_莫灵喵与MMW
+
+        }
+        
+        public enum Phase2_Initial_Protean_Positions_Of_Light_Rampant
+        {
+
+            Supporters_North_MOTH12_For_JPPF_And_L_蓝绿全部在北MSTH12_日野和L团用,
+            Supporters_North_H12MOT_For_JPPF_And_L_蓝绿全部在北H12MST_日野和L团用,
+            Normal_Protean_Tanks_North_East_For_Both_Grey9_常规八方T在东北_灰9用
 
         }
 
         public enum Phase2_Strats_Of_Light_Rampant
         {
 
-            Star_Of_David_Japanese_PF_六芒星日服野队法,
-            New_Grey9_新灰九法_MMW灰9,
+            Star_Of_David_Japanese_PF_六芒星日服野队法_莫灵喵与MMW,
+            New_Grey9_新灰九法_莫灵喵与MMW,
             Lucrezia_L团法,
-            Deprecated_Old_Grey9_已废弃的旧灰九法
+            Obsolete_Old_Grey9_已淘汰的旧灰九法_莫灵喵
 
         }
 
         public enum Phase3_Strats_Of_The_First_Half
         {
 
-            Moogle_莫古力_国服MMW,
+            Moogle_莫古力_莫灵喵与MMW,
             Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
 
         }
@@ -704,7 +706,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
 
             Double_Group_双分组法,
-            High_Priority_As_Locomotives_车头低换法,
+            High_Priority_As_Locomotives_车头低换法_MMW,
             Moglin_Meow_Or_Baby_Wheelchair_Based_On_Signs_根据目标标记的莫灵喵法或宝宝椅法
 
         }
@@ -712,7 +714,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase3_Branches_Of_The_Double_Group_Strat
         {
 
-            Based_On_Safe_Positions_安全区为基准_国服MMW双分组,
+            Based_On_Safe_Positions_安全区为基准_MMW,
             Based_On_The_Second_Apocalypse_第二次启示为基准
 
         }
@@ -720,15 +722,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase3_Branches_Of_The_Locomotive_Strat
         {
 
-            MT_And_M1_As_Locomotives_MT和D1为车头_国服MMW车头法,
-            Others_As_Locomotives_人群为车头
+            MT_And_M1_As_Locomotives_MT和D1为车头_MMW,
+            Others_As_Locomotives_Chinese_PF_国服野队人群为车头
 
         }
 
         public enum Phase3_Divisions_Of_The_Zone
         {
 
-            North_To_Southwest_For_The_Left_Group_左组从正北到西南_国服MMW,
+            North_To_Southwest_For_The_Left_Group_左组从正北到西南_莫灵喵与MMW,
             Northwest_To_South_For_The_Left_Group_左组从西北到正南
 
         }
@@ -746,7 +748,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase4_Strats_Of_The_First_Half
         {
 
-            Single_Swap_Baiting_After_先单换再引导_国服MMW,
+            Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW,
             Single_Swap_Baiting_First_先引导再单换,
             Double_Swaps_双换
 
@@ -755,8 +757,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase4_Priorities_Of_The_Players_With_Wyrmclaw
         {
 
-            In_THD_Order_按THD顺序,
-            In_HTD_Order_按HTD顺序_国服MMW,
+            In_THD_Order_按THD顺序_莫灵喵,
+            In_HTD_Order_按HTD顺序_MMW,
             In_H1TDH2_Order_按H1TDH2顺序
 
         }
@@ -765,7 +767,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         {
 
             According_To_Debuffs_根据Debuff,
-            According_To_Signs_On_Me_根据我身上的目标标记_国服MMW
+            According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW
 
         }
 
@@ -783,10 +785,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase4_Relative_Positions_Of_Residues
         {
 
-            Eastmost_最东侧_国服MMW攻击1,
-            About_East_次东侧_国服MMW攻击2,
-            About_West_次西侧_国服MMW攻击3,
-            Westmost_最西侧_国服MMW攻击4,
+            Eastmost_最东侧,
+            About_East_次东侧,
+            About_West_次西侧,
+            Westmost_最西侧,
             Unknown_未知
 
         }
@@ -794,17 +796,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase4_Positions_Before_Knockback
         {
 
-            Normal_正攻,
-            Y_Formation_Y字队形
+            Normal_正攻_莫灵喵与MMW,
+            Y_Formation_Japanese_PF_日服野队Y字队形
 
         }
 
         public enum Phase5_Strats_Of_Wings_Dark_And_Light
         {
 
-            Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_国服MMW,
-            Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导,
-            Other_Strats_Are_Work_In_Progress_其他攻略正在施工中
+            Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_莫灵喵与MMW,
+            Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导
 
         }
 
@@ -819,7 +820,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public enum Phase5_Orders_During_Polarizing_Strikes
         {
 
-            Tanks_Melees_Ranges_Healers_坦克近战远程奶妈_国服MMW,
+            Tanks_Melees_Ranges_Healers_坦克近战远程奶妈_莫灵喵与MMW,
             Tanks_Healers_Melees_Ranges_坦克奶妈近战远程
 
         }
@@ -1398,7 +1399,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             int myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
 
-            if (Phase1_Standby_Position_Of_Utopian_Sky == Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4_国服MMW)
+            if (Phase1_Standby_Position_Of_Utopian_Sky == Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4_莫灵喵与MMW)
             {
 
                 int rotationMultiplier = myIndex switch
@@ -1646,7 +1647,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     List<int> temporaryOrder = [0, 1, 2, 3, 4, 5, 6, 7];
                     string debugOutput = "";
 
-                    if (Phase1_Standby_Position_Of_Utopian_Sky == Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4_国服MMW)
+                    if (Phase1_Standby_Position_Of_Utopian_Sky == Phase1_Standby_Positions_Of_Utopian_Sky.Swap_OT_And_M2_交换ST与D4_莫灵喵与MMW)
                     {
 
                         temporaryOrder = [0, 1, 7, 5, 3, 4, 2, 6];
@@ -1905,7 +1906,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             int lowPriorityStack = P1转轮召抓人.LastIndexOf(1);
             List<int> membersOfTheNorthGroup = [];
 
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTSTH1H2去北_国服MMW)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTM1_vary_MTSTH1H2去北MTD1换_莫灵喵与MMW)
             {
 
                 hasSelectedAStrat = true;
@@ -1957,7 +1958,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTH1M1R1_Go_North_MTH1D1D3去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTH1M1R1_Go_North_MTOT_vary_MTH1D1D3去北MTST换)
             {
 
                 hasSelectedAStrat = true;
@@ -2009,7 +2010,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTR1R2_Go_North_MTSTD3D4去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTR1R2_Go_North_MTM1_vary_MTSTD3D4去北MTD1换_莫灵喵)
             {
 
                 hasSelectedAStrat = true;
@@ -2159,7 +2160,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var o1 = P1转轮召抓人.IndexOf(1);
             var o2 = P1转轮召抓人.LastIndexOf(1);
             List<int> upGroup = [];
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTSTH1H2去北_国服MMW)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTH1H2_Go_North_MTM1_vary_MTSTH1H2去北MTD1换_莫灵喵与MMW)
             {
                 upGroup.Add(o1);
                 if (o1 != 1 && o2 != 1) upGroup.Add(1);
@@ -2168,7 +2169,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && o1 != 4 && o2 != 4) upGroup.Add(4);
             }
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTH1M1R1_Go_North_MTH1D1D3去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTH1M1R1_Go_North_MTOT_vary_MTH1D1D3去北MTST换)
             {
                 upGroup.Add(o1);
                 if (o1 != 2 && o2 != 2) upGroup.Add(2);
@@ -2177,7 +2178,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (upGroup.Count < 4 && o1 != 0 && o2 != 0) upGroup.Add(0);
                 if (upGroup.Count < 4 && o1 != 1 && o2 != 1) upGroup.Add(1);
             }
-            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTR1R2_Go_North_MTSTD3D4去北)
+            if (Phase1_Group_Of_Turn_Of_The_Heavens == Phase1_Groups_Of_Turn_Of_The_Heavens.MTOTR1R2_Go_North_MTM1_vary_MTSTD3D4去北MTD1换_莫灵喵)
             {
                 /*
                 List<int> upIndex = [0, 1, 6, 7];
@@ -2714,9 +2715,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排
+            if (Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排_莫灵喵
                ||
-               Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234_国服MMW)
+               Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234_莫灵喵与MMW)
             {
                 // The addition of this strat credits to @alexandria_prime. Appreciate!
 
@@ -3073,9 +3074,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         }
                     }
 
-                    if (Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排
+                    if (Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Single_Line_In_HTD_Order_按HTD顺序单排_莫灵喵
                        ||
-                       Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234_国服MMW)
+                       Phase1_Strat_Of_Fall_Of_Faith == Phase1_Strats_Of_Fall_Of_Faith.Double_Lines_H12MOT_Left_M12R12_Right_双排左H12MST右D1234_莫灵喵与MMW)
                     {
                         // The addition of this strat credits to @alexandria_prime. Appreciate!
 
@@ -3142,7 +3143,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
 
-                    if (Phase1_Orientation_Benchmark_During_Fall_Of_Faith == Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级_国服MMW)
+                    if (Phase1_Orientation_Benchmark_During_Fall_Of_Faith == Phase1_Orientation_Benchmarks_During_Fall_Of_Faith.High_Priority_Left_Facing_The_Boss_面向Boss左侧高优先级_莫灵喵与MMW)
                     {
                         // The addition of this benchmark credits to @alexandria_prime. Appreciate!
 
@@ -3388,7 +3389,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         Vector3 standbyPosition = new Vector3(100, 0, 100);
                         Vector3 towerPosition = new Vector3(100, 0, 100);
 
-                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级)
+                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级_莫灵喵)
                         {
 
                             if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 113.08f : 86.92f, 0, 90.81f);
@@ -3492,7 +3493,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
 
-                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位_国服MMW)
+                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位_MMW)
                         {
                             // The algorithm implementation of this strat was inspired by @abigseal's script.
                             // Therefore, the following code should credit to him. Appreciate!
@@ -3743,7 +3744,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                         Vector3 standbyPosition = new Vector3(100, 0, 100);
                         Vector3 towerPosition = new Vector3(100, 0, 100);
 
-                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级)
+                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Completely_Based_On_Priority_完全根据优先级_莫灵喵)
                         {
 
                             if (myTowerIndex > 0 && myTowerIndex <= P1塔[0]) standbyPosition = new(eastTower ? 102f : 98f, 0, 90.81f);
@@ -3847,7 +3848,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                         }
 
-                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位_国服MMW)
+                        if (Phase1_Strat_Of_Towers == Phase1_Strats_Of_Towers.Fixed_H1H2R2_Rest_Fill_Vacancies_固定H1H2D4剩余人补位_MMW)
                         {
                             // Same as before, the following credits to @abigseal. Appreciate!
 
@@ -4666,7 +4667,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Strat_After_Knockback == Phase2_Strats_After_Knockback.Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针_国服MMW)
+            if (Phase2_Strat_After_Knockback == Phase2_Strats_After_Knockback.Clockwise_Both_Groups_Counterclockwise_总是顺时针双组逆时针_莫灵喵与MMW)
             {
 
                 if (((proteanPositionOfTheCurrentGroup + 1) % 8) == proteanPositionOfTheReflection
@@ -5599,7 +5600,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if (Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Right_Red_近战组去右红色镜子
                    ||
-                   Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_国服MMW)
+                   Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_莫灵喵与MMW)
                 {
 
                     Vector3 targetPosition = new Vector3(100, 0, 100);
@@ -5741,7 +5742,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     if (Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左
                        ||
-                       Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_国服MMW)
+                       Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_莫灵喵与MMW)
                     {
 
                         Vector3 targetPosition = new Vector3(100, 0, 100);
@@ -5782,7 +5783,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     if (Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Left_If_Same_近战组最近红色镜子距离相同则左
                        ||
-                       Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_国服MMW)
+                       Phase2_Strat_Of_Mirror_Mirror == Phase2_Strats_Of_Mirror_Mirror.Melee_Group_Closest_Red_Right_If_Same_近战组最近红色镜子距离相同则右_莫灵喵与MMW)
                     {
 
                         Vector3 targetPosition = new Vector3(100, 0, 100);
@@ -5909,7 +5910,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             int myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
             double rotation = 0d;
 
-            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_And_East_常规八方T在东北_MMW灰9)
+            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_East_For_Both_Grey9_常规八方T在东北_灰9用)
             {
 
                 rotation = 0d;
@@ -5928,7 +5929,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_MOTH12_蓝绿全部在北MSTH12_MMW正六芒星)
+            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_MOTH12_For_JPPF_And_L_蓝绿全部在北MSTH12_日野和L团用)
             {
 
                 rotation = -0.5d;
@@ -5947,7 +5948,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_H12MOT_蓝绿全部在北H12MST)
+            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_H12MOT_For_JPPF_And_L_蓝绿全部在北H12MST_日野和L团用)
             {
 
                 rotation = -0.5d;
@@ -5997,7 +5998,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             var currentproperty = accessory.Data.GetDefaultDrawProperties();
 
-            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Star_Of_David_Japanese_PF_六芒星日服野队法)
+            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Star_Of_David_Japanese_PF_六芒星日服野队法_莫灵喵与MMW)
             {
 
                 Vector3 point1 = new Vector3(97.321f, 0f, 106.467f);
@@ -6089,7 +6090,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法_MMW灰9)
+            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法_莫灵喵与MMW)
             {
 
                 Vector3 point1 = new Vector3(93f, 0f, 100f);
@@ -6441,7 +6442,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             List<int> playersWithTethers = [];
 
-            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_And_East_常规八方T在东北_MMW灰9)
+            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Normal_Protean_Tanks_North_East_For_Both_Grey9_常规八方T在东北_灰9用)
             {
 
                 List<int> orderFromTheWestInclusive = [2, 6, 0, 7, 1, 5, 3, 4];
@@ -6460,7 +6461,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_MOTH12_蓝绿全部在北MSTH12_MMW正六芒星)
+            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_MOTH12_For_JPPF_And_L_蓝绿全部在北MSTH12_日野和L团用)
             {
 
                 List<int> orderFromTheWestInclusive = [0, 1, 2, 3, 7, 6, 5, 4];
@@ -6479,7 +6480,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_H12MOT_蓝绿全部在北H12MST)
+            if (Phase2_Initial_Protean_Position_Of_Light_Rampant == Phase2_Initial_Protean_Positions_Of_Light_Rampant.Supporters_North_H12MOT_For_JPPF_And_L_蓝绿全部在北H12MST_日野和L团用)
             {
 
                 List<int> orderFromTheWestInclusive = [2, 3, 0, 1, 7, 6, 5, 4];
@@ -6532,9 +6533,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Vector3 southMeetingPoint = new Vector3(100.00f, 0, 118.00f);
             Vector3 westMeetingPoint = new Vector3(82.00f, 0, 100.00f);
 
-            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Star_Of_David_Japanese_PF_六芒星日服野队法)
+            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Star_Of_David_Japanese_PF_六芒星日服野队法_莫灵喵与MMW)
             {
-                accessory.Log.Debug("Star_Of_David_Japanese_PF_六芒星日服野队法");
+                accessory.Log.Debug("Star_Of_David_Japanese_PF_六芒星日服野队法_莫灵喵与MMW");
                 myTower = myTetherIndex switch
                 {
                     1 => tower4,
@@ -6565,7 +6566,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法_MMW灰9)
+            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.New_Grey9_新灰九法_莫灵喵与MMW)
             {
                 foreach (var item in phase2_playersWithLuminousHammer)
                 {
@@ -6804,9 +6805,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Deprecated_Old_Grey9_已废弃的旧灰九法)
+            if (Phase2_Strat_Of_Light_Rampant == Phase2_Strats_Of_Light_Rampant.Obsolete_Old_Grey9_已淘汰的旧灰九法_莫灵喵)
             {
-                accessory.Log.Debug("Deprecated_Old_Grey9_已废弃的旧灰九法");
+                accessory.Log.Debug("Obsolete_Old_Grey9_已淘汰的旧灰九法_莫灵喵");
                 int numberOfPlayersWithLuminousHammerBefore = 0;
 
                 if (myIndex == 0)
@@ -8243,7 +8244,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法_MMW)
             {
 
                 int myIndex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
@@ -8299,7 +8300,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 }
 
-                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.MT_And_M1_As_Locomotives_MT和D1为车头_国服MMW车头法)
+                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.MT_And_M1_As_Locomotives_MT和D1为车头_MMW)
                 {
 
                     if (myIndex != 0 && myIndex != 4)
@@ -8342,7 +8343,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 }
 
-                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_人群为车头)
+                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_Chinese_PF_国服野队人群为车头)
                 {
 
                     if (myIndex != 0 && myIndex != 4)
@@ -8690,7 +8691,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法_MMW)
             {
 
                 if (phase3_numberOfDarkWaterIiiHasBeenProcessed == 6)
@@ -9086,7 +9087,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法_MMW)
             {
 
                 bool goLeft = phase3_locomotive_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
@@ -10073,10 +10074,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.Double_Group_双分组法)
             {
 
-                if (Phase3_Branch_Of_The_Double_Group_Strat == Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准_国服MMW双分组)
+                if (Phase3_Branch_Of_The_Double_Group_Strat == Phase3_Branches_Of_The_Double_Group_Strat.Based_On_Safe_Positions_安全区为基准_MMW)
                 {
 
-                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_国服MMW)
+                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_莫灵喵与MMW)
                     {
 
                         if (direction1OfTheLast == 0
@@ -10179,7 +10180,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 if (Phase3_Branch_Of_The_Double_Group_Strat == Phase3_Branches_Of_The_Double_Group_Strat.Based_On_The_Second_Apocalypse_第二次启示为基准)
                 {
 
-                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_国服MMW)
+                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_莫灵喵与MMW)
                     {
 
                         if (direction1OfTheSecond == 0
@@ -10281,13 +10282,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法_MMW)
             {
 
-                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.MT_And_M1_As_Locomotives_MT和D1为车头_国服MMW车头法)
+                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.MT_And_M1_As_Locomotives_MT和D1为车头_MMW)
                 {
 
-                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_国服MMW)
+                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_莫灵喵与MMW)
                     {
 
                         if (direction1OfThePenultimate == 0
@@ -10387,10 +10388,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 }
 
-                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_人群为车头)
+                if (Phase3_Branch_Of_The_Locomotive_Strat == Phase3_Branches_Of_The_Locomotive_Strat.Others_As_Locomotives_Chinese_PF_国服野队人群为车头)
                 {
 
-                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_国服MMW)
+                    if (Phase3_Division_Of_The_Zone == Phase3_Divisions_Of_The_Zone.North_To_Southwest_For_The_Left_Group_左组从正北到西南_莫灵喵与MMW)
                     {
 
                         if (direction1OfTheLast == 0
@@ -10737,7 +10738,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法)
+            if (Phase3_Strat_Of_The_Second_Half == Phase3_Strats_Of_The_Second_Half.High_Priority_As_Locomotives_车头低换法_MMW)
             {
 
                 bool goLeft = phase3_locomotive_shouldGoLeft(accessory.Data.PartyList.IndexOf(accessory.Data.Me));
@@ -11268,7 +11269,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     break;
                 }
             }
-            if (Phase3_Strat_Of_The_First_Half == Phase3_Strats_Of_The_First_Half.Moogle_莫古力_国服MMW)
+            if (Phase3_Strat_Of_The_First_Half == Phase3_Strats_Of_The_First_Half.Moogle_莫古力_莫灵喵与MMW)
             {
                 //短火
                 if (P3FireBuff[myPartyIndex] == 1)
@@ -11715,7 +11716,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 }
             }
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_国服MMW || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -11968,7 +11969,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     3 => new(104.2f, 0, 102.0f),
                 };
             }
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_国服MMW)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW)
             {
                 var tIndex = P4Tether[0] == -1 ? 1 : 0;
                 var nIndex = P4Tether[2] == -1 ? 3 : 2;
@@ -12209,7 +12210,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     }
                 }
             }
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_国服MMW || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -12565,13 +12566,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 temporaryOrder=[0,1,2,3,4,5,6,7];
 
-                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序) {
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵) {
                     
                     temporaryOrder=[0,1,2,3,4,5,6,7];
                     
                 }
                 
-                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_国服MMW) {
+                if(Phase4_Priority_Of_The_Players_With_Wyrmclaw==Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_MMW) {
                     
                     temporaryOrder=[2,3,0,1,4,5,6,7];
                     
@@ -12629,25 +12630,25 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_1234_From_East_To_West_根据Debuff从东到西1234) {
                 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧_国服MMW攻击1) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧) {
 
                     return 0;
 
                 }
 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧_国服MMW攻击2) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧) {
 
                     return 1;
 
                 }
 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧_国服MMW攻击3) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧) {
 
                     return 2;
 
                 }
 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧_国服MMW攻击4) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧) {
 
                     return 3;
 
@@ -12657,25 +12658,25 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang==Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang.According_To_Debuffs_1342_From_East_To_West_根据Debuff从东到西1342) {
                 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧_国服MMW攻击1) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧) {
 
                     return 0;
 
                 }
 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧_国服MMW攻击2) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_East_次东侧) {
 
                     return 2;
 
                 }
 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧_国服MMW攻击3) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.About_West_次西侧) {
 
                     return 3;
 
                 }
 
-                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧_国服MMW攻击4) {
+                if(currentPosition==Phase4_Relative_Positions_Of_Residues.Westmost_最西侧) {
 
                     return 1;
 
@@ -12793,14 +12794,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             {
                 bool isHigh = true;
 
-                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序)
+                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵)
                 {
 
                     isHigh = (P4ClawBuff.IndexOf(1) == myIndex);
 
                 }
 
-                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_国服MMW)
+                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_MMW)
                 {
 
                     List<int> temporaryPriority = [2, 3, 0, 1, 4, 5, 6, 7];
@@ -12932,14 +12933,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             {
                 bool isHigh = true;
 
-                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序)
+                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵)
                 {
 
                     isHigh = (P4ClawBuff.IndexOf(2) == myIndex);
 
                 }
 
-                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_国服MMW)
+                if (Phase4_Priority_Of_The_Players_With_Wyrmclaw == Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_MMW)
                 {
 
                     List<int> temporaryPriority = [2, 3, 0, 1, 4, 5, 6, 7];
@@ -13162,7 +13163,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (P4WaterPos.Count == 1) return;
             var myindex = accessory.Data.PartyList.IndexOf(accessory.Data.Me);
             Vector3 centre = new(100, 0, 100);
-            if (Phase4_Position_Before_Knockback == Phase4_Positions_Before_Knockback.Normal_正攻)
+            if (Phase4_Position_Before_Knockback == Phase4_Positions_Before_Knockback.Normal_正攻_莫灵喵与MMW)
             {
                 var dir8 = PositionTo8Dir((P4WaterPos[0] + P4WaterPos[1]) / 2, centre) - 1;
                 Vector3 mtPos = new(107, 0, 88);
@@ -13218,7 +13219,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
                 }
             }
-            if (Phase4_Position_Before_Knockback == Phase4_Positions_Before_Knockback.Y_Formation_Y字队形)
+            if (Phase4_Position_Before_Knockback == Phase4_Positions_Before_Knockback.Y_Formation_Japanese_PF_日服野队Y字队形)
             {
                 Vector3 mtPos = P4WaterPos[1].Z < 100 ? new(92, 0, 90) : new(108, 0, 110);
                 Vector3 stPos = P4WaterPos[1].Z < 100 ? new(108, 0, 90) : new(92, 0, 110);
@@ -13688,7 +13689,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (Enable_Developer_Mode)
             {
 
-                if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_国服MMW)
+                if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW)
                 {
 
                     accessory.Method.SendChat($"""
@@ -14107,7 +14108,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_国服MMW)
+            if (Phase4_Logic_Of_Residue_Guidance == Phase4_Logics_Of_Residue_Guidance.According_To_Signs_On_Me_根据我身上的目标标记_莫灵喵和MMW)
             {
 
 
@@ -14157,28 +14158,28 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             switch (relativePosition)
             {
 
-                case (Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧_国服MMW攻击1):
+                case (Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧):
                     {
 
                         return phase4_residueIdsFromEastToWest[0];
 
                     }
 
-                case (Phase4_Relative_Positions_Of_Residues.About_East_次东侧_国服MMW攻击2):
+                case (Phase4_Relative_Positions_Of_Residues.About_East_次东侧):
                     {
 
                         return phase4_residueIdsFromEastToWest[1];
 
                     }
 
-                case (Phase4_Relative_Positions_Of_Residues.About_West_次西侧_国服MMW攻击3):
+                case (Phase4_Relative_Positions_Of_Residues.About_West_次西侧):
                     {
 
                         return phase4_residueIdsFromEastToWest[2];
 
                     }
 
-                case (Phase4_Relative_Positions_Of_Residues.Westmost_最西侧_国服MMW攻击4):
+                case (Phase4_Relative_Positions_Of_Residues.Westmost_最西侧):
                     {
 
                         return phase4_residueIdsFromEastToWest[3];
@@ -14210,7 +14211,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             switch (relativePosition)
             {
 
-                case (Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧_国服MMW攻击1):
+                case (Phase4_Relative_Positions_Of_Residues.Eastmost_最东侧):
                     {
 
                         if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
@@ -14232,7 +14233,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
 
-                case (Phase4_Relative_Positions_Of_Residues.About_East_次东侧_国服MMW攻击2):
+                case (Phase4_Relative_Positions_Of_Residues.About_East_次东侧):
                     {
 
                         if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
@@ -14254,7 +14255,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
 
-                case (Phase4_Relative_Positions_Of_Residues.About_West_次西侧_国服MMW攻击3):
+                case (Phase4_Relative_Positions_Of_Residues.About_West_次西侧):
                     {
 
                         if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
@@ -14276,7 +14277,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     }
 
-                case (Phase4_Relative_Positions_Of_Residues.Westmost_最西侧_国服MMW攻击4):
+                case (Phase4_Relative_Positions_Of_Residues.Westmost_最西侧):
                     {
 
                         if (Language_Of_Prompts == Languages_Of_Prompts.Simplified_Chinese_简体中文)
@@ -15002,7 +15003,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_国服MMW
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_莫灵喵与MMW
                 ||
                 Phase5_Strat_Of_Wings_Dark_And_Light==Phase5_Strats_Of_Wings_Dark_And_Light.Reverse_Triangle_MT_Baits_In_Towers_倒三角法MT在塔中引导)
             {
@@ -15143,7 +15144,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_国服MMW)
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_莫灵喵与MMW)
             {
 
                 Vector3 position1OfCurrentMt = RotatePoint(positionOfTheFirstTower, new Vector3(100, 0, 100), float.Pi);
@@ -15558,7 +15559,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_国服MMW)
+            if (Phase5_Strat_Of_Wings_Dark_And_Light == Phase5_Strats_Of_Wings_Dark_And_Light.Grey9_Brain_Dead_MT_First_Tower_Opposite_灰九脑死法MT一塔对侧_莫灵喵与MMW)
             {
 
                 if (Phase5_Order_Of_Taking_Towers == Phase5_Orders_Of_Taking_Towers.Melees_First_Then_Healers_Left_Ranges_Right_近战先然后奶妈左远程右)
@@ -17216,7 +17217,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         private int phase5_getRoundToTakeHits(int currentIndex)
         {
 
-            if (Phase5_Order_During_Polarizing_Strikes == Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈_国服MMW)
+            if (Phase5_Order_During_Polarizing_Strikes == Phase5_Orders_During_Polarizing_Strikes.Tanks_Melees_Ranges_Healers_坦克近战远程奶妈_莫灵喵与MMW)
             {
 
                 if (currentIndex == 0 || currentIndex == 1)
