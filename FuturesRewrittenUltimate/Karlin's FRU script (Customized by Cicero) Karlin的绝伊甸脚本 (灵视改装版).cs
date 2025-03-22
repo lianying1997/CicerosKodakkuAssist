@@ -571,7 +571,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         volatile bool phase4_guidanceOfResiduesHasBeenGenerated = false;
         System.Threading.ManualResetEvent phase4_1_ManualReset = new System.Threading.ManualResetEvent(false);
         int phase4_1_TetherCount = 0;
-
+        private static CrystallizeTime _cry = new();
+        private static PriorityDict _pd = new();
+        private static List<System.Threading.ManualResetEvent> _events = [.. Enumerable.Range(0, 20).Select(_ => new System.Threading.ManualResetEvent(false))];
         volatile string phase5_bossId = "";
         volatile bool phase5_hasAcquiredTheFirstTower = false;
         volatile string phase5_indexOfTheFirstTower = "";
@@ -12572,10 +12574,217 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         }
 
+        public class CrystallizeTime
+        {
+            public ScriptAccessory Sa { get; set; } = null!;
+            public PriorityDict Pr { get; set; } = null!;
+            public ulong LeftWyrmSid { get; set; } = 0;
+            public ulong RightWyrmSid { get; set; } = 0;
+            public int LeftIcePlayerIdx { get; set; } = -1;
+            public int RightIcePlayerIdx { get; set; } = -1;
+            public int LeftWindPlayerIdx { get; set; } = -1;
+            public int RightWindPlayerIdx { get; set; } = -1;
+
+            public void Init(ScriptAccessory accessory, PriorityDict priorityDict)
+            {
+                Sa = accessory;
+                Pr = priorityDict;
+                LeftWyrmSid = 0;
+                RightWyrmSid = 0;
+                LeftIcePlayerIdx = -1;
+                RightIcePlayerIdx = -1;
+                LeftWindPlayerIdx = -1;
+                RightWindPlayerIdx = -1;
+            }
+        }
+
+        public class PriorityDict
+        {
+            // ReSharper disable once NullableWarningSuppressionIsUsed
+            public ScriptAccessory sa { get; set; } = null!;
+            // ReSharper disable once NullableWarningSuppressionIsUsed
+            public Dictionary<int, int> Priorities { get; set; } = null!;
+            public string Annotation { get; set; } = "";
+            public int ActionCount { get; set; } = 0;
+
+            public void Init(ScriptAccessory accessory, string annotation, int partyNum = 8)
+            {
+                sa = accessory;
+                Priorities = new Dictionary<int, int>();
+                for (var i = 0; i < partyNum; i++)
+                {
+                    Priorities.Add(i, 0);
+                }
+                Annotation = annotation;
+                ActionCount = 0;
+            }
+
+            /// <summary>
+            /// 为特定Key增加优先级
+            /// </summary>
+            /// <param name="idx">key</param>
+            /// <param name="priority">优先级数值</param>
+            public void AddPriority(int idx, int priority)
+            {
+                Priorities[idx] += priority;
+            }
+
+            /// <summary>
+            /// 从Priorities中找到前num个数值最小的，得到新的Dict返回
+            /// </summary>
+            /// <param name="num"></param>
+            /// <returns></returns>
+            public List<KeyValuePair<int, int>> SelectSmallPriorityIndices(int num)
+            {
+                return SelectMiddlePriorityIndices(0, num);
+            }
+
+            /// <summary>
+            /// 从Priorities中找到前num个数值最大的，得到新的Dict返回
+            /// </summary>
+            /// <param name="num"></param>
+            /// <returns></returns>
+            public List<KeyValuePair<int, int>> SelectLargePriorityIndices(int num)
+            {
+                return SelectMiddlePriorityIndices(0, num, true);
+            }
+
+            /// <summary>
+            /// 从Priorities中找到升序排列中间的数值，得到新的Dict返回
+            /// </summary>
+            /// <param name="skip">跳过skip个元素。若从第二个开始取，skip=1</param>
+            /// <param name="num"></param>
+            /// <param name="descending">降序排列，默认为false</param>
+            /// <returns></returns>
+            public List<KeyValuePair<int, int>> SelectMiddlePriorityIndices(int skip, int num, bool descending = false)
+            {
+                if (Priorities.Count < skip + num)
+                    return new List<KeyValuePair<int, int>>();
+
+                IEnumerable<KeyValuePair<int, int>> sortedPriorities;
+                if (descending)
+                {
+                    // 根据值从大到小降序排序，并取前num个键
+                    sortedPriorities = Priorities
+                        .OrderByDescending(pair => pair.Value) // 先根据值排列
+                        .ThenBy(pair => pair.Key) // 再根据键排列
+                        .Skip(skip) // 跳过前skip个元素
+                        .Take(num); // 取前num个键值对
+                }
+                else
+                {
+                    // 根据值从小到大升序排序，并取前num个键
+                    sortedPriorities = Priorities
+                        .OrderBy(pair => pair.Value) // 先根据值排列
+                        .ThenBy(pair => pair.Key) // 再根据键排列
+                        .Skip(skip) // 跳过前skip个元素
+                        .Take(num); // 取前num个键值对
+                }
+
+                return sortedPriorities.ToList();
+            }
+
+            /// <summary>
+            /// 从Priorities中找到升序排列第idx位的数据，得到新的Dict返回
+            /// </summary>
+            /// <param name="idx"></param>
+            /// <param name="descending">降序排列，默认为false</param>
+            /// <returns></returns>
+            public KeyValuePair<int, int> SelectSpecificPriorityIndex(int idx, bool descending = false)
+            {
+                var sortedPriorities = SelectMiddlePriorityIndices(0, 8, descending);
+                return sortedPriorities[idx];
+            }
+
+            /// <summary>
+            /// 从Priorities中找到对应key的数据，得到其Value排序后位置返回
+            /// </summary>
+            /// <param name="key"></param>
+            /// <param name="descending">降序排列，默认为false</param>
+            /// <returns></returns>
+            public int FindPriorityIndexOfKey(int key, bool descending = false)
+            {
+                var sortedPriorities = SelectMiddlePriorityIndices(0, 8, descending);
+                var i = 0;
+                foreach (var dict in sortedPriorities)
+                {
+                    if (dict.Key == key) return i;
+                    i++;
+                }
+
+                return i;
+            }
+
+            /// <summary>
+            /// 一次性增加优先级数值
+            /// 通常适用于特殊优先级（如H-T-D-H）
+            /// </summary>
+            /// <param name="priorities"></param>
+            public void AddPriorities(List<int> priorities)
+            {
+                if (Priorities.Count != priorities.Count)
+                    sa.Log.Error("输入的列表与内部设置长度不同");
+
+                for (var i = 0; i < Priorities.Count; i++)
+                    AddPriority(i, priorities[i]);
+            }
+
+            /// <summary>
+            /// 输出优先级字典的Key与优先级
+            /// </summary>
+            /// <returns></returns>
+            public string ShowPriorities()
+            {
+                var str = $"{Annotation} 优先级字典：\n";
+                foreach (var pair in Priorities)
+                {
+                    str += $"Key {pair.Key} ({sa.GetPlayerJobByIndex(pair.Key)}), Value {pair.Value}\n";
+                }
+                sa.Log.Debug(str);
+                return str;
+            }
+
+            public string PrintAnnotation()
+            {
+                sa.Log.Debug(Annotation);
+                return Annotation;
+            }
+
+            public PriorityDict DeepCopy()
+            {
+                return JsonConvert.DeserializeObject<PriorityDict>(JsonConvert.SerializeObject(this)) ?? new PriorityDict();
+            }
+
+            public void AddActionCount(int count = 1)
+            {
+                ActionCount += count;
+            }
+
+            public bool IsActionCountEqualTo(int times)
+            {
+                return ActionCount == times;
+            }
+        }
+
         [ScriptMethod(name: "P4_时间结晶_分P", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40240"], userControl: false)]
         public void P4_时间结晶_分P(Event @event, ScriptAccessory accessory)
         {
             parse = 4.3d;
+
+            _pd.Init(accessory, "时间结晶");
+            _cry.Init(accessory, _pd);
+            _events = [.. Enumerable.Range(0, 20).Select(_ => new System.Threading.ManualResetEvent(false))];
+
+            List<int> pdList = Phase4_Priority_Of_The_Players_With_Wyrmclaw switch
+            {
+                // 数字越小，优先度越高（偏左），默认为HTD顺序。
+                Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵 => [0, 1, 2, 3, 4, 5, 6, 7],
+                Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_HTD_Order_按HTD顺序_MMW => [2, 3, 0, 1, 4, 5, 6, 7],
+                Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_H1TDH2_Order_按H1TDH2顺序 => [1, 2, 0, 7, 3, 4, 5, 6],
+                _ => [2, 3, 0, 1, 4, 5, 6, 7],
+            };
+            _pd.AddPriorities(pdList);
+
             P4ClawBuff = [0, 0, 0, 0, 0, 0, 0, 0];
             phase4_numberOfMajorDebuffsHaveBeenCounted = 0;
             phase4_semaphoreMajorDebuffsWereConfirmed = new System.Threading.AutoResetEvent(false);
@@ -12611,36 +12820,43 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             {
                 if (!float.TryParse(@event["Duration"], out float dur)) return;
                 P4ClawBuff[index] = dur > 20 ? 2 : 1;
+                _pd.AddPriority(index, 0);      // 红 +0
             }
 
             if (id == "3264")
             {
                 P4ClawBuff[index] = 3;
+                _pd.AddPriority(index, 100);    // 蓝 +100
             }
             //暗 4
             if (id == "2460")
             {
                 P4OtherBuff[index] = 4;
+                _pd.AddPriority(index, 40);     // 暗 +40
             }
             //水 3
             if (id == "2461")
             {
                 P4OtherBuff[index] = 3;
+                _pd.AddPriority(index, 20);     // 水 +20
             }
             //冰 1
             if (id == "2462")
             {
                 P4OtherBuff[index] = 1;
+                _pd.AddPriority(index, 0);      // 冰 +0
             }
             //风 2
             if (id == "2463")
             {
                 P4OtherBuff[index] = 2;
+                _pd.AddPriority(index, 10);     // 风 +10
             }
             //土 5
             if (id == "2454")
             {
                 P4OtherBuff[index] = 5;
+                _pd.AddPriority(index, 30);     // 土 +30
             }
 
             System.Threading.Thread.MemoryBarrier();
@@ -12659,7 +12875,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     {
 
                         phase4_semaphoreMajorDebuffsWereConfirmed.Set();
-
+                        _events[0].Set();   // 蓝红记录完毕
                     }
 
                 }
@@ -12688,13 +12904,85 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     {
 
                         phase4_semaphoreIncidentalDebuffsWereConfirmed.Set();
-
+                        _events[1].Set();   // 属性记录完毕
                     }
 
                 }
 
             }
 
+        }
+
+        [ScriptMethod(name: "P4_时间结晶_计算分组归属",
+            eventType: EventTypeEnum.ActionEffect,
+            eventCondition: ["ActionId:40298"],
+            userControl: false,
+            suppress: 10000)]
+
+        public void P4_时间结晶_计算分组归属(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+
+            _events[0].WaitOne();
+            _events[1].WaitOne();
+            /*
+            *   优先级值中，个位数对应职业优先级，十位数对应属性Buff，百位数对应红蓝Buff
+            *   个位数：依TDH, HTD, HTDH的设置而不同
+            *   十位数：冰+0，风+10，水+20，土+30，暗+40
+            *   百位数：红+0，蓝+100
+            *   升序排列后，可得到：[左红冰，右红冰，左红风，右红风，蓝冰，蓝水，蓝土，蓝暗]
+            */
+            _cry.LeftIcePlayerIdx = _pd.SelectSpecificPriorityIndex(0).Key;
+            _cry.RightIcePlayerIdx = _pd.SelectSpecificPriorityIndex(1).Key;
+            _cry.LeftWindPlayerIdx = _pd.SelectSpecificPriorityIndex(2).Key;
+            _cry.RightWindPlayerIdx = _pd.SelectSpecificPriorityIndex(3).Key;
+            accessory.Log.Debug($"记录下左红冰{_cry.LeftIcePlayerIdx}，右红冰{_cry.RightIcePlayerIdx}，左红风{_cry.LeftWindPlayerIdx}，右红风{_cry.RightWindPlayerIdx}");
+
+            _events[2].Set();   // P4二运优先级记录完毕
+        }
+
+        [ScriptMethod(name: "P4_时间结晶_接收外部标点",
+            eventType: EventTypeEnum.Marker,
+            eventCondition: ["Operate:Add", "Id:regex:^(0[679]|10)$"],
+            userControl: false)]
+
+        public void P4_时间结晶_接收外部标点(Event @event, ScriptAccessory accessory)
+        {
+            if (parse != 4.3) return;
+            if (Phase4_Mark_Players_During_The_Second_Half) return;
+
+            _events[2].WaitOne();
+            if (!ParseObjectId(@event["TargetId"], out var tid)) return;
+            var index = accessory.Data.PartyList.IndexOf((uint)tid);
+            if (!int.TryParse(@event["Id"], out var sign)) return;
+
+            const int stop1 = 9;
+            const int stop2 = 10;
+            const int bind1 = 6;
+            const int bind2 = 7;
+
+            // 若外部存在标点则顺从
+            switch (sign)
+            {
+                case stop1:
+                    _cry.LeftIcePlayerIdx = index;
+                    accessory.Log.Debug($"时间结晶：接收到外部的stop1标点，标给{index}");
+                    break;
+                case stop2:
+                    _cry.RightIcePlayerIdx = index;
+                    accessory.Log.Debug($"时间结晶：接收到外部的stop2标点，标给{index}");
+                    break;
+                case bind1:
+                    _cry.LeftWindPlayerIdx = index;
+                    accessory.Log.Debug($"时间结晶：接收到外部的bind1标点，标给{index}");
+                    break;
+                case bind2:
+                    _cry.RightWindPlayerIdx = index;
+                    accessory.Log.Debug($"时间结晶：接收到外部的bind2标点，标给{index}");
+                    break;
+                default:
+                    break;
+            }
         }
 
         [ScriptMethod(name: "Phase4 Mark Teammates During The Second Half 二运标记队友",
@@ -13571,6 +13859,26 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             lock (phase4_readwriteLockOfDrachenWandererIds_AsAConstant)
             {
 
+                if (!ParseObjectId(@event["SourceId"], out var sourceId)) return;
+                var spos = JsonConvert.DeserializeObject<Vector3>(@event["SourcePosition"]);
+                if (spos.X < 100)
+                {
+                    _cry.LeftWyrmSid = sourceId;
+                    accessory.Log.Debug($"时间结晶：记录下左侧龙头{spos}的ID{sourceId}");
+                }
+                else
+                {
+                    _cry.RightWyrmSid = sourceId;
+                    accessory.Log.Debug($"时间结晶：记录下右侧龙头{spos}的ID{sourceId}");
+                }
+
+
+                if ((_cry.LeftWyrmSid != 0) && (_cry.RightWyrmSid != 0))
+                {
+                    _events[3].Set();
+                    accessory.Log.Debug($"时间结晶：左侧右侧龙头记录完毕。");
+                }
+
                 if (phase4_id1OfTheDrachenWanderers.Equals(""))
                 {
 
@@ -13651,15 +13959,31 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
+            _events[3].WaitOne();
+
+            // Usami:
+            // 爆炸范围的常驻显示会引发撞龙头玩家对灯钢铁的误判
+            // 想法如下：
+            // 玩家为红冰或红风时，不显示自己一侧龙头的爆炸范围，转而使用一个很小的绿色圈表征龙头位置。因为自己一侧的龙头爆炸会影响灯的判断。
+            // 一侧红冰撞完就与人群集合，另一侧红冰需观察自己一侧灯，爆炸后速穿，与龙头无关。
+            // 红风需观察灯的爆炸然后速穿撞龙头，两个相似的绘图会影响判断。
+            // 玩家为蓝Buff，不作修改。蓝暗需要躲避龙头爆炸范围，剩余三人全程不涉及龙头路径，留着也没事。
+
+            var myIndex = accessory.GetMyIndex();
+            bool isSameSideWyrm = false;
+            if (sourceId == _cry.LeftWyrmSid)
+                isSameSideWyrm = (myIndex == _cry.LeftIcePlayerIdx) || (myIndex == _cry.LeftWindPlayerIdx);
+            else if (sourceId == _cry.RightWyrmSid)
+                isSameSideWyrm = (myIndex == _cry.RightIcePlayerIdx) || (myIndex == _cry.RightWindPlayerIdx);
+
             var currentProperty = accessory.Data.GetDefaultDrawProperties();
-
             currentProperty.Name = $"Phase4_Explosion_Range_Of_Drachen_Wanderers_圣龙气息爆炸范围_{sourceId}";
-            currentProperty.Scale = new(12);
+            currentProperty.Scale = isSameSideWyrm ? new(1.5f) : new(12);
             currentProperty.Owner = sourceId;
-            currentProperty.Color = accessory.Data.DefaultDangerColor;
+            currentProperty.Color = isSameSideWyrm ? accessory.Data.DefaultSafeColor.WithW(3f) : accessory.Data.DefaultDangerColor;
             currentProperty.DestoryAt = 34000;
+            accessory.Method.SendDraw(isSameSideWyrm ? DrawModeEnum.Imgui : DrawModeEnum.Default, DrawTypeEnum.Circle, currentProperty);
 
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, currentProperty);
 
         }
 
@@ -18343,6 +18667,69 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     accessory.Method.TTS(text);
                 }
             }
+        }
+    }
+
+    public static class IndexHelper
+    {
+        /// <summary>
+        /// 输入玩家dataId，获得对应的位置index
+        /// </summary>
+        /// <param name="pid">玩家SourceId</param>
+        /// <param name="accessory"></param>
+        /// <returns>该玩家对应的位置index</returns>
+        public static int GetPlayerIdIndex(this ScriptAccessory accessory, uint pid)
+        {
+            // 获得玩家 IDX
+            return accessory.Data.PartyList.IndexOf(pid);
+        }
+
+        /// <summary>
+        /// 获得主视角玩家对应的位置index
+        /// </summary>
+        /// <param name="accessory"></param>
+        /// <returns>主视角玩家对应的位置index</returns>
+        public static int GetMyIndex(this ScriptAccessory accessory)
+        {
+            return accessory.Data.PartyList.IndexOf(accessory.Data.Me);
+        }
+
+        /// <summary>
+        /// 输入玩家dataId，获得对应的位置称呼，输出字符仅作文字输出用
+        /// </summary>
+        /// <param name="pid">玩家SourceId</param>
+        /// <param name="accessory"></param>
+        /// <returns>该玩家对应的位置称呼</returns>
+        public static string GetPlayerJobById(this ScriptAccessory accessory, uint pid)
+        {
+            // 获得玩家职能简称，无用处，仅作DEBUG输出
+            var idx = accessory.Data.PartyList.IndexOf(pid);
+            var str = accessory.GetPlayerJobByIndex(idx);
+            return str;
+        }
+
+        /// <summary>
+        /// 输入位置index，获得对应的位置称呼，输出字符仅作文字输出用
+        /// </summary>
+        /// <param name="idx">位置index</param>
+        /// <param name="fourPeople">是否为四人迷宫</param>
+        /// <param name="accessory"></param>
+        /// <returns></returns>
+        public static string GetPlayerJobByIndex(this ScriptAccessory accessory, int idx, bool fourPeople = false)
+        {
+            var str = idx switch
+            {
+                0 => "MT",
+                1 => fourPeople ? "H1" : "ST",
+                2 => fourPeople ? "D1" : "H1",
+                3 => fourPeople ? "D2" : "H2",
+                4 => "D1",
+                5 => "D2",
+                6 => "D3",
+                7 => "D4",
+                _ => "unknown"
+            };
+            return str;
         }
     }
 }
