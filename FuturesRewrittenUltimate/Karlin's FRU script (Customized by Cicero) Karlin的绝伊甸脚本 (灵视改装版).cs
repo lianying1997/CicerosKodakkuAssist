@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.3",
+        version: "0.0.1.4",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -15586,14 +15586,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 // Always keep the first hit away from others.
                 Vector3 position2OfCurrentMt=(isLeftFirstAndFarFirst)?
                     new Vector3((oppositeOfTheFirstTower.X-100)/7+100,0,(oppositeOfTheFirstTower.Z-100)/7+100):
-                    new Vector3((oppositeOfTheFirstTower.X-100)/7*18+100,0,(oppositeOfTheFirstTower.Z-100)/7*18+100);
+                    new Vector3((position1OfCurrentMt.X-100)/7*18+100,0,(position1OfCurrentMt.Z-100)/7*18+100);
 
                 Vector3 position2OfCurrentOt=(isLeftFirstAndFarFirst)?
                     (RotatePoint(positionOfTheLeftTower,new Vector3(100,0,100),float.Pi)):
                     (RotatePoint(positionOfTheRightTower,new Vector3(100,0,100),float.Pi));
                 // OT would be opposite of the other tower.
                 Vector3 position1OfCurrentOt=(isLeftFirstAndFarFirst)?
-                    new Vector3((positionOfTheFirstTower.X-100)/7*18+100,0,(positionOfTheFirstTower.Z-100)/7*18+100):
+                    new Vector3((position2OfCurrentOt.X-100)/7*18+100,0,(position2OfCurrentOt.Z-100)/7*18+100):
                     new Vector3((positionOfTheFirstTower.X-100)/7+100,0,(positionOfTheFirstTower.Z-100)/7+100);
 
                 if(isCurrentMt) {
