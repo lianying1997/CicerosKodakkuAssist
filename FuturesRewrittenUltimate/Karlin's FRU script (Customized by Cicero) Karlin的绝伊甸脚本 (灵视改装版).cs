@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.0.98",
+        version: "0.0.0.99",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -277,6 +277,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool Enable_Text_Prompts { get; set; } = true;
         [UserSetting("提示的语言")]
         public Languages_Of_Prompts Language_Of_Prompts { get; set; }
+        [UserSetting("搞怪模式 (Some random weird prompts after each wipe./团灭后随机跳出些搞怪的东西。)")]
+        public Weird_Shenanigans Weird_Shenanigan { get; set; } = Weird_Shenanigans.Astesia_ACR_蟹蟹的ACR;
 
         [UserSetting("-----TTS设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____TTS_Settings_____ { get; set; } = true;
@@ -418,6 +420,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         int? firstTargetIcon = null;
         double parse = 0;
         volatile bool isInPhase5 = false;
+        System.Threading.AutoResetEvent shenaniganSemaphore=new System.Threading.AutoResetEvent(false);
 
         int P1雾龙计数 = 0;
         readonly Object P1雾龙计数读写锁_AsAConstant = new Object();
@@ -606,6 +609,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             Simplified_Chinese_简体中文,
             English_英文
 
+        }
+
+        public enum Weird_Shenanigans {
+            
+            Disabled_不启用,
+            Astesia_ACR_蟹蟹的ACR,
+            Res_Gestae_Populi_Romani_II_Bellum_Hannibalicum_罗马人的故事2汉尼拔战纪,
+            Helldivers_绝地潜兵,
+            Call_Of_Duty_Death_Quotes_使命召唤阵亡名人名言,
+            StarCraft_SCBoy_星际争霸星际老男孩
+            
         }
 
         public enum Tanks
@@ -884,6 +898,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 accessory.Method.MarkClear();
             parse = 1d;
             isInPhase5 = false;
+            shenaniganSemaphore.Set();
 
             P1雾龙记录 = [0, 0, 0, 0];
             P1雾龙计数 = 0;
@@ -990,6 +1005,232 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             onPoints.Add(new onPoint("B", new Vector2(107, 100), new Vector2(108.5f, 100), new Vector2(107, 101.4f), new Vector2(105.6f, 100), new Vector2(107, 98.6f)));
             onPoints.Add(new onPoint("C", new Vector2(100, 107), new Vector2(100, 108.5f), new Vector2(98.6f, 107), new Vector2(100, 105.6f), new Vector2(101.4f, 107.1f)));
             onPoints.Add(new onPoint("D", new Vector2(93, 100), new Vector2(91.5f, 100), new Vector2(93, 98.6f), new Vector2(94.4f, 100), new Vector2(93, 101.4f)));
+        }
+        
+        [ScriptMethod(name:"Weird Shenanigans 搞怪",
+            eventType:EventTypeEnum.AddCombatant,
+            eventCondition:["DataId:9020"],
+            suppress:10000)]
+
+        public void Weird_Shenanigans_搞怪(Event @event, ScriptAccessory accessory) {
+
+            shenaniganSemaphore.WaitOne();
+
+            System.Threading.Thread.MemoryBarrier();
+
+            System.Random seed=new System.Random();
+            string prompt="";
+
+            if(Weird_Shenanigan==Weird_Shenanigans.Astesia_ACR_蟹蟹的ACR) {
+                
+                int randomNumber=seed.Next(1,101);
+
+                if(randomNumber<=10) {
+
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="欢迎使用小猪蟹蟹ACR！";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="You're now running Astesia The Piggy ACR!";
+
+                    }
+
+                }
+
+                else {
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                        prompt="欢迎使用蟹蟹的ACR！";
+
+                    }
+                    
+                    if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                        prompt="You're now running Astesia's ACR!";
+
+                    }
+                    
+                }
+
+            }
+            
+            if(Weird_Shenanigan==Weird_Shenanigans.Res_Gestae_Populi_Romani_II_Bellum_Hannibalicum_罗马人的故事2汉尼拔战纪) {
+                
+                List<string> chineseContents=[
+                    "第一章 第一次布匿战争(264BC–>241BC): 罗马与迦太基为争夺西西里爆发首次大规模海陆战,罗马海军首战几近全歼迦太基舰队,最终罗马获胜并夺取西西里岛。",
+                    "第二章 第一次布匿战争之后(241BC–>219BC): 迦太基转向西班牙扩张以弥补损失,第一次布匿战争迦太基将军哈米尔卡之子,迦太基的传奇将军汉尼拔登场。",
+                    "第三章 第二次布匿战争初期(219BC–>216BC): 迦太基主动挑起第二次布匿战争,汉尼拔率军奇迹般的越过高卢领地,翻阅阿尔卑斯山,重创并多次全歼罗马军队,坎尼会战罗马完败。",
+                    "第四章 第二次布匿战争中前期(215BC–>211BC): 汉尼拔在意大利屡战屡胜但未能攻下罗马城,罗马在西班牙的反击攻势被击溃。共和国生死存亡之际,西庇阿请缨元老院,罗马的传奇将军登场。",
+                    "第五章 第二次布匿战争中后期(210BC–>206BC): 西庇阿在西班牙连战连捷,以少胜多全灭两个迦太基军团。汉尼拔的援军进入意大利后遭遇阻截,惨遭全歼。罗马夺回意大利南部所有大型城邦。",
+                    "第六章 第二次布匿战争后期(205BC–>201BC): 西庇阿登陆北非控制努米底亚,汉尼拔被迦太基长老会召回本土,在扎马战役中两位将军史诗对决,西庇阿用汉尼拔创造的战术全歼了汉尼拔的军队,罗马完胜。",
+                    "第七章 布匿战争以后(200BC–>183BC): 西庇阿遭政敌加图暗算辞官隐居,不久便因病去世,\"不知感恩的祖国不配拥有我的尸骨\"。汉尼拔流亡希腊化的腓尼基城邦,随后在小亚细亚被罗马追兵赶上饮毒自尽。",
+                    "第八章 马其顿衰亡(179BC–>167BC): 罗马在第三次马其顿战争中击败马其顿王国并使其解体,征服了希腊,实现了环地中海霸权。",
+                    "第九章 迦太基衰亡(149BC–>146BC): 罗马发动第三次布匿战争,迦太基城沦陷,其国家彻底不复存在。罗马人睥睨地中海,留下一句胜者骄傲的宣言:\"Mare Nostrum (我们的海)\"。"
+                ];
+                
+                List<string> englishContents=[
+                    "Chapter 1 The First Punic War (264BC->241BC): Rome and Carthage clashed in their first large-scale land and naval war over the control of Sicily. In its naval debut, Rome nearly annihilated the Carthaginian fleet. Ultimately, Rome emerged victorious and seized Sicily.",
+                    "Chapter 2 After the First Punic War (241BC–>219BC): Carthage shifted its focus to expanding into Spain to compensate for its losses. During this period, Hannibal, the son of General Hamilcar from the First Punic War, made his legendary entrance onto the stage of history.",
+                    "Chapter 3: Early Phase of the Second Punic War (219BC–>216BC): Carthage initiated the Second Punic War. Hannibal led his army through Gaul and over the Alps in a miraculous feat, inflicting devastating defeats on Rome, including the complete annihilation of Roman forces at the Battle of Cannae.",
+                    "Chapter 4: Middle Phase of the Second Punic War – Part I (215BC–>211BC): Although Hannibal won victory after victory in Italy, he failed to capture Rome. Meanwhile, Rome’s counteroffensive in Spain was crushed. At this moment of existential crisis for the Republic, Scipio volunteered before the Senate — the legendary Roman general stepped into the spotlight.",
+                    "Chapter 5: Middle Phase of the Second Punic War – Part II (210BC–>206BC): Scipio won a series of brilliant victories in Spain, defeating two Carthaginian armies despite being outnumbered. Hannibal’s reinforcements entering Italy were intercepted and annihilated. Rome regained control over all major cities in southern Italy.",
+                    "Chapter 6: Late Phase of the Second Punic War (205BC–>201BC): Scipio landed in North Africa and took control of Numidia. The Carthaginian elders recalled Hannibal home. In the epic Battle of Zama, the two legendary generals faced off, and Scipio used Hannibal’s own tactics to decisively defeat him. Rome triumphed completely.",
+                    "Chapter 7: After the Punic Wars (200BC–>183BC): Scipio was forced to resign and retire due to political attacks by his rival Cato. He died shortly after, lamenting: \"Ungrateful country, you won't even have my bones\". Hannibal fled to the Hellenistic Phoenician cities in Greece, but was eventually cornered in Asia Minor by Roman pursuers and took poison to end his life.",
+                    "Chapter 8: The Fall of Macedonia (179BC–>167BC): Rome defeated the Kingdom of Macedonia in the Third Macedonian War and dissolved it, bringing Greece under Roman control and achieving dominance over the Mediterranean.",
+                    "Chapter 9: The Fall of Carthage (149BC–>146BC): Rome launched the Third Punic War. Carthage was captured and utterly destroyed. The Carthaginian state ceased to exist. The Romans, gazing over the Mediterranean, left behind a proud victor’s declaration: \"Mare Nostrum (Our Sea)\"."
+                ];
+                
+                int randomNumber=seed.Next(0,9);
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt=chineseContents[randomNumber];
+
+                }
+                    
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt=englishContents[randomNumber];
+                    
+                }
+
+            }
+            
+            if(Weird_Shenanigan==Weird_Shenanigans.Helldivers_绝地潜兵) {
+
+                List<string> systemNames=["Malevelon Creek","Meridian","Turing","Angel's Venture","Hellmire","Cyberstan","Calypso"];
+                    
+                int randomNumber=seed.Next(0,7);
+
+                prompt=$"Initiating FTL Jump to, the {systemNames[randomNumber]} system. FTL Jump successful. Hellpods primed. Mission coordinates locked.";
+
+            }
+            
+            if(Weird_Shenanigan==Weird_Shenanigans.Call_Of_Duty_Death_Quotes_使命召唤阵亡名人名言) {
+                
+                List<string> chineseContents=[
+                    "问候约旦河的河畔,以及锡安倾倒的高塔。",
+                    "坟冢之上,风呼啸而过。",
+                    "奴隶不是铺就你道路的砖石,他们也不是你救赎历史中的章节。",
+                    "主啊,你造我们是为了你,我们的心如不安息在你怀中,便不会安宁。",
+                    "不!我还活着!我将永远活着!我心中有些东西是永远不会死去的!",
+                    "生者不当座上宾,死者却做棺中人。",
+                    "凡持剑的,必死在剑下。",
+                    "任何地方的不公不义,都威胁着所有的公平正义。",
+                    "我至死也未能见到照耀我祖国的曙光。",
+                    "我生在了一个善良的世界，全心全意地爱着它。我死在了一个邪恶的世界，离别时刻无话可说。",
+                    "历史就是人类努力回想起理想的过程。——埃蒙·德·瓦莱拉, 1929",
+                    "让我们致力于希腊人在很多很多年前就曾写下的内容: 驯服人的野蛮并创造这个世界的温雅生活。——罗伯特·F·肯尼迪, 1968",
+                    "每造一把枪,每下水一艘战舰,每发射一枚火箭,都是对饥肠辘辘,无家可归和衣不蔽体之人的盗窃。——德怀特·D·艾森豪威尔, 1953",
+                    "昨日的失误已无法弥补,但明天的输赢仍可以拼搏。——林登·B·约翰逊, 1964",
+                    "希望之末,败亡之始。——夏尔·戴高乐, 1945",
+                    "我挂冠回乡之时,惟余两袖清风。——安东尼奥·德·奥利韦拉·萨拉查, 1968",
+                    "拆毁纪念像时,得留下底座。它们将来总会派上用处。——斯坦尼斯瓦夫·耶日·莱茨, 1957",
+                    "不要害怕真理之路上无人同行。——罗伯特·F·肯尼迪, 1968",
+                    "这火箭什么都好,就是目的地选错了星球。——韦恩赫尔·冯·布劳恩在V-2火箭首次打击伦敦后, 1944",
+                    "我们把自己卷入了一个巨大的混乱之中,跌跌撞撞地来控制一台精致的机器,我们并不明白这台机器的工作原理。——约翰·梅纳德·凯恩斯, 1930"
+                ];
+                
+                List<string> englishContents=[
+                    "Del Giordano le rive saluta, di Sionne le torri atterrate.",
+                    "Through the graves the wind is blowing.",
+                    "The enslaved were not bricks in your road, and their lives were not chapters in your redemptive history.",
+                    "Thou hast made us for thyself, O Lord, and our heart is restless until it finds its rest in thee.",
+                    "No! I'm alive! I will live forever! I have in my heart what does not die!",
+                    "The living denied a table; the dead get a whole coffin.",
+                    "What was born by the sword shall die by the sword.",
+                    "Injustice anywhere is a threat to justice everywhere.",
+                    "I die without seeing the dawn brighten over my native land.",
+                    "I entered a kind world and loved it wholeheartedly. I leave in an evil one and have nothing to say by way of farewells.",
+                    "All history is man's efforts to realise ideals. - Éamon de Valera, 1929",
+                    "Let us dedicate ourselves to what the Greeks wrote so many years ago: to tame the savageness of man and make gentle the life of this world. - Robert F. Kennedy, 1968",
+                    "Every gun that is made, every warship launched, every rocket fired signifies a theft from those who hunger and are not fed, those who are cold and are not clothed. - Dwight D. Eisenhower, 1953",
+                    "Yesterday is not ours to recover, but tomorrow is ours to win or lose. - Lyndon B. Johnson, 1964",
+                    "The end of hope is the beginning of death. - Charles de Gaulle, 1945",
+                    "The day I leave the power, inside my pockets will only be dust. - Antonio de Oliveira Salazar, 1968",
+                    "When smashing monuments, save the pedestals. They always come in handy. - Stanisław Jerzy Lec, 1957",
+                    "Fear not the path of truth for the lack of people walking on it. - Robert F. Kennedy, 1968",
+                    "The rocket worked perfectly, except for landing on the wrong planet. - Wernher von Braun upon the first V-2 hitting London, 1944",
+                    "We have involved ourselves in a colossal muddle, having blundered in the control of a delicate machine, the working of which we do not understand. - John Maynard Keynes, 1930"
+                ];
+                
+                int randomNumber=seed.Next(0,20);
+
+                if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
+
+                    prompt=chineseContents[randomNumber];
+
+                }
+                    
+                if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
+
+                    prompt=englishContents[randomNumber];
+                    
+                }
+
+            }
+            
+            if(Weird_Shenanigan==Weird_Shenanigans.StarCraft_SCBoy_星际争霸星际老男孩) {
+                
+                List<string> contents=[
+                    "哎,盟友的基地要被推平啦!",
+                    "你的好兄弟被干了,不拉一把吗?",
+                    "基地被干啦!赶紧看一下吧?",
+                    "基地被打啦!只能换家啦!",
+                    "没能量场是不能刷兵的!",
+                    "原子弹来啦!GG!",
+                    "看到红点了吗?那个是原子弹!",
+                    "基地升级完毕。我好爽啊!",
+                    "五!四!三!二!一!GG!",
+                    "哎,打起来啦?操作秀起来!",
+                    "你的部队正遭受成吨的伤害!",
+                    "你的部队正在交战。纳尼?",
+                    "你那高贵的星灵战士快被打死啦!",
+                    "敌人正在对你使用杀虫剂!",
+                    "感觉气矿被掏空...",
+                    "喂,你的人口满啦!可以打一波啦!",
+                    "人口满了怎么弄?那就F2A啊!",
+                    "异虫的建筑都必须放置在菌毯上。你不会连菌毯都找不到吧?",
+                    "人口不足,你的爆兵真是猛!",
+                    "请折跃更多的水晶塔。你可以考虑野水晶啊!",
+                    "晶体矿不足。注意花钱节奏哦?",
+                    "哎,矿不够啦!没钱的日子好难受啊!",
+                    "好阴啊,居然偷我们的SCV!",
+                    "兄弟,你的农民被打啦!你的农民这下遭重啦!",
+                    "你的SCV被打啦!这是要不给活路哦?"
+                ];
+                
+                int randomNumber=seed.Next(0,25);
+
+                prompt=contents[randomNumber];
+
+            }
+
+            if(!prompt.Equals("")) {
+
+                if(Enable_Text_Prompts) {
+                    
+                    accessory.Method.TextInfo(prompt,10000);
+                    
+                }
+
+                if(Enable_Vanilla_TTS||Enable_Daily_Routines_TTS) {
+                    
+                    accessory.TTS(prompt,Enable_Vanilla_TTS,Enable_Daily_Routines_TTS);
+                    
+                }
+                
+            }
+
+            System.Threading.Thread.MemoryBarrier();
+
+            shenaniganSemaphore=new System.Threading.AutoResetEvent(false);
+
         }
 
         #region P1
