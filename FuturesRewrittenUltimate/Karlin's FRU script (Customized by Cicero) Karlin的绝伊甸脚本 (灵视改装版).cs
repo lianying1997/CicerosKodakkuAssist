@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.3",
+        version: "0.0.1.6",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -144,7 +144,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - @bupleurum. provided affixes regarding the MMW strats on CN, optimized paths of the New Grey9 strat for Light Rampant in Phase 2. (Mar 20, 2025)
          - @cyf5119 provided ranges of halo AOEs for Turn of the Heavens in Phase 1. (Mar 19, 2025)
          - @milkvio provided guidance for Fulgent Blade in Phase 5. (Mar 16, 2025)
-         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2. (Mar 16, 2025)
+         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2, optimized drawing of Drachen Wanderers in the second half of Phae 4. (Mar 16, 2025; Mar 22, 2025)
          - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
 
         原作者,奠基人兼共同维护者: @karlin_z
@@ -154,7 +154,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         - @bupleurum.为配置文本提供了国服MMW攻略相关标注,P2光之失控(光暴)新灰九法光流侵蚀(放泥)大致路径细化。 (2025.3.20)
         - @cyf5119为P1光轮召唤提供了雷焰之光轮的AOE范围。 (2025.3.19)
         - @milkvio为P5璀璨之刃(地火)提供了指路。 (2025.03.16)
-        - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告。 (2025.03.16)
+        - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告,P4二运龙头绘制优化。 (2025.03.16, 2025.03.22)
         - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。 (2025.03.10)
 
         ***** New Features *****
@@ -1013,7 +1013,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name:"Weird Shenanigans 搞怪",
             eventType:EventTypeEnum.AddCombatant,
             eventCondition:["DataId:9020"],
-            suppress:10000)]
+            suppress:10000,
+            userControl:false)]
 
         public void Weird_Shenanigans_搞怪(Event @event, ScriptAccessory accessory) {
 
@@ -1021,7 +1022,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             System.Threading.Thread.MemoryBarrier();
 
-            System.Threading.Thread.Sleep(2000);
+            System.Threading.Thread.Sleep(3500);
+            
+            System.Threading.Thread.MemoryBarrier();
+
+            if(Weird_Shenanigan==Weird_Shenanigans.Disabled_不启用) {
+                
+                shenaniganSemaphore=new System.Threading.AutoResetEvent(false);
+
+                return;
+
+            }
             
             System.Threading.Thread.MemoryBarrier();
 
@@ -1032,17 +1043,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 
                 int randomNumber=seed.Next(1,101);
 
-                if(randomNumber<=10) {
+                if(randomNumber<=25) {
 
                     if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                        prompt="欢迎使用小猪蟹蟹ACR！";
+                        prompt="欢迎使用小猪蟹蟹的ACR！";
 
                     }
                     
                     if(Language_Of_Prompts==Languages_Of_Prompts.English_英文) {
 
-                        prompt="You're now running Astesia The Piggy ACR!";
+                        prompt="You're now running Astesia The Piggy's ACR!";
 
                     }
 
@@ -1052,7 +1063,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
                     if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                        prompt="欢迎使用蟹蟹的ACR！";
+                        prompt="欢迎使用蟹蟹(Astesia)的ACR！";
 
                     }
                     
@@ -1069,27 +1080,27 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if(Weird_Shenanigan==Weird_Shenanigans.Res_Gestae_Populi_Romani_II_Bellum_Hannibalicum_罗马人的故事2汉尼拔战纪) {
                 
                 List<string> chineseContents=[
-                    "第一章 第一次布匿战争(264BC–>241BC): 罗马与迦太基为争夺西西里爆发首次大规模海陆战,罗马海军首战几近全歼迦太基舰队,最终罗马获胜并夺取西西里岛。",
-                    "第二章 第一次布匿战争之后(241BC–>219BC): 迦太基转向西班牙扩张以弥补损失,第一次布匿战争迦太基将军哈米尔卡之子,迦太基的传奇将军汉尼拔登场。",
-                    "第三章 第二次布匿战争初期(219BC–>216BC): 迦太基主动挑起第二次布匿战争,汉尼拔率军奇迹般的越过高卢领地,翻阅阿尔卑斯山,重创并多次全歼罗马军队,坎尼会战罗马完败。",
-                    "第四章 第二次布匿战争中前期(215BC–>211BC): 汉尼拔在意大利屡战屡胜但未能攻下罗马城,罗马在西班牙的反击攻势被击溃。共和国生死存亡之际,西庇阿请缨元老院,罗马的传奇将军登场。",
-                    "第五章 第二次布匿战争中后期(210BC–>206BC): 西庇阿在西班牙连战连捷,以少胜多全灭两个迦太基军团。汉尼拔的援军进入意大利后遭遇阻截,惨遭全歼。罗马夺回意大利南部所有大型城邦。",
-                    "第六章 第二次布匿战争后期(205BC–>201BC): 西庇阿登陆北非控制努米底亚,汉尼拔被迦太基长老会召回本土,在扎马战役中两位将军史诗对决,西庇阿用汉尼拔创造的战术全歼了汉尼拔的军队,罗马完胜。",
-                    "第七章 布匿战争以后(200BC–>183BC): 西庇阿遭政敌加图暗算辞官隐居,不久便因病去世,\"不知感恩的祖国不配拥有我的尸骨\"。汉尼拔流亡希腊化的腓尼基城邦,随后在小亚细亚被罗马追兵赶上饮毒自尽。",
-                    "第八章 马其顿衰亡(179BC–>167BC): 罗马在第三次马其顿战争中击败马其顿王国并使其解体,征服了希腊,实现了环地中海霸权。",
-                    "第九章 迦太基衰亡(149BC–>146BC): 罗马发动第三次布匿战争,迦太基城沦陷,其国家彻底不复存在。罗马人睥睨地中海,留下一句胜者骄傲的宣言:\"Mare Nostrum (我们的海)\"。"
+                    "第一次布匿战争: 罗马与迦太基为争夺西西里爆发首次大规模海陆战,罗马海军首战几近全歼迦太基舰队,最终罗马获胜并夺取西西里岛。",
+                    "第一次布匿战争之后: 迦太基转向西班牙扩张以弥补损失,第一次布匿战争迦太基将军哈米尔卡之子,传奇名将汉尼拔登场。",
+                    "第二次布匿战争初期: 迦太基主动挑起第二次布匿战争,汉尼拔率军奇迹般的越过高卢领地,翻阅阿尔卑斯山,重创并多次全歼罗马军队,坎尼会战罗马完败。",
+                    "第二次布匿战争中前期: 汉尼拔在意大利屡战屡胜但未能攻下罗马城,罗马在西班牙的反击攻势被击溃。共和国生死存亡之际,西庇阿请缨元老院,罗马的传奇名将登场。",
+                    "第二次布匿战争中后期: 西庇阿在西班牙连战连捷,以少胜多全灭两个迦太基军团。汉尼拔的援军进入意大利后遭遇阻截,惨遭全歼。罗马夺回意大利南部所有大型城邦。",
+                    "第二次布匿战争后期: 西庇阿登陆北非控制努米底亚,汉尼拔被迦太基长老会召回本土,在扎马战役中两位将军史诗对决,西庇阿用汉尼拔创造的战术全歼了汉尼拔的军队,罗马完胜。",
+                    "布匿战争以后: 西庇阿遭政敌加图暗算辞官隐居,不久便因病去世,\"不知感恩的祖国不配拥有我的尸骨\"。汉尼拔流亡希腊化的腓尼基城邦,随后在小亚细亚被罗马追兵赶上前饮毒自尽。",
+                    "马其顿衰亡: 罗马在第三次马其顿战争中击败马其顿王国并使其解体,征服了希腊,实现了环地中海霸权。",
+                    "迦太基衰亡: 罗马发动第三次布匿战争,迦太基城沦陷,其国家彻底不复存在。罗马人睥睨地中海,留下一句胜者骄傲的宣言:\"Mare Nostrum (我们的海)\"。"
                 ];
                 
                 List<string> englishContents=[
-                    "Chapter 1 The First Punic War (264BC->241BC): Rome and Carthage clashed in their first large-scale land and naval war over the control of Sicily. In its naval debut, Rome nearly annihilated the Carthaginian fleet. Ultimately, Rome emerged victorious and seized Sicily.",
-                    "Chapter 2 After the First Punic War (241BC–>219BC): Carthage shifted its focus to expanding into Spain to compensate for its losses. During this period, Hannibal, the son of General Hamilcar from the First Punic War, made his legendary entrance onto the stage of history.",
-                    "Chapter 3: Early Phase of the Second Punic War (219BC–>216BC): Carthage initiated the Second Punic War. Hannibal led his army through Gaul and over the Alps in a miraculous feat, inflicting devastating defeats on Rome, including the complete annihilation of Roman forces at the Battle of Cannae.",
-                    "Chapter 4: Middle Phase of the Second Punic War – Part I (215BC–>211BC): Although Hannibal won victory after victory in Italy, he failed to capture Rome. Meanwhile, Rome’s counteroffensive in Spain was crushed. At this moment of existential crisis for the Republic, Scipio volunteered before the Senate — the legendary Roman general stepped into the spotlight.",
-                    "Chapter 5: Middle Phase of the Second Punic War – Part II (210BC–>206BC): Scipio won a series of brilliant victories in Spain, defeating two Carthaginian armies despite being outnumbered. Hannibal’s reinforcements entering Italy were intercepted and annihilated. Rome regained control over all major cities in southern Italy.",
-                    "Chapter 6: Late Phase of the Second Punic War (205BC–>201BC): Scipio landed in North Africa and took control of Numidia. The Carthaginian elders recalled Hannibal home. In the epic Battle of Zama, the two legendary generals faced off, and Scipio used Hannibal’s own tactics to decisively defeat him. Rome triumphed completely.",
-                    "Chapter 7: After the Punic Wars (200BC–>183BC): Scipio was forced to resign and retire due to political attacks by his rival Cato. He died shortly after, lamenting: \"Ungrateful country, you won't even have my bones\". Hannibal fled to the Hellenistic Phoenician cities in Greece, but was eventually cornered in Asia Minor by Roman pursuers and took poison to end his life.",
-                    "Chapter 8: The Fall of Macedonia (179BC–>167BC): Rome defeated the Kingdom of Macedonia in the Third Macedonian War and dissolved it, bringing Greece under Roman control and achieving dominance over the Mediterranean.",
-                    "Chapter 9: The Fall of Carthage (149BC–>146BC): Rome launched the Third Punic War. Carthage was captured and utterly destroyed. The Carthaginian state ceased to exist. The Romans, gazing over the Mediterranean, left behind a proud victor’s declaration: \"Mare Nostrum (Our Sea)\"."
+                    "The First Punic War: Rome and Carthage clashed in their first large-scale land and naval war over the control of Sicily. In its naval debut, Rome nearly annihilated the Carthaginian fleet. Ultimately, Rome emerged victorious and seized Sicily.",
+                    "After the First Punic War: Carthage shifted its focus to expanding into Spain to compensate for its losses. During this period, Hannibal, the son of General Hamilcar from the First Punic War, made his legendary entrance onto the stage of history.",
+                    "Early Phase of the Second Punic War: Carthage initiated the Second Punic War. Hannibal led his army through Gaul and over the Alps in a miraculous feat, inflicting devastating defeats on Rome, including the complete annihilation of Roman forces at the Battle of Cannae.",
+                    "Middle Phase of the Second Punic War Part I: Although Hannibal won victory after victory in Italy, he failed to capture Rome. Meanwhile, Rome’s counteroffensive in Spain was crushed. At this moment of existential crisis for the Republic, Scipio volunteered before the Senate — the legendary Roman general stepped into the spotlight.",
+                    "Middle Phase of the Second Punic War Part II: Scipio won a series of brilliant victories in Spain, defeating two Carthaginian armies despite being outnumbered. Hannibal’s reinforcements entering Italy were intercepted and annihilated. Rome regained control over all major cities in southern Italy.",
+                    "Late Phase of the Second Punic War: Scipio landed in North Africa and took control of Numidia. The Carthaginian elders recalled Hannibal home. In the epic Battle of Zama, the two legendary generals faced off, and Scipio used Hannibal’s own tactics to decisively defeat him. Rome triumphed completely.",
+                    "After the Punic Wars: Scipio was forced to resign and retire due to political attacks by his rival Cato. He died shortly after, lamenting: \"Ungrateful country, you won't even have my bones\". Hannibal fled to the Hellenistic Phoenician cities in Greece and eventually took poison to end his life in Asia Minor before being cornered by Roman pursuers.",
+                    "The Fall of Macedonia: Rome defeated the Kingdom of Macedonia in the Third Macedonian War and dissolved it, bringing Greece under Roman control and achieving dominance over the Mediterranean.",
+                    "The Fall of Carthage: Rome launched the Third Punic War. Carthage was captured and utterly destroyed. The Carthaginian state ceased to exist. The Romans, gazing over the Mediterranean, left behind a proud victor’s declaration: \"Mare Nostrum (Our Sea)\"."
                 ];
                 
                 int randomNumber=seed.Next(0,9);
@@ -1110,41 +1121,89 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             
             if(Weird_Shenanigan==Weird_Shenanigans.Helldivers_绝地潜兵) {
 
-                List<string> systemNames=["Malevelon Creek","Meridian","Turing","Angel's Venture","Hellmire","Cyberstan","Calypso"];
-                    
-                int randomNumber=seed.Next(0,7);
+                int randomNumber=seed.Next(1,101);
 
-                prompt=$"Initiating FTL Jump to, the {systemNames[randomNumber]} system. FTL Jump successful. Hellpods primed. Mission coordinates locked.";
+                if(randomNumber<=5) {
+
+                    prompt="Here? Here! Here? What about here? Here? Here! Here! Here? What about here? Hellpod launch suspended.";
+
+                }
+
+                else {
+                    
+                    List<string> systemNames=[
+                        "Malevelon Creek",
+                        "Meridian",
+                        "Turing",
+                        "Angel's Venture",
+                        "Hellmire", // 5
+                        "Cyberstan",
+                        "Calypso",
+                        "Moradesh",
+                        "Fenrir III",
+                        "Chort Bay", //10
+                        "Marfark",
+                        "Omicron",
+                        "Vernen Wells",
+                        "Genesis Prime",
+                        "Mog" //15
+                    ];
+                    
+                    int randomNumber2=seed.Next(0,15);
+
+                    prompt=$"Initiating FTL Jump to, the {systemNames[randomNumber2]} system. FTL Jump successful. Hellpods primed. Mission coordinates locked.";
+                    
+                }
 
             }
             
             if(Weird_Shenanigan==Weird_Shenanigans.Call_Of_Duty_Death_Quotes_使命召唤阵亡名人名言) {
                 
                 List<string> chineseContents=[
-                    "问候约旦河的河畔,以及锡安倾倒的高塔。",
+                    "问候约旦河的河畔,以及锡安倾倒的高塔...",
                     "坟冢之上,风呼啸而过。",
                     "奴隶不是铺就你道路的砖石,他们也不是你救赎历史中的章节。",
                     "主啊,你造我们是为了你,我们的心如不安息在你怀中,便不会安宁。",
-                    "不!我还活着!我将永远活着!我心中有些东西是永远不会死去的!",
+                    "不!我还活着!我将永远活着!我心中有些东西是永远不会死去的!", // 5
                     "生者不当座上宾,死者却做棺中人。",
                     "凡持剑的,必死在剑下。",
                     "任何地方的不公不义,都威胁着所有的公平正义。",
                     "我至死也未能见到照耀我祖国的曙光。",
-                    "我生在了一个善良的世界，全心全意地爱着它。我死在了一个邪恶的世界，离别时刻无话可说。",
+                    "我生在了一个善良的世界，全心全意地爱着它。我死在了一个邪恶的世界，离别时刻无话可说。", // 10
+                    "你不能用痛苦养育一个人,也无法用怒火来让他饱腹。",
+                    "\"我们已经通过了!\"",
+                    "野牛惨遭屠戮,村民享其残躯。",
+                    "引火上身的人早晚会意识到灼痛的感觉会与暖身的温度伴随而至。",
+                    "流沙之上,大厦将倾。", // 15
+                    "忠诚笃实的人,将满渥福祉。",
+                    "她凄然地笑着,遁入了无尽的夜空。",
+                    "唯有死亡才算是责任的尾声。",
+                    "目的为手段赋予了正义,但总得有什么为目的赋予正义。",
+                    "高唱你的死亡咏赞,如归乡英雄般死去。", // 20
                     "历史就是人类努力回想起理想的过程。——埃蒙·德·瓦莱拉, 1929",
                     "让我们致力于希腊人在很多很多年前就曾写下的内容: 驯服人的野蛮并创造这个世界的温雅生活。——罗伯特·F·肯尼迪, 1968",
                     "每造一把枪,每下水一艘战舰,每发射一枚火箭,都是对饥肠辘辘,无家可归和衣不蔽体之人的盗窃。——德怀特·D·艾森豪威尔, 1953",
                     "昨日的失误已无法弥补,但明天的输赢仍可以拼搏。——林登·B·约翰逊, 1964",
-                    "希望之末,败亡之始。——夏尔·戴高乐, 1945",
+                    "希望之末,败亡之始。——夏尔·戴高乐, 1945", // 25
                     "我挂冠回乡之时,惟余两袖清风。——安东尼奥·德·奥利韦拉·萨拉查, 1968",
                     "拆毁纪念像时,得留下底座。它们将来总会派上用处。——斯坦尼斯瓦夫·耶日·莱茨, 1957",
                     "不要害怕真理之路上无人同行。——罗伯特·F·肯尼迪, 1968",
                     "这火箭什么都好,就是目的地选错了星球。——韦恩赫尔·冯·布劳恩在V-2火箭首次打击伦敦后, 1944",
-                    "我们把自己卷入了一个巨大的混乱之中,跌跌撞撞地来控制一台精致的机器,我们并不明白这台机器的工作原理。——约翰·梅纳德·凯恩斯, 1930"
+                    "一个人被打败不算完蛋,当他放弃就真正完蛋了。——理查德·尼克松, 1962", // 30
+                    "不要祈祷更安逸的生活,我的朋友,祈祷自己成为更坚强的人。——约翰·F·肯尼迪, 1963",
+                    "大自然不解消亡,只解演变。——韦恩赫尔·冯·布劳恩, 1962",
+                    "乐观主义者认为这个世界是所有可能中最好的,而悲观主义者担心这就是真的。——詹姆斯·布朗奇·卡贝尔, 《银马》, 1926",
+                    "当魔鬼和你勾肩搭背时, 你很难认出他来。——阿尔伯特·施佩尔, 1972",
+                    "战时无法律。——马库斯·图利乌斯·西塞罗, 52BC", // 35
+                    "他们对你的要求不多: 只是要你去恨你所爱的,去爱你所厌的。——鲍里斯·帕斯捷尔纳克, 1960",
+                    "大部分经济学上的谬误都源自于\"定量馅饼\"的前提假设,以为一方得益,另一方就必有所失。——米尔顿·弗里德曼, 1980",
+                    "世界上有三种谎言: 谎言,糟糕透顶的谎言和统计数据。——马克·吐温, 1907",
+                    "咬我一次,可耻在狗;咬我多次,纵容它的我才可耻。——菲莉丝·施拉夫利, 1995",
+                    "我不知道第三次世界大战会使用何种武器,但我知道,第四次世界大战会使用棍子和石头。——阿尔伯特·爱因斯坦, 1949" //40
                 ];
                 
                 List<string> englishContents=[
-                    "Del Giordano le rive saluta, di Sionne le torri atterrate.",
+                    "Del Giordano le rive saluta, di Sionne le torri atterrate...",
                     "Through the graves the wind is blowing.",
                     "The enslaved were not bricks in your road, and their lives were not chapters in your redemptive history.",
                     "Thou hast made us for thyself, O Lord, and our heart is restless until it finds its rest in thee.",
@@ -1154,6 +1213,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     "Injustice anywhere is a threat to justice everywhere.",
                     "I die without seeing the dawn brighten over my native land.",
                     "I entered a kind world and loved it wholeheartedly. I leave in an evil one and have nothing to say by way of farewells.",
+                    "You cannot nurture a man with pain, nor can you feed him with anger.",
+                    "\"Hemos pasado!\"",
+                    "The Banteng has been led to slaughter - and the villagers feast on its remnants.",
+                    "Those who wear the shirt of fire will realize it burns as much as it warms.",
+                    "What is built on sand sooner or later would tumble down.",
+                    "A faithful man shall abound with blessings.",
+                    "She smiled sadly, as she flew into the night.",
+                    "Only in death does duty end.",
+                    "The end may justify the means as long as there is something that justifies the end.",
+                    "Sing your death song and die like a hero going home.",
                     "All history is man's efforts to realise ideals. - Éamon de Valera, 1929",
                     "Let us dedicate ourselves to what the Greeks wrote so many years ago: to tame the savageness of man and make gentle the life of this world. - Robert F. Kennedy, 1968",
                     "Every gun that is made, every warship launched, every rocket fired signifies a theft from those who hunger and are not fed, those who are cold and are not clothed. - Dwight D. Eisenhower, 1953",
@@ -1163,10 +1232,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     "When smashing monuments, save the pedestals. They always come in handy. - Stanisław Jerzy Lec, 1957",
                     "Fear not the path of truth for the lack of people walking on it. - Robert F. Kennedy, 1968",
                     "The rocket worked perfectly, except for landing on the wrong planet. - Wernher von Braun upon the first V-2 hitting London, 1944",
-                    "We have involved ourselves in a colossal muddle, having blundered in the control of a delicate machine, the working of which we do not understand. - John Maynard Keynes, 1930"
+                    "A man is not finished when he's defeated. He's finished when he quits. - Richard Nixon, 1962",
+                    "Do not pray for easy lives, pray to be stronger men. - John F. Kennedy, 1963",
+                    "Nature does not know extinction, only transformation. - Wernher von Braun, 1962",
+                    "The optimist thinks this is the best of all possible worlds. The pessimist fears it is true. - James Branch Cabell, The Silver Stallion, 1926",
+                    "One seldom recognizes the devil when he is putting his hand on your shoulder. - Albert Speer, 1972",
+                    "Laws are silent in times of war. - Marcus Tullius Cicero, 52 BC",
+                    "They don't ask much of you. They only want you to hate the things you love and to love the things you despise. - Boris Pasternak, 1960",
+                    "Most economic fallacies derive from the tendency to assume that there is a fixed pie, that one party can gain only at the expense of another. - Milton Friedman, 1980",
+                    "There are three kinds of lies: lies, damned lies, and statistics. - Mark Twain, 1907",
+                    "Bite us once, shame on the dog; bite us repeatedly, shame on us for allowing it. - Phyllis Schlafly, 1995",
+                    "I know not with what weapons World War III will be fought, but World War IV will be fought with sticks and stones. - Albert Einstein, 1949"
                 ];
                 
-                int randomNumber=seed.Next(0,20);
+                int randomNumber=seed.Next(0,40);
 
                 if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
@@ -1187,32 +1266,47 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 List<string> contents=[
                     "哎,盟友的基地要被推平啦!",
                     "你的好兄弟被干了,不拉一把吗?",
+                    "你的盟友正在交战,你就光看着吗?",
                     "基地被干啦!赶紧看一下吧?",
-                    "基地被打啦!只能换家啦!",
+                    "基地被打啦!只能换家啦!", // 5
                     "没能量场是不能刷兵的!",
                     "原子弹来啦!GG!",
                     "看到红点了吗?那个是原子弹!",
-                    "基地升级完毕。我好爽啊!",
+                    "对面不想理你,并朝你扔出了聚变打击。",
+                    "基地升级完毕。我好爽啊!", // 10
+                    "你的指挥中心变的更高级了!",
                     "五!四!三!二!一!GG!",
+                    "这项升级很关键,很及时。",
                     "哎,打起来啦?操作秀起来!",
-                    "你的部队正遭受成吨的伤害!",
+                    "你的部队正遭受成吨的伤害!", // 15
                     "你的部队正在交战。纳尼?",
+                    "哎哎,敌人在打你的兵,兄弟!",
                     "你那高贵的星灵战士快被打死啦!",
-                    "敌人正在对你使用杀虫剂!",
+                    "你的星灵部队正在哀嚎!",
+                    "敌人正在对你使用杀虫剂!", // 20
+                    "你的虫群部队被人干爆啦!",
+                    "暂停一下。",
+                    "好,哥回来了!",
                     "感觉气矿被掏空...",
+                    "有东西挡住了,先清理一下地面。APM飙起来!", // 25
+                    "这里不能降落,你在想什么啊?",
                     "喂,你的人口满啦!可以打一波啦!",
                     "人口满了怎么弄?那就F2A啊!",
-                    "异虫的建筑都必须放置在菌毯上。你不会连菌毯都找不到吧?",
+                    "矿脉已被采光,你有分基地吗?",
+                    "异虫的建筑都必须放置在菌毯上。你不会连菌毯都找不到吧?", // 30
+                    "我真是遭不住了,没菌毯怎么造?你猜啊!",
                     "人口不足,你的爆兵真是猛!",
                     "请折跃更多的水晶塔。你可以考虑野水晶啊!",
-                    "晶体矿不足。注意花钱节奏哦?",
+                    "核武器好了,干死他们!",
+                    "晶体矿不足。注意花钱节奏哦?", // 35
                     "哎,矿不够啦!没钱的日子好难受啊!",
                     "好阴啊,居然偷我们的SCV!",
-                    "兄弟,你的农民被打啦!你的农民这下遭重啦!",
-                    "你的SCV被打啦!这是要不给活路哦?"
+                    "怎么老打我们的SCV?你等死吧!",
+                    "你的SCV被打啦!这是要不给活路哦?",
+                    "他们在点杀你的探机,情况不妙啊!" // 40
                 ];
                 
-                int randomNumber=seed.Next(0,25);
+                int randomNumber=seed.Next(0,40);
 
                 prompt=contents[randomNumber];
 
@@ -1222,7 +1316,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(Enable_Text_Prompts) {
                     
-                    accessory.Method.TextInfo(prompt,10000);
+                    accessory.Method.TextInfo(prompt,6500);
                     
                 }
 
@@ -15910,14 +16004,14 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 // Always keep the first hit away from others.
                 Vector3 position2OfCurrentMt=(isLeftFirstAndFarFirst)?
                     new Vector3((oppositeOfTheFirstTower.X-100)/7+100,0,(oppositeOfTheFirstTower.Z-100)/7+100):
-                    new Vector3((oppositeOfTheFirstTower.X-100)/7*18+100,0,(oppositeOfTheFirstTower.Z-100)/7*18+100);
+                    new Vector3((position1OfCurrentMt.X-100)/7*18+100,0,(position1OfCurrentMt.Z-100)/7*18+100);
 
                 Vector3 position2OfCurrentOt=(isLeftFirstAndFarFirst)?
                     (RotatePoint(positionOfTheLeftTower,new Vector3(100,0,100),float.Pi)):
                     (RotatePoint(positionOfTheRightTower,new Vector3(100,0,100),float.Pi));
                 // OT would be opposite of the other tower.
                 Vector3 position1OfCurrentOt=(isLeftFirstAndFarFirst)?
-                    new Vector3((positionOfTheFirstTower.X-100)/7*18+100,0,(positionOfTheFirstTower.Z-100)/7*18+100):
+                    new Vector3((position2OfCurrentOt.X-100)/7*18+100,0,(position2OfCurrentOt.Z-100)/7*18+100):
                     new Vector3((positionOfTheFirstTower.X-100)/7+100,0,(positionOfTheFirstTower.Z-100)/7+100);
 
                 if(isCurrentMt) {
