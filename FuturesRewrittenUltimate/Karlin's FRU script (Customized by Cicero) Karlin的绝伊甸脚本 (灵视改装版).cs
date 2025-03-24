@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.6",
+        version: "0.0.1.7",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -1013,7 +1013,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         [ScriptMethod(name:"Weird Shenanigans 搞怪",
             eventType:EventTypeEnum.AddCombatant,
             eventCondition:["DataId:9020"],
-            suppress:10000,
+            suppress:15000,
             userControl:false)]
 
         public void Weird_Shenanigans_搞怪(Event @event, ScriptAccessory accessory) {
@@ -1047,7 +1047,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                     if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                        prompt="欢迎使用小猪蟹蟹的ACR！";
+                        prompt="欢迎使用小猪蟹蟹的ACR!";
 
                     }
                     
@@ -1063,7 +1063,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
                     if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
-                        prompt="欢迎使用蟹蟹(Astesia)的ACR！";
+                        prompt="欢迎使用蟹蟹(Astesia)的ACR!";
 
                     }
                     
@@ -1080,27 +1080,27 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if(Weird_Shenanigan==Weird_Shenanigans.Res_Gestae_Populi_Romani_II_Bellum_Hannibalicum_罗马人的故事2汉尼拔战纪) {
                 
                 List<string> chineseContents=[
-                    "第一次布匿战争: 罗马与迦太基为争夺西西里爆发首次大规模海陆战,罗马海军首战几近全歼迦太基舰队,最终罗马获胜并夺取西西里岛。",
-                    "第一次布匿战争之后: 迦太基转向西班牙扩张以弥补损失,第一次布匿战争迦太基将军哈米尔卡之子,传奇名将汉尼拔登场。",
-                    "第二次布匿战争初期: 迦太基主动挑起第二次布匿战争,汉尼拔率军奇迹般的越过高卢领地,翻阅阿尔卑斯山,重创并多次全歼罗马军队,坎尼会战罗马完败。",
-                    "第二次布匿战争中前期: 汉尼拔在意大利屡战屡胜但未能攻下罗马城,罗马在西班牙的反击攻势被击溃。共和国生死存亡之际,西庇阿请缨元老院,罗马的传奇名将登场。",
-                    "第二次布匿战争中后期: 西庇阿在西班牙连战连捷,以少胜多全灭两个迦太基军团。汉尼拔的援军进入意大利后遭遇阻截,惨遭全歼。罗马夺回意大利南部所有大型城邦。",
-                    "第二次布匿战争后期: 西庇阿登陆北非控制努米底亚,汉尼拔被迦太基长老会召回本土,在扎马战役中两位将军史诗对决,西庇阿用汉尼拔创造的战术全歼了汉尼拔的军队,罗马完胜。",
-                    "布匿战争以后: 西庇阿遭政敌加图暗算辞官隐居,不久便因病去世,\"不知感恩的祖国不配拥有我的尸骨\"。汉尼拔流亡希腊化的腓尼基城邦,随后在小亚细亚被罗马追兵赶上前饮毒自尽。",
-                    "马其顿衰亡: 罗马在第三次马其顿战争中击败马其顿王国并使其解体,征服了希腊,实现了环地中海霸权。",
-                    "迦太基衰亡: 罗马发动第三次布匿战争,迦太基城沦陷,其国家彻底不复存在。罗马人睥睨地中海,留下一句胜者骄傲的宣言:\"Mare Nostrum (我们的海)\"。"
+                    "第一次布匿战争:\n罗马与迦太基为争夺西西里爆发首次大规模海陆战,罗马海军首战几近全歼迦太基舰队,最终罗马获胜并夺取西西里岛。",
+                    "第一次布匿战争之后:\n迦太基转向西班牙扩张以弥补损失,第一次布匿战争迦太基将军哈米尔卡之子,传奇名将汉尼拔登场。",
+                    "第二次布匿战争初期:\n迦太基主动挑起第二次布匿战争,汉尼拔率军奇迹般的越过高卢领地,翻阅阿尔卑斯山,重创并多次全歼罗马军队,坎尼会战罗马完败。",
+                    "第二次布匿战争中前期:\n汉尼拔在意大利屡战屡胜但未能攻下罗马城,罗马在西班牙的反击攻势被击溃。共和国生死存亡之际,西庇阿请缨元老院,罗马的传奇名将登场。",
+                    "第二次布匿战争中后期:\n西庇阿在西班牙连战连捷,以少胜多全灭两个迦太基军团。汉尼拔的援军进入意大利后遭遇阻截,惨遭全歼。罗马夺回意大利南部所有大型城邦。",
+                    "第二次布匿战争后期:\n西庇阿登陆北非控制努米底亚,汉尼拔被迦太基长老会召回本土,在扎马战役中两位将军史诗对决,西庇阿用汉尼拔创造的战术全歼了汉尼拔的军队,罗马完胜。",
+                    "布匿战争以后:\n西庇阿遭政敌加图暗算辞官隐居,不久便因病去世,\"不知感恩的祖国不配拥有我的尸骨\"。汉尼拔流亡希腊化的腓尼基城邦,随后在小亚细亚被罗马追兵赶上前饮毒自尽。",
+                    "马其顿衰亡:\n罗马在第三次马其顿战争中击败马其顿王国并使其解体,征服了希腊,实现了环地中海霸权。",
+                    "迦太基衰亡:\n罗马发动第三次布匿战争,迦太基城沦陷,其国家彻底不复存在。罗马人睥睨地中海,留下一句胜者骄傲的宣言:\"Mare Nostrum (我们的海)\"。"
                 ];
                 
                 List<string> englishContents=[
-                    "The First Punic War: Rome and Carthage clashed in their first large-scale land and naval war over the control of Sicily. In its naval debut, Rome nearly annihilated the Carthaginian fleet. Ultimately, Rome emerged victorious and seized Sicily.",
-                    "After the First Punic War: Carthage shifted its focus to expanding into Spain to compensate for its losses. During this period, Hannibal, the son of General Hamilcar from the First Punic War, made his legendary entrance onto the stage of history.",
-                    "Early Phase of the Second Punic War: Carthage initiated the Second Punic War. Hannibal led his army through Gaul and over the Alps in a miraculous feat, inflicting devastating defeats on Rome, including the complete annihilation of Roman forces at the Battle of Cannae.",
-                    "Middle Phase of the Second Punic War Part I: Although Hannibal won victory after victory in Italy, he failed to capture Rome. Meanwhile, Rome’s counteroffensive in Spain was crushed. At this moment of existential crisis for the Republic, Scipio volunteered before the Senate — the legendary Roman general stepped into the spotlight.",
-                    "Middle Phase of the Second Punic War Part II: Scipio won a series of brilliant victories in Spain, defeating two Carthaginian armies despite being outnumbered. Hannibal’s reinforcements entering Italy were intercepted and annihilated. Rome regained control over all major cities in southern Italy.",
-                    "Late Phase of the Second Punic War: Scipio landed in North Africa and took control of Numidia. The Carthaginian elders recalled Hannibal home. In the epic Battle of Zama, the two legendary generals faced off, and Scipio used Hannibal’s own tactics to decisively defeat him. Rome triumphed completely.",
-                    "After the Punic Wars: Scipio was forced to resign and retire due to political attacks by his rival Cato. He died shortly after, lamenting: \"Ungrateful country, you won't even have my bones\". Hannibal fled to the Hellenistic Phoenician cities in Greece and eventually took poison to end his life in Asia Minor before being cornered by Roman pursuers.",
-                    "The Fall of Macedonia: Rome defeated the Kingdom of Macedonia in the Third Macedonian War and dissolved it, bringing Greece under Roman control and achieving dominance over the Mediterranean.",
-                    "The Fall of Carthage: Rome launched the Third Punic War. Carthage was captured and utterly destroyed. The Carthaginian state ceased to exist. The Romans, gazing over the Mediterranean, left behind a proud victor’s declaration: \"Mare Nostrum (Our Sea)\"."
+                    "The First Punic War:\nRome and Carthage clashed in their first large-scale land and naval war over the control of Sicily. In its naval debut, Rome nearly annihilated the Carthaginian fleet. Ultimately, Rome emerged victorious and seized Sicily.",
+                    "After the First Punic War:\nCarthage shifted its focus to expanding into Spain to compensate for its losses. During this period, Hannibal, the son of General Hamilcar from the First Punic War, made his legendary entrance onto the stage of history.",
+                    "Early Phase of the Second Punic War:\nCarthage initiated the Second Punic War. Hannibal led his army through Gaul and over the Alps in a miraculous feat, inflicting devastating defeats on Rome, including the complete annihilation of Roman forces at the Battle of Cannae.",
+                    "Middle Phase of the Second Punic War Part I:\nAlthough Hannibal won victory after victory in Italy, he failed to capture Rome. Meanwhile, Rome’s counteroffensive in Spain was crushed. At this moment of existential crisis for the Republic, Scipio volunteered before the Senate — the legendary Roman general stepped into the spotlight.",
+                    "Middle Phase of the Second Punic War Part II:\nScipio won a series of brilliant victories in Spain, defeating two Carthaginian armies despite being outnumbered. Hannibal’s reinforcements entering Italy were intercepted and annihilated. Rome regained control over all major cities in southern Italy.",
+                    "Late Phase of the Second Punic War:\nScipio landed in North Africa and took control of Numidia. The Carthaginian elders recalled Hannibal home. In the epic Battle of Zama, the two legendary generals faced off, and Scipio used Hannibal’s own tactics to decisively defeat him. Rome triumphed completely.",
+                    "After the Punic Wars:\nScipio was forced to resign and retire due to political attacks by his rival Cato. He died shortly after, lamenting: \"Ungrateful country, you won't even have my bones\". Hannibal fled to the Hellenistic Phoenician cities in Greece and eventually took poison to end his life in Asia Minor before being cornered by Roman pursuers.",
+                    "The Fall of Macedonia:\nRome defeated the Kingdom of Macedonia in the Third Macedonian War and dissolved it, bringing Greece under Roman control and achieving dominance over the Mediterranean.",
+                    "The Fall of Carthage:\nRome launched the Third Punic War. Carthage was captured and utterly destroyed. The Carthaginian state ceased to exist. The Romans, gazing over the Mediterranean, left behind a proud victor’s declaration: \"Mare Nostrum (Our Sea)\"."
                 ];
                 
                 int randomNumber=seed.Next(0,9);
@@ -1123,9 +1123,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 int randomNumber=seed.Next(1,101);
 
-                if(randomNumber<=5) {
+                if(randomNumber<=10) {
 
-                    prompt="Here? Here! Here? What about here? Here? Here! Here! Here? What about here? Hellpod launch suspended.";
+                    prompt="Here? Here! Here? What about here? Here? Here! Here! Here? What about here?\nHellpod launch suspended.";
 
                 }
 
@@ -1151,7 +1151,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     
                     int randomNumber2=seed.Next(0,15);
 
-                    prompt=$"Initiating FTL Jump to, the {systemNames[randomNumber2]} system. FTL Jump successful. Hellpods primed. Mission coordinates locked.";
+                    prompt=$"Initiating FTL Jump to, the {systemNames[randomNumber2]} system.\nFTL Jump successful.\nHellpods primed.\nMission coordinates locked.";
                     
                 }
 
@@ -1169,7 +1169,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     "凡持剑的,必死在剑下。",
                     "任何地方的不公不义,都威胁着所有的公平正义。",
                     "我至死也未能见到照耀我祖国的曙光。",
-                    "我生在了一个善良的世界，全心全意地爱着它。我死在了一个邪恶的世界，离别时刻无话可说。", // 10
+                    "我生在了一个善良的世界,全心全意地爱着它。我死在了一个邪恶的世界,离别时刻无话可说。", // 10
                     "你不能用痛苦养育一个人,也无法用怒火来让他饱腹。",
                     "\"我们已经通过了!\"",
                     "野牛惨遭屠戮,村民享其残躯。",
@@ -1180,26 +1180,36 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     "唯有死亡才算是责任的尾声。",
                     "目的为手段赋予了正义,但总得有什么为目的赋予正义。",
                     "高唱你的死亡咏赞,如归乡英雄般死去。", // 20
-                    "历史就是人类努力回想起理想的过程。——埃蒙·德·瓦莱拉, 1929",
-                    "让我们致力于希腊人在很多很多年前就曾写下的内容: 驯服人的野蛮并创造这个世界的温雅生活。——罗伯特·F·肯尼迪, 1968",
-                    "每造一把枪,每下水一艘战舰,每发射一枚火箭,都是对饥肠辘辘,无家可归和衣不蔽体之人的盗窃。——德怀特·D·艾森豪威尔, 1953",
-                    "昨日的失误已无法弥补,但明天的输赢仍可以拼搏。——林登·B·约翰逊, 1964",
-                    "希望之末,败亡之始。——夏尔·戴高乐, 1945", // 25
-                    "我挂冠回乡之时,惟余两袖清风。——安东尼奥·德·奥利韦拉·萨拉查, 1968",
-                    "拆毁纪念像时,得留下底座。它们将来总会派上用处。——斯坦尼斯瓦夫·耶日·莱茨, 1957",
-                    "不要害怕真理之路上无人同行。——罗伯特·F·肯尼迪, 1968",
-                    "这火箭什么都好,就是目的地选错了星球。——韦恩赫尔·冯·布劳恩在V-2火箭首次打击伦敦后, 1944",
-                    "一个人被打败不算完蛋,当他放弃就真正完蛋了。——理查德·尼克松, 1962", // 30
-                    "不要祈祷更安逸的生活,我的朋友,祈祷自己成为更坚强的人。——约翰·F·肯尼迪, 1963",
-                    "大自然不解消亡,只解演变。——韦恩赫尔·冯·布劳恩, 1962",
-                    "乐观主义者认为这个世界是所有可能中最好的,而悲观主义者担心这就是真的。——詹姆斯·布朗奇·卡贝尔, 《银马》, 1926",
-                    "当魔鬼和你勾肩搭背时, 你很难认出他来。——阿尔伯特·施佩尔, 1972",
-                    "战时无法律。——马库斯·图利乌斯·西塞罗, 52BC", // 35
-                    "他们对你的要求不多: 只是要你去恨你所爱的,去爱你所厌的。——鲍里斯·帕斯捷尔纳克, 1960",
-                    "大部分经济学上的谬误都源自于\"定量馅饼\"的前提假设,以为一方得益,另一方就必有所失。——米尔顿·弗里德曼, 1980",
-                    "世界上有三种谎言: 谎言,糟糕透顶的谎言和统计数据。——马克·吐温, 1907",
-                    "咬我一次,可耻在狗;咬我多次,纵容它的我才可耻。——菲莉丝·施拉夫利, 1995",
-                    "我不知道第三次世界大战会使用何种武器,但我知道,第四次世界大战会使用棍子和石头。——阿尔伯特·爱因斯坦, 1949" //40
+                    "叛变者骑着战马,消失于夜色之中。",
+                    "历史上,每当人们开始认为,可以用对形式框架的虚伪尊重取代对道德义务的真心服从时,嗜杀成性的暴戾恶鬼就会重返人间。",
+                    "没有什么东西比战争更残酷和不人道,没有什么事物比和平更令人神往。但没有互相尊重对方权利的因,就得不到和平的果。",
+                    "信士接连倒下,蒙昧之祸四散蔓延。",
+                    "为了保卫沙中之砾,他们流干了最后一滴血。", // 25
+                    "历史就是人类努力回想起理想的过程。\n——埃蒙·德·瓦莱拉, 1929",
+                    "让我们致力于希腊人在很多很多年前就曾写下的内容: 驯服人的野蛮并创造这个世界的温雅生活。\n——罗伯特·F·肯尼迪, 1968",
+                    "昨日的失误已无法弥补,但明天的输赢仍可以拼搏。\n——林登·B·约翰逊, 1964",
+                    "希望之末,败亡之始。\n——夏尔·戴高乐, 1945",
+                    "我挂冠回乡之时,惟余两袖清风。\n——安东尼奥·德·奥利韦拉·萨拉查, 1968", // 30
+                    "拆毁纪念像时,得留下底座。它们将来总会派上用处。\n——斯坦尼斯瓦夫·耶日·莱茨, 1957",
+                    "不要害怕真理之路上无人同行。\n——罗伯特·F·肯尼迪, 1968",
+                    "这火箭什么都好,就是目的地选错了星球。\n——韦恩赫尔·冯·布劳恩在V-2火箭首次打击伦敦后, 1944",
+                    "一个人被打败不算完蛋,当他放弃就真正完蛋了。\n——理查德·尼克松, 1962",
+                    "不要祈祷更安逸的生活,我的朋友,祈祷自己成为更坚强的人。\n——约翰·F·肯尼迪, 1963", // 35
+                    "大自然不解消亡,只解演变。\n——韦恩赫尔·冯·布劳恩, 1962",
+                    "乐观主义者认为这个世界是所有可能中最好的,而悲观主义者担心这就是真的。\n——詹姆斯·布朗奇·卡贝尔, 《银马》, 1926",
+                    "当魔鬼和你勾肩搭背时,你很难认出他来。\n——阿尔伯特·施佩尔, 1972",
+                    "战时无法律。\n——马库斯·图利乌斯·西塞罗, 52BC",
+                    "他们对你的要求不多: 只是要你去恨你所爱的,去爱你所厌的。\n——鲍里斯·帕斯捷尔纳克, 1960", // 40
+                    "大部分经济学上的谬误都源自于\"定量馅饼\"的前提假设,以为一方得益,另一方就必有所失。\n——米尔顿·弗里德曼, 1980",
+                    "世界上有三种谎言: 谎言,糟糕透顶的谎言和统计数据。\n——马克·吐温, 1907",
+                    "咬我一次,可耻在狗;咬我多次,纵容它的我才可耻。\n——菲莉丝·施拉夫利, 1995",
+                    "我不知道第三次世界大战会使用何种武器,但我知道,第四次世界大战会使用棍子和石头。\n——阿尔伯特·爱因斯坦, 1949",
+                    "风水这个东西,你要信也可以,但是我更相信事在人为。\n——李嘉诚, 1969", // 45
+                    "金钱是补偿一个人的工作的唯一办法,我认为这种看法大错特错。人们是需要钱,但他们也需要在工作中得到愉快和自豪。\n——盛田昭夫, 1966",
+                    "建立个人和企业的良好信誉,这是资产负债表之中见不到,但却是价值无限的资产。\n——李嘉诚, 1967",
+                    "财富聚散无常,唯学问终生受用。\n——何鸿燊, 1966",
+                    "人们常言道:\"我们生活在一个腐败,虚伪的社会当中。\"这也不尽然。心慈好善的人仍占多数。\n——若望·保禄一世, 1978",
+                    "这世界上半数的困惑,都来源于我们不知道自己的需求是多么微不足道。\n——理查德·E·伯德海军上将, 于南极洲, 1935" // 50
                 ];
                 
                 List<string> englishContents=[
@@ -1223,29 +1233,39 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                     "Only in death does duty end.",
                     "The end may justify the means as long as there is something that justifies the end.",
                     "Sing your death song and die like a hero going home.",
-                    "All history is man's efforts to realise ideals. - Éamon de Valera, 1929",
-                    "Let us dedicate ourselves to what the Greeks wrote so many years ago: to tame the savageness of man and make gentle the life of this world. - Robert F. Kennedy, 1968",
-                    "Every gun that is made, every warship launched, every rocket fired signifies a theft from those who hunger and are not fed, those who are cold and are not clothed. - Dwight D. Eisenhower, 1953",
-                    "Yesterday is not ours to recover, but tomorrow is ours to win or lose. - Lyndon B. Johnson, 1964",
-                    "The end of hope is the beginning of death. - Charles de Gaulle, 1945",
-                    "The day I leave the power, inside my pockets will only be dust. - Antonio de Oliveira Salazar, 1968",
-                    "When smashing monuments, save the pedestals. They always come in handy. - Stanisław Jerzy Lec, 1957",
-                    "Fear not the path of truth for the lack of people walking on it. - Robert F. Kennedy, 1968",
-                    "The rocket worked perfectly, except for landing on the wrong planet. - Wernher von Braun upon the first V-2 hitting London, 1944",
-                    "A man is not finished when he's defeated. He's finished when he quits. - Richard Nixon, 1962",
-                    "Do not pray for easy lives, pray to be stronger men. - John F. Kennedy, 1963",
-                    "Nature does not know extinction, only transformation. - Wernher von Braun, 1962",
-                    "The optimist thinks this is the best of all possible worlds. The pessimist fears it is true. - James Branch Cabell, The Silver Stallion, 1926",
-                    "One seldom recognizes the devil when he is putting his hand on your shoulder. - Albert Speer, 1972",
-                    "Laws are silent in times of war. - Marcus Tullius Cicero, 52 BC",
-                    "They don't ask much of you. They only want you to hate the things you love and to love the things you despise. - Boris Pasternak, 1960",
-                    "Most economic fallacies derive from the tendency to assume that there is a fixed pie, that one party can gain only at the expense of another. - Milton Friedman, 1980",
-                    "There are three kinds of lies: lies, damned lies, and statistics. - Mark Twain, 1907",
-                    "Bite us once, shame on the dog; bite us repeatedly, shame on us for allowing it. - Phyllis Schlafly, 1995",
-                    "I know not with what weapons World War III will be fought, but World War IV will be fought with sticks and stones. - Albert Einstein, 1949"
+                    "The mutineers ride into the night.",
+                    "The specter of homicidal violence has appeared in history whenever it was believed that the hypocritical respect for formalities could replace the obedience of moral obligations.",
+                    "Nothing more cruel and inhuman than a war. Nothing more desirable than peace. But peace has its causes, it is an effect. The effect of respect for mutual rights.",
+                    "One by one the righteous fell, and the ills of ignorance permeated.",
+                    "They defended the grains of sand in the desert to the last drop of their blood.",
+                    "All history is man's efforts to realise ideals.\n- Éamon de Valera, 1929",
+                    "Let us dedicate ourselves to what the Greeks wrote so many years ago: to tame the savageness of man and make gentle the life of this world.\n- Robert F. Kennedy, 1968",
+                    "Yesterday is not ours to recover, but tomorrow is ours to win or lose.\n- Lyndon B. Johnson, 1964",
+                    "The end of hope is the beginning of death.\n- Charles de Gaulle, 1945",
+                    "The day I leave the power, inside my pockets will only be dust.\n- Antonio de Oliveira Salazar, 1968",
+                    "When smashing monuments, save the pedestals. They always come in handy.\n- Stanisław Jerzy Lec, 1957",
+                    "Fear not the path of truth for the lack of people walking on it.\n- Robert F. Kennedy, 1968",
+                    "The rocket worked perfectly, except for landing on the wrong planet.\n- Wernher von Braun upon the first V-2 hitting London, 1944",
+                    "A man is not finished when he's defeated. He's finished when he quits.\n- Richard Nixon, 1962",
+                    "Do not pray for easy lives, pray to be stronger men.\n- John F. Kennedy, 1963",
+                    "Nature does not know extinction, only transformation.\n- Wernher von Braun, 1962",
+                    "The optimist thinks this is the best of all possible worlds. The pessimist fears it is true.\n- James Branch Cabell, The Silver Stallion, 1926",
+                    "One seldom recognizes the devil when he is putting his hand on your shoulder.\n- Albert Speer, 1972",
+                    "Laws are silent in times of war.\n- Marcus Tullius Cicero, 52 BC",
+                    "They don't ask much of you. They only want you to hate the things you love and to love the things you despise.\n- Boris Pasternak, 1960",
+                    "Most economic fallacies derive from the tendency to assume that there is a fixed pie, that one party can gain only at the expense of another.\n- Milton Friedman, 1980",
+                    "There are three kinds of lies: lies, damned lies, and statistics.\n- Mark Twain, 1907",
+                    "Bite us once, shame on the dog; bite us repeatedly, shame on us for allowing it.\n- Phyllis Schlafly, 1995",
+                    "I know not with what weapons World War III will be fought, but World War IV will be fought with sticks and stones.\n- Albert Einstein, 1949",
+                    "You can believe in Feng Shui if you want, but ultimately people control their own fate.\n- Li Ka-shing, 1969",
+                    "I believe it is a big mistake to think that money is the only way to compensate a person for his work. People need money, but they also want to be happy in their work and proud of it.\n- Morita Akio, 1966",
+                    "A good reputation for yourself and your company is an invaluable asset not reflected in the balance sheets.\n- Li Ka-shing, 1967",
+                    "Knowledge is your real companion, your life long companion, not fortune. Fortune can disappear.\n- Stanley Ho, 1966",
+                    "People sometimes say: \"we are in a society that is all rotten, all dishonest.\" That is not true. There are still so many good people, so many honest people.\n- John Paul I, 1978",
+                    "Half the confusion in the world comes from not knowing how little we need.\n- Admiral Richard E. Byrd on his time in Antarctica, 1935"
                 ];
                 
-                int randomNumber=seed.Next(0,40);
+                int randomNumber=seed.Next(0,50);
 
                 if(Language_Of_Prompts==Languages_Of_Prompts.Simplified_Chinese_简体中文) {
 
@@ -1316,7 +1336,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 if(Enable_Text_Prompts) {
                     
-                    accessory.Method.TextInfo(prompt,6500);
+                    accessory.Method.TextInfo(prompt,11500);
                     
                 }
 
