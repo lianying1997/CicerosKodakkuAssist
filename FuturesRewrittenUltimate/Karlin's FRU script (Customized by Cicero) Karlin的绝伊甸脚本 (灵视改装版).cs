@@ -6884,7 +6884,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (Enable_Text_Prompts)
+            if (Enable_Developer_Mode)
             {
 
                 accessory.Method.SendChat($"""
