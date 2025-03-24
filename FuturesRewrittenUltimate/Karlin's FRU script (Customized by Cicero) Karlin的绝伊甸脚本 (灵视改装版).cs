@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.7",
+        version: "0.0.1.8",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -144,7 +144,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
          - @bupleurum. provided affixes regarding the MMW strats on CN, optimized paths of the New Grey9 strat for Light Rampant in Phase 2. (Mar 20, 2025)
          - @cyf5119 provided ranges of halo AOEs for Turn of the Heavens in Phase 1. (Mar 19, 2025)
          - @milkvio provided guidance for Fulgent Blade in Phase 5. (Mar 16, 2025)
-         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2, optimized drawing of Drachen Wanderers in the second half of Phae 4. (Mar 16, 2025; Mar 22, 2025)
+         - @usamilyan4608 provided warnings by time for AOEs from spheres during Light Rampant in Phase 2, optimized drawing of Drachen Wanderers in the second half of Phae 4, incorrect debug output in the developer mode.
+           (Mar 16, 2025; Mar 22, 2025; Mar 24, 2025)
          - @veever2464 provided supports of Daily Routines TTS for each TTS prompt. (Mar 10, 2025)
 
         原作者,奠基人兼共同维护者: @karlin_z
@@ -154,7 +155,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         - @bupleurum.为配置文本提供了国服MMW攻略相关标注,P2光之失控(光暴)新灰九法光流侵蚀(放泥)大致路径细化。 (2025.3.20)
         - @cyf5119为P1光轮召唤提供了雷焰之光轮的AOE范围。 (2025.3.19)
         - @milkvio为P5璀璨之刃(地火)提供了指路。 (2025.03.16)
-        - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告,P4二运龙头绘制优化。 (2025.03.16, 2025.03.22)
+        - @usamilyan4608为P2光之失控(光暴)期间的光球AOE提供了时间警告,P4二运龙头绘制优化,开发者模式调试输出修复。
+          (2025.03.16, 2025.03.22, 2025.03.24)
         - @veever2464为每一条TTS提示提供了Daily Routines TTS支持。 (2025.03.10)
 
         ***** New Features *****
