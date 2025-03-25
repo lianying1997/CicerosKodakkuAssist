@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.8",
+        version: "0.0.1.9",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -76,6 +76,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         Attack 1 to 4 stand for the players in the left group, bind 1 to three & square stand for the players on the right. The marks with the number 1 or 2 stand for the players on melee positions.
         Missing signs or incorrect signs will cause unreliable results.
         10. Marks for players with Wyrmclaw (red) debuffs during the second half of Phase 4 involve Target To Ignore and Target To Bind.
+        For the marking logic Ignore1_And_Bind1_Go_West:
+        Target To Ignore 1 and Target To Bind 1: The players who are going to deal with the mechanism in the west. Target To Bind stands for the longer debuff.
+        Target To Ignore 2 and Target To Bind 2: The players who are going to deal with the mechanism in the east. Target To Bind stands for the longer debuff.
+        For the marking logic Ignore1_And_Ignore2_Go_West:
         Target To Ignore 1 and 2: The players who are going to deal with the mechanism in the west. Number 2 stands for the longer debuff.
         Target To Bind 1 and 2: The players who are going to deal with the mechanism in the east. Number 2 stands for the longer debuff.
         The mark priority would be based on the priority of players with Wyrmclaw (red) above.
@@ -117,6 +121,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         攻击1到4代表去左组的人,止步1到3和方块代表去右组的。下标1和2表示站近战位。
         残缺或者错误的标记将导致电椅。
         10. P4二运对圣龙爪(红)debuff玩家的标记涉及到禁止和止步。
+        对于禁止1和锁链1去西边的标记逻辑来说:
+        禁止1和锁链1:前往西侧处理机制。锁链是长debuff。
+        禁止2和锁链2:前往东侧处理机制。锁链是长debuff。
+        对于禁止1和禁止2去西边的标记逻辑来说:
         禁止1和2:前往西侧处理机制。数字2是长debuff。
         止步1和2:前往东侧处理机制。数字2是长debuff。
         标记的优先级将取决于上面圣龙爪(红)玩家优先级的设置。
@@ -359,6 +367,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool Phase4_Mark_Players_During_The_Second_Half { get; set; } = false;
         [UserSetting("P4二运 圣龙爪(红)玩家优先级")]
         public Phase4_Priorities_Of_The_Players_With_Wyrmclaw Phase4_Priority_Of_The_Players_With_Wyrmclaw { get; set; } = Phase4_Priorities_Of_The_Players_With_Wyrmclaw.In_THD_Order_按THD顺序_莫灵喵;
+        [UserSetting("P4二运 标记圣龙爪(红)队友的逻辑")]
+        public Phase4_Logics_Of_Marking_Teammates_With_Wyrmclaw Phase4_Logic_Of_Marking_Teammates_With_Wyrmclaw { get; set; } = Phase4_Logics_Of_Marking_Teammates_With_Wyrmclaw.Ignore1_And_Bind1_Go_West_禁止1和锁链1去西边_莫灵喵;
         [UserSetting("P4二运 标记圣龙牙(蓝)队友的逻辑")]
         public Phase4_Logics_Of_Marking_Teammates_With_Wyrmfang Phase4_Logic_Of_Marking_Teammates_With_Wyrmfang { get; set; }
         [UserSetting("P4二运 正常灯和延时灯的范围显示时间(second/秒)")]
@@ -786,6 +796,13 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             In_HTD_Order_按HTD顺序_MMW,
             In_H1TDH2_Order_按H1TDH2顺序
 
+        }
+
+        public enum Phase4_Logics_Of_Marking_Teammates_With_Wyrmclaw {
+            
+            Ignore1_And_Bind1_Go_West_禁止1和锁链1去西边_莫灵喵,
+            Ignore1_And_Ignore2_Go_West_禁止1和禁止2去西边
+            
         }
 
         public enum Phase4_Logics_Of_Residue_Guidance
@@ -5744,8 +5761,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Scale = new(4);
             currentProperty.Radian = float.Pi;
             currentProperty.Owner = bossId;
-            currentProperty.TargetPosition = new Vector3(100, 0, 100);
-            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.TargetPosition = RotatePoint(new Vector3(100,0,80),new Vector3(100,0,100),float.Pi/4*proteanPosition);
+            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(3f);
             currentProperty.Delay = 6000;
             currentProperty.DestoryAt = 7000;
 
@@ -5756,9 +5773,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Name = "Phase2_Potential_Dangerous_Zone_Of_The_Colourless_Mirror_无色镜子潜在危险区";
             currentProperty.Scale = new(4);
             currentProperty.Radian = float.Pi / 3;
-            currentProperty.Position = RotatePoint(new(100, 0, 80), new(100, 0, 100), float.Pi / 4 * proteanPosition); ;
-            currentProperty.TargetPosition = new Vector3(100, 0, 100);
-            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Position = RotatePoint(new Vector3(100,0,80),new Vector3(100,0,100),float.Pi/4*proteanPosition);
+            currentProperty.TargetObject = bossId;
+            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(3f);
             currentProperty.Delay = 6000;
             currentProperty.DestoryAt = 7000;
 
@@ -6208,7 +6225,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Position = RotatePoint(new(100, 0, 80), new(100, 0, 100), float.Pi / 4 * leftMirror);
             currentProperty.Rotation = float.Pi / 6;
             currentProperty.TargetPosition = new Vector3(100, 0, 100);
-            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(3f);
             currentProperty.Delay = 13500;
             currentProperty.DestoryAt = 10000;
 
@@ -6222,7 +6239,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             currentProperty.Position = RotatePoint(new(100, 0, 80), new(100, 0, 100), float.Pi / 4 * rightMirror);
             currentProperty.Rotation = -(float.Pi / 6);
             currentProperty.TargetPosition = new Vector3(100, 0, 100);
-            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(1f);
+            currentProperty.Color = Phase2_Colour_Of_Potential_Dangerous_Zones.V4.WithW(3f);
             currentProperty.Delay = 13500;
             currentProperty.DestoryAt = 10000;
 
@@ -13279,6 +13296,20 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
                 List<MarkType> marksForShortWyrmclaw=[MarkType.Stop1,MarkType.Bind1];
                 List<MarkType> marksForLongWyrmclaw=[MarkType.Stop2,MarkType.Bind2];
+
+                if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmclaw==Phase4_Logics_Of_Marking_Teammates_With_Wyrmclaw.Ignore1_And_Bind1_Go_West_禁止1和锁链1去西边_莫灵喵) {
+                    
+                    marksForShortWyrmclaw=[MarkType.Stop1,MarkType.Stop2];
+                    marksForLongWyrmclaw=[MarkType.Bind1,MarkType.Bind2];
+                    
+                }
+                
+                if(Phase4_Logic_Of_Marking_Teammates_With_Wyrmclaw==Phase4_Logics_Of_Marking_Teammates_With_Wyrmclaw.Ignore1_And_Ignore2_Go_West_禁止1和禁止2去西边) {
+                    
+                    marksForShortWyrmclaw=[MarkType.Stop1,MarkType.Bind1];
+                    marksForLongWyrmclaw=[MarkType.Stop2,MarkType.Bind2];
+                    
+                }
                 
                 for(int i=0,j=0,k=0;i<temporaryOrder.Count;++i) {
 
