@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.9",
+        version: "0.0.1.10",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -260,7 +260,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         
         There is a character limit in the description area of scripts that I'm unable to put the whole description here. Therefore, I moved the script description to the pinned messages on Discord.
         Navigate to the Discord of Kodakku Assist, find the post "Cicero's Kodakku Assist 个人在线脚本库" in the channel "示例与分享", and finally check "Pinned Messages" for the script description.
-        For PC, "Pinned Messages"is in the upper right corner of the chat bar. For mobile, click the arrow icon in the upper right corner, then there would be a tab "Pins".
+        For PC, "Pinned Messages" is in the upper right corner of the chat bar. For mobile, click the arrow icon in the upper right corner, then there would be a tab "Pins".
         It would take about 5 minutes to go through the English part of the description. Please make sure you have read it in full before running the script. Thank you!
         Please have a look at the script description after each update, especially for the section of New Features and Known Issues.
         
@@ -916,8 +916,17 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void Init(ScriptAccessory accessory)
         {
             accessory.Method.RemoveDraw(".*");
-            if (Phase1_Mark_Players_During_Fall_Of_Faith)
+
+            if(Phase1_Mark_Players_In_Safe_Positions
+               ||
+               Phase1_Mark_Players_During_Fall_Of_Faith
+               ||
+               Phase4_Mark_Players_During_The_Second_Half) {
+                
                 accessory.Method.MarkClear();
+                
+            }
+            
             parse = 1d;
             isInPhase5 = false;
             shenaniganSemaphore.Set();
