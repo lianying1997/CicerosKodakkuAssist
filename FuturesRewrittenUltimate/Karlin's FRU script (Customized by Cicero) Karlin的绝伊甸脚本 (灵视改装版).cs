@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.10",
+        version: "0.0.1.11",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -14207,15 +14207,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             }
 
-            if (((IBattleChara?)targetObject) == null)
-            {
-
-                return;
-
-            }
-
-            if (((IBattleChara?)targetObject).IsDead)
-            {
+            if(targetObject.IsDead) {
                 // Ignore the situations that the debuff was removed due to a death.
 
                 return;
@@ -14696,16 +14688,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             Vector3 targetPosition = targetObject.Position;
 
-            if (((IBattleChara?)targetObject) == null)
-            {
-
-                return;
-
-            }
-
-            if (((IBattleChara?)targetObject).IsDead)
-            {
-                // Ignore the situations that the debuff was removed due to a death.
+            if(targetObject.IsDead) {
 
                 return;
 
