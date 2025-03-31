@@ -28,7 +28,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
     [ScriptType(name: "Karlin's FRU script (Customized by Cicero) Karlin的绝伊甸脚本 (灵视改装版)",
         territorys: [1238],
         guid: "148718fd-575d-493a-8ac7-1cc7092aff85",
-        version: "0.0.1.12",
+        version: "0.0.1.13",
         note: notesOfTheScript,
         author: "Karlin")]
 
@@ -281,6 +281,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         汉尼拔,你能做的只有好好备战明天的会战。因为迦太基人,尤其是你,实在太不擅长在和平环境中生存了。
          - 扎马会战前一天西庇阿与汉尼拔的交谈,202BC。在第二天的会战中,西庇阿用汉尼拔创造的战术全歼了汉尼拔的军队,第二次布匿战争罗马完胜。
         """;
+        
+        #region User_Settings_用户设置
 
         [UserSetting("-----全局设置----- (No actual meaning for this setting/此设置无实际意义)")]
         public bool _____Global_Settings_____ { get; set; } = true;
@@ -429,7 +431,11 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public bool _____Developer_Settings_____ { get; set; } = true;
         [UserSetting("启用开发者模式")]
         public bool Enable_Developer_Mode { get; set; } = false;
+        
+        #endregion
 
+        #region Variables_变量
+        
         int? firstTargetIcon = null;
         double parse = 0;
         volatile bool isInPhase5 = false;
@@ -586,6 +592,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         private static CrystallizeTime _cry = new();
         private static PriorityDict _pd = new();
         private static List<System.Threading.ManualResetEvent> _events = [.. Enumerable.Range(0, 20).Select(_ => new System.Threading.ManualResetEvent(false))];
+        
         volatile string phase5_bossId = "";
         volatile bool phase5_hasAcquiredTheFirstTower = false;
         volatile string phase5_indexOfTheFirstTower = "";
@@ -620,6 +627,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         private List<Vector2?> BladeRoutes;
         private readonly object bladeLock = new object();
         private readonly object drawLock = new object();
+        
+        #endregion
+
+        #region Enumeration_And_Classes_枚举和类
 
         public enum Languages_Of_Prompts
         {
@@ -788,7 +799,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
             Single_Swap_Baiting_After_先单换再引导_莫灵喵与MMW,
             Single_Swap_Baiting_First_先引导再单换,
-            Double_Swaps_双换
+            Double_Swaps_Baiting_First_先引导再双换
 
         }
 
@@ -916,6 +927,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
         }
         
+        #endregion
+
+        #region Initialization_初始化
+        
         private void resetPoints()
         {
             onPoints.Clear();
@@ -1016,10 +1031,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             phase3_moglinMeow_rightPositionToStackOfTheSecondRound = new Vector3(100, 0, 100);
             phase3_finalPositionOfTheBoss = new Vector3(100, 0, 100);
 
+            P4FragmentId=0;
+            P4Tether=[-1,-1,-1,-1,-1,-1,-1,-1];
+            P4Stack=[0,0,0,0,0,0,0,0];
+            P4TetherDone=false;
+            P4ClawBuff=[0,0,0,0,0,0,0,0];
             phase4_numberOfMajorDebuffsHaveBeenCounted = 0;
             phase4_semaphoreMajorDebuffsWereConfirmed = new System.Threading.AutoResetEvent(false);
             phase4_numberOfIncidentalDebuffsHaveBeenCounted = 0;
             phase4_semaphoreIncidentalDebuffsWereConfirmed = new System.Threading.AutoResetEvent(false);
+            P4OtherBuff=[0,0,0,0,0,0,0,0];
             phase4_marksOfPlayersWithWyrmfang = [
                 MarkType.Cross,
                 MarkType.Cross,
@@ -1030,11 +1051,16 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 MarkType.Cross,
                 MarkType.Cross
             ];
+            P4BlueTether=0;
+            P4WaterPos=[];
             phase4_id1OfTheDrachenWanderers = "";
             phase4_id2OfTheDrachenWanderers = "";
             phase4_timesTheWyrmclawDebuffWasRemoved = 0;
             phase4_residueIdsFromEastToWest = [0, 0, 0, 0];
             phase4_guidanceOfResiduesHasBeenGenerated = false;
+            phase4_1_ManualReset=new System.Threading.ManualResetEvent(false);
+            phase4_1_TetherCount=0;
+            // It's not necessary to initialize the static variables... right?
 
             phase5_bossId = "";
             phase5_hasAcquiredTheFirstTower = false;
@@ -1045,6 +1071,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             BladeRoutes = Enumerable.Repeat<Vector2?>(null, 7).ToList();
             resetPoints();//初始化地火坐标
         }
+        
+        #endregion
+        
+        #region Weird_Shenanigans_搞怪
         
         [ScriptMethod(name:"Weird Shenanigans 搞怪",
             eventType:EventTypeEnum.AddCombatant,
@@ -1389,8 +1419,10 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             shenaniganSemaphore=new System.Threading.AutoResetEvent(false);
 
         }
+        
+        #endregion
 
-        #region P1
+        #region Phase_1
 
         [ScriptMethod(name: "----- Phase 1 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType: EventTypeEnum.NpcYell,
@@ -4465,7 +4497,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #endregion
 
-        #region P2
+        #region Phase_2
 
         [ScriptMethod(name: "----- Phase 2 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType: EventTypeEnum.NpcYell,
@@ -7727,7 +7759,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         }
         #endregion
 
-        #region P3
+        #region Phase_3
 
         [ScriptMethod(name: "----- Phase 3 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType: EventTypeEnum.NpcYell,
@@ -11772,7 +11804,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         }
         #endregion
 
-        #region P4
+        #region Phase_4
 
         [ScriptMethod(name: "----- Phase 4 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType: EventTypeEnum.NpcYell,
@@ -12118,7 +12150,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             }
             var ii = idles.IndexOf(idleStack);
 
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_双换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_Baiting_First_先引导再双换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -12315,7 +12347,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             if (!ParseObjectId(@event["SourceId"], out var sid)) return;
             if (sid != accessory.Data.Me) return;
             //accessory.Log.Debug("线");
+            
+            System.Threading.Thread.MemoryBarrier();
+            
             phase4_1_ManualReset.WaitOne();
+            
+            System.Threading.Thread.MemoryBarrier();
 
             var tIndex = P4Tether[0] == -1 ? 1 : 0;
             var nIndex = P4Tether[2] == -1 ? 3 : 2;
@@ -12388,9 +12425,15 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         public void P4_暗光龙诗_引导处理位置(Event @event, ScriptAccessory accessory)
         {
             if (parse != 4.2) return;
+            
+            System.Threading.Thread.MemoryBarrier();
+            
             phase4_1_ManualReset.WaitOne();
+            
+            System.Threading.Thread.MemoryBarrier();
+            
             Vector3 dealpos = new();
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_双换 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_Baiting_First_先引导再双换 || Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Single_Swap_Baiting_First_先引导再单换)
             {
                 List<int> idles = [];
                 for (int i = 0; i < 8; i++)
@@ -12612,7 +12655,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
                 }
             }
             var ii = idles.IndexOf(idleStack);
-            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_双换)
+            if (Phase4_Strat_Of_The_First_Half == Phase4_Strats_Of_The_First_Half.Double_Swaps_Baiting_First_先引导再双换)
             {
                 if (upGroup.Contains(tetherStack))
                 {
@@ -15108,7 +15151,7 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
 
         #endregion
 
-        #region P5
+        #region Phase_5
 
         [ScriptMethod(name: "----- Phase 5 ----- (No actual meaning for this toggle/此开关无实际意义)",
             eventType: EventTypeEnum.NpcYell,
@@ -18761,6 +18804,8 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
         }
 
         #endregion
+        
+        #region Common_Mathematical_Wheels_常用数学轮子
 
         private int ParsTargetIcon(string id)
         {
@@ -18810,8 +18855,12 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             var lenth = v2.Length();
             return new(centre.X + MathF.Sin(rot) * lenth, centre.Y, centre.Z - MathF.Cos(rot) * lenth);
         }
+        
+        #endregion
+        
     }
 
+    #region Other_Common_Wheels_其他常用轮子
 
     public static class Extensions
     {
@@ -18897,6 +18946,9 @@ namespace CicerosKodakkuAssist.FuturesRewrittenUltimate
             return str;
         }
     }
+    
+    #endregion
+    
 }
 
 
